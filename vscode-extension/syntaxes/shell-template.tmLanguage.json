@@ -1,0 +1,70 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Shell Template",
+  "scopeName": "source.shell.template",
+  "patterns": [
+    { "include": "#template-placeholder" },
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#variables" },
+    { "include": "#keywords" }
+  ],
+  "repository": {
+    "template-placeholder": {
+      "name": "variable.other.placeholder.template",
+      "match": "\\{\\{([a-zA-Z][a-zA-Z0-9_]*)\\}\\}",
+      "captures": {
+        "0": { "name": "punctuation.definition.placeholder.template" },
+        "1": { "name": "variable.parameter.placeholder.template" }
+      }
+    },
+    "comments": {
+      "name": "comment.line.number-sign.shell",
+      "match": "#.*$"
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.single.shell",
+          "begin": "'",
+          "end": "'"
+        },
+        {
+          "name": "string.quoted.double.shell",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            { "include": "#template-placeholder" },
+            { "include": "#variables" }
+          ]
+        }
+      ]
+    },
+    "variables": {
+      "patterns": [
+        {
+          "name": "variable.other.shell",
+          "match": "\\$[a-zA-Z_][a-zA-Z0-9_]*"
+        },
+        {
+          "name": "variable.other.bracket.shell",
+          "begin": "\\$\\{",
+          "end": "\\}",
+          "patterns": [{ "include": "$self" }]
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.shell",
+          "match": "\\b(if|then|else|elif|fi|for|in|do|done|while|until|case|esac|function|return|exit)\\b"
+        },
+        {
+          "name": "keyword.operator.shell",
+          "match": "\\b(echo|read|set|export|local|readonly|shift|test|true|false)\\b"
+        }
+      ]
+    }
+  }
+}

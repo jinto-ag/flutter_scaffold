@@ -1,0 +1,100 @@
+{
+  "name": "flutter-scaffold-template",
+  "displayName": "Flutter Scaffold Template",
+  "description": "Syntax highlighting, linting, and formatting for flutter_scaffold template files",
+  "version": "0.1.0",
+  "publisher": "flutter-scaffold",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jinto-ag/flutter_scaffold"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Formatters",
+    "Linters"
+  ],
+  "activationEvents": [
+    "onLanguage:dart-template",
+    "onLanguage:shell-template"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "dart-template",
+        "aliases": [
+          "Dart Template",
+          "dart-template"
+        ],
+        "extensions": [
+          ".dart.template"
+        ],
+        "configuration": "./language-configuration.json"
+      },
+      {
+        "id": "shell-template",
+        "aliases": [
+          "Shell Template",
+          "shell-template"
+        ],
+        "filenames": [
+          "pre-commit.template",
+          "commit-msg.template",
+          "setup.sh.template"
+        ],
+        "configuration": "./shell-language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "dart-template",
+        "scopeName": "source.dart.template",
+        "path": "./syntaxes/dart-template.tmLanguage.json"
+      },
+      {
+        "language": "shell-template",
+        "scopeName": "source.shell.template",
+        "path": "./syntaxes/shell-template.tmLanguage.json"
+      }
+    ],
+    "configuration": {
+      "title": "Flutter Scaffold Template",
+      "properties": {
+        "flutterScaffoldTemplate.enableLinting": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable linting for template files"
+        },
+        "flutterScaffoldTemplate.enableFormatOnSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "Format template files on save"
+        },
+        "flutterScaffoldTemplate.placeholderValidation": {
+          "type": "boolean",
+          "default": true,
+          "description": "Validate placeholder names"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "typescript": "^5.0.0",
+    "@vscode/vsce": "^2.22.0"
+  }
+}
