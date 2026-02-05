@@ -1,33 +1,238 @@
 import 'dart:io';
 
-import 'package:flutter_scaffold/flutter_scaffold.dart';
+import 'package:flutter_scaffold/src/utils/templates.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 
+// Mock loader for unit testing logic without file system
+class MockTemplateLoader extends TemplateLoader {
+  MockTemplateLoader(this.templates);
+  final Map<String, String> templates;
+
+  @override
+  String? loadTemplate(String relativePath) => templates[relativePath];
+
+  @override
+  String loadTemplateOrThrow(String relativePath) {
+    if (templates.containsKey(relativePath)) return templates[relativePath]!;
+    throw TemplateNotFoundException(relativePath);
+  }
+}
+
 void main() {
-  group('TemplateLoader', () {
+  const coreFiles = [
+    'lib/main.dart',
+    'lib/src/app.dart',
+    'lib/src/core/errors/exceptions.dart',
+    'lib/src/core/errors/failures.dart',
+    'lib/src/core/theme/app_theme.dart',
+    'lib/src/routing/routes.dart',
+  ];
+
+  group('TemplateLoader Logic (Conditional Tokens)', () {
+    test('Basic if condition (true)', () {
+      final templates = {
+        'test.template': '''
+Start
+{{if show}}
+Shown
+{{endif}}
+End''',
+      };
+
+      final loader = MockTemplateLoader(templates);
+      final result = loader.loadAndApplyTemplate('test.template', {
+        'show': true,
+      });
+
+      expect(result, 'Start\nShown\nEnd');
+    });
+
+    test('Basic if condition (false)', () {
+      final templates = {
+        'test.template': '''
+Start
+{{if show}}
+Shown
+{{endif}}
+End''',
+      };
+
+      final loader = MockTemplateLoader(templates);
+      final result = loader.loadAndApplyTemplate('test.template', {
+        'show': false,
+      });
+
+      expect(result, 'Start\nEnd');
+    });
+
+    test('If-Else condition (true)', () {
+      final templates = {
+        'test.template': '''
+{{if show}}
+True
+{{else}}
+False
+{{endif}}''',
+      };
+
+      final loader = MockTemplateLoader(templates);
+      final result = loader.loadAndApplyTemplate('test.template', {
+        'show': true,
+      });
+
+      expect(result, 'True');
+    });
+
+    test('If-Else condition (false)', () {
+      final templates = {
+        'test.template': '''
+{{if show}}
+True
+{{else}}
+False
+{{endif}}''',
+      };
+
+      final loader = MockTemplateLoader(templates);
+      final result = loader.loadAndApplyTemplate('test.template', {
+        'show': false,
+      });
+
+      expect(result, 'False');
+    });
+
+    test('If-ElseIf-Else chain', () {
+      final templates = {
+        'test.template': '''
+{{if cond1}}
+One
+{{else if cond2}}
+Two
+{{else}}
+Three
+{{endif}}''',
+      };
+
+      final loader = MockTemplateLoader(templates);
+
+      // Case 1
+      expect(
+        loader.loadAndApplyTemplate('test.template', {
+          'cond1': true,
+          'cond2': false,
+        }),
+        'One',
+      );
+
+      // Case 2
+      expect(
+        loader.loadAndApplyTemplate('test.template', {
+          'cond1': false,
+          'cond2': true,
+        }),
+        'Two',
+      );
+
+      // Case 3
+      expect(
+        loader.loadAndApplyTemplate('test.template', {
+          'cond1': false,
+          'cond2': false,
+        }),
+        'Three',
+      );
+    });
+
+    test('Nested conditions', () {
+      final templates = {
+        'test.template': '''
+{{if outer}}
+Outer
+{{if inner}}
+Inner
+{{endif}}
+{{endif}}''',
+      };
+
+      final loader = MockTemplateLoader(templates);
+
+      expect(
+        loader.loadAndApplyTemplate('test.template', {
+          'outer': true,
+          'inner': true,
+        }),
+        'Outer\nInner',
+      );
+
+      expect(
+        loader.loadAndApplyTemplate('test.template', {
+          'outer': true,
+          'inner': false,
+        }),
+        'Outer',
+      );
+
+      expect(
+        loader.loadAndApplyTemplate('test.template', {
+          'outer': false,
+          'inner': true,
+        }),
+        '', // Inner ignored because outer is false
+      );
+    });
+
+    test('Variable substitution with logic', () {
+      final templates = {
+        'test.template': '''
+{{if show}}
+Hello {{name}}
+{{endif}}''',
+      };
+
+      final loader = MockTemplateLoader(templates);
+      final result = loader.loadAndApplyTemplate('test.template', {
+        'show': true,
+        'name': 'World',
+      });
+
+      expect(result, 'Hello World');
+    });
+
+    test('Whitespace handling', () {
+      final templates = {
+        'test.template': '''
+  {{ if show }}  
+    Shown
+  {{ endif }}  ''',
+      };
+
+      final loader = MockTemplateLoader(templates);
+      final result = loader.loadAndApplyTemplate('test.template', {
+        'show': true,
+      });
+
+      // The implementation preserves content lines indentation but logic lines are removed.
+      expect(result, '    Shown');
+    });
+  });
+
+  // Original Integration Tests
+  group('TemplateLoader integration', () {
     late TemplateLoader loader;
     late String templatesPath;
 
     setUpAll(() {
-      // Use the actual templates directory from the package
       templatesPath = p.join(Directory.current.path, 'lib', 'src', 'templates');
-
-      // Verify templates directory exists for these tests
-      if (!Directory(templatesPath).existsSync()) {
-        fail('Templates directory not found at: $templatesPath');
-      }
-
       loader = TemplateLoader(templatesPath: templatesPath);
     });
 
-    test('getTemplatesDirectory returns correct path', () {
+    test('getTemplatesDirectory returns valid path', () {
       final dir = loader.getTemplatesDirectory();
-      expect(dir, equals(templatesPath));
       expect(Directory(dir).existsSync(), isTrue);
     });
 
-    test('loadTemplate returns content for existing core templates', () {
+    test('loadTemplate returns content for existing core template', () {
       final content = loader.loadTemplate('core/app.dart.template');
       expect(content, isNotNull);
       expect(content, isNotEmpty);

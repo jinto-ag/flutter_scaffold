@@ -11,12 +11,19 @@
   ],
   "repository": {
     "template-placeholder": {
-      "name": "variable.other.placeholder.template",
-      "match": "\\{\\{([a-zA-Z][a-zA-Z0-9_]*)\\}\\}",
-      "captures": {
-        "0": { "name": "punctuation.definition.placeholder.template" },
-        "1": { "name": "variable.parameter.placeholder.template" }
-      }
+      "begin": "\\{\\{",
+      "end": "\\}\\}",
+      "name": "meta.embedded.template",
+      "patterns": [
+        {
+          "match": "\\b(if\\s+[a-zA-Z0-9_]+|else\\s+if\\s+[a-zA-Z0-9_]+|else|endif)\\b",
+          "name": "keyword.control.template"
+        },
+        {
+          "match": "[a-zA-Z][a-zA-Z0-9_]*",
+          "name": "variable.other.placeholder.template"
+        }
+      ]
     },
     "comments": {
       "name": "comment.line.number-sign.shell",

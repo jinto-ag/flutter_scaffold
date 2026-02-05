@@ -182,37 +182,41 @@ void main() {
       }
     });
 
-    test('core templates are standalone (no placeholders) except main.dart', () {
-      final coreDir = Directory(
-        p.join(Directory.current.path, 'lib', 'src', 'templates', 'core'),
-      );
+    test(
+      'core templates are standalone (no placeholders) except main.dart and app.dart',
+      () {
+        final coreDir = Directory(
+          p.join(Directory.current.path, 'lib', 'src', 'templates', 'core'),
+        );
 
-      if (!coreDir.existsSync()) {
-        fail('Core templates directory does not exist');
-      }
-
-      final templates = coreDir.listSync().whereType<File>();
-
-      for (final file in templates) {
-        final content = file.readAsStringSync();
-        final basename = p.basename(file.path);
-
-        // main.dart.template is allowed to have {{projectName}} for package import
-        if (basename == 'main.dart.template') {
-          expect(
-            content.contains('{{projectName}}'),
-            isTrue,
-            reason:
-                'main.dart.template should have {{projectName}} placeholder',
-          );
-        } else {
-          expect(
-            content.contains('{{'),
-            isFalse,
-            reason: '$basename should not have variable placeholders',
-          );
+        if (!coreDir.existsSync()) {
+          fail('Core templates directory does not exist');
         }
-      }
-    });
+
+        final templates = coreDir.listSync().whereType<File>();
+
+        for (final file in templates) {
+          final content = file.readAsStringSync();
+          final basename = p.basename(file.path);
+
+          // main.dart.template and app.dart.template are allowed to have {{projectName}}
+          // for package import and app title
+          if (basename == 'main.dart.template' ||
+              basename == 'app.dart.template') {
+            expect(
+              content.contains('{{projectName}}'),
+              isTrue,
+              reason: '$basename should have {{projectName}} placeholder',
+            );
+          } else {
+            expect(
+              content.contains('{{'),
+              isFalse,
+              reason: '$basename should not have variable placeholders',
+            );
+          }
+        }
+      },
+    );
   });
 }

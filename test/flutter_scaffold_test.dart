@@ -43,7 +43,7 @@ void main() {
 
   group('Templates', () {
     test('TemplateRegistry returns core templates', () {
-      const registry = TemplateRegistry();
+      final registry = TemplateRegistry();
 
       final appTemplate = registry.getTemplate('lib/src/app.dart');
       expect(appTemplate, isNotNull);
@@ -57,7 +57,7 @@ void main() {
     });
 
     test('TemplateRegistry returns feature templates', () {
-      const registry = TemplateRegistry();
+      final registry = TemplateRegistry();
 
       final screenTemplate = registry.getFeatureTemplate('screen', 'auth');
       expect(screenTemplate, isNotNull);

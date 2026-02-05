@@ -42,12 +42,17 @@ class FeatureService {
     FileUtils? fileUtils,
     TemplateRegistry? templates,
   }) : _logger = logger ?? ScaffoldLogger(),
-       _fileUtils = fileUtils ?? const FileUtils(),
-       _templates = templates ?? const TemplateRegistry();
+       _fileUtils = fileUtils ?? const FileUtils();
 
   final ScaffoldLogger _logger;
   final FileUtils _fileUtils;
-  final TemplateRegistry _templates;
+
+  /// Create a TemplateRegistry with context from pubspec.yaml.
+  TemplateRegistry _createTemplateRegistry(String projectPath) {
+    final pubspecPath = _fileUtils.joinPath(projectPath, 'pubspec.yaml');
+    final context = TemplateContext.fromPubspec(pubspecPath);
+    return TemplateRegistry(context: context);
+  }
 
   /// Get the features directory path.
   String _featuresPath(String projectPath) =>
@@ -142,6 +147,9 @@ class FeatureService {
       );
     }
 
+    // Create context-aware template registry
+    final templates = _createTemplateRegistry(projectPath);
+
     var dirsCreated = 0;
     var filesCreated = 0;
 
@@ -164,19 +172,19 @@ class FeatureService {
     final files = [
       (
         'presentation/screens/${normalized}_screen.dart',
-        _templates.getFeatureTemplate('screen', normalized),
+        templates.getFeatureTemplate('screen', normalized),
       ),
       (
         'presentation/providers/${normalized}_providers.dart',
-        _templates.getFeatureTemplate('providers', normalized),
+        templates.getFeatureTemplate('providers', normalized),
       ),
       (
         'domain/entities/${normalized}_entity.dart',
-        _templates.getFeatureTemplate('entity', normalized),
+        templates.getFeatureTemplate('entity', normalized),
       ),
       (
         'domain/repositories/${normalized}_repository.dart',
-        _templates.getFeatureTemplate('repository', normalized),
+        templates.getFeatureTemplate('repository', normalized),
       ),
     ];
 

@@ -8,8 +8,9 @@ const KNOWN_PLACEHOLDERS = new Set([
     'FeatureName',
 ]);
 
-const PLACEHOLDER_REGEX = /\{\{\s*([a-zA-Z][a-zA-Z0-9_]*)\s*\}\}/g;
-// Number of lines added to the top of the shadow file
+// Regex to capture the content inside {{ }}. 
+// Optimized for single-line usage mostly, but supports newlines if VS Code range allows.
+const PLACEHOLDER_REGEX = /\{\{([\s\S]*?)\}\}/g;
 const SHADOW_HEADER_LINES = 1;
 
 let diagnosticCollection: vscode.DiagnosticCollection;
@@ -32,7 +33,6 @@ export function activate(context: vscode.ExtensionContext) {
         }),
         vscode.workspace.onDidSaveTextDocument(validateDocument),
 
-        // Clean up shadow files when document is closed
         vscode.workspace.onDidCloseTextDocument((doc) => {
             if (isTemplateFile(doc)) {
                 shadowProvider.deleteShadowFile(doc);
@@ -61,11 +61,14 @@ export function activate(context: vscode.ExtensionContext) {
                     if (!dartItems) return templateItems;
 
                     const items = Array.isArray(dartItems) ? dartItems : dartItems.items;
+                    // prioritizing template items
                     return [...templateItems, ...items];
                 },
             },
             '.',
             '{',
+            ' ', // Trigger on space too
+            'i', 'e', // Trigger on logic start chars
         ),
     );
 
@@ -108,7 +111,9 @@ class ShadowDocumentProvider implements vscode.HoverProvider, vscode.CompletionI
     private updateShadowFile(document: vscode.TextDocument) {
         const text = document.getText();
         const ignores = '// ignore_for_file: uri_does_not_exist, undefined_class, undefined_function, undefined_identifier, UNUSED_IMPORT, dead_code\n';
-        const sanitized = ignores + text.replace(/\{\{/g, '  ').replace(/\}\}/g, '  ');
+
+        // Replace ALL {{...}} content with block comments
+        const sanitized = ignores + text.replace(/\{\{([\s\S]*?)\}\}/g, '/* {{$1}} */');
 
         const shadowPath = this.getShadowUri(document.uri).fsPath;
         try {
@@ -157,7 +162,7 @@ class ShadowDocumentProvider implements vscode.HoverProvider, vscode.CompletionI
                 return hover;
             }
         } catch (e) {
-            console.error('Shadow hover failed', e);
+            // ignore
         }
         return undefined;
     }
@@ -195,7 +200,6 @@ class ShadowDocumentProvider implements vscode.HoverProvider, vscode.CompletionI
             return list;
 
         } catch (e) {
-            console.error('Shadow completion failed', e);
             return undefined;
         }
     }
@@ -233,7 +237,6 @@ class ShadowDocumentProvider implements vscode.HoverProvider, vscode.CompletionI
                 return this.mapLocationFromShadow(result as vscode.Location);
             }
         } catch (e) {
-            console.error('Shadow definition failed', e);
             return undefined;
         }
     }
@@ -243,11 +246,11 @@ function isTemplateFile(document: vscode.TextDocument): boolean {
     return document.languageId === 'dart-template' || document.languageId === 'shell-template';
 }
 
+// Global regex reset helper unused, but we reset in loops
 function validateDocument(document: vscode.TextDocument) {
     if (!isTemplateFile(document)) {
         return;
     }
-
     const config = vscode.workspace.getConfiguration('flutterScaffoldTemplate');
     if (!config.get('enableLinting', true)) {
         diagnosticCollection.delete(document.uri);
@@ -257,23 +260,47 @@ function validateDocument(document: vscode.TextDocument) {
     const diagnostics: vscode.Diagnostic[] = [];
     const text = document.getText();
 
+    // Validate conditional nesting
     if (config.get('placeholderValidation', true)) {
+        diagnostics.push(...validateConditionalNesting(document));
+        
         let match;
-        while ((match = PLACEHOLDER_REGEX.exec(text)) !== null) {
-            const placeholderName = match[1];
-            if (!KNOWN_PLACEHOLDERS.has(placeholderName)) {
-                const startPos = document.positionAt(match.index);
-                const endPos = document.positionAt(match.index + match[0].length);
-                const range = new vscode.Range(startPos, endPos);
+        PLACEHOLDER_REGEX.lastIndex = 0;
 
-                const diagnostic = new vscode.Diagnostic(
-                    range,
-                    `Unknown placeholder: '${placeholderName}'. Known placeholders: ${Array.from(KNOWN_PLACEHOLDERS).join(', ')}`,
-                    vscode.DiagnosticSeverity.Warning,
-                );
-                diagnostic.source = 'flutter-scaffold-template';
-                diagnostic.code = 'unknown-placeholder';
-                diagnostics.push(diagnostic);
+        while ((match = PLACEHOLDER_REGEX.exec(text)) !== null) {
+            const content = match[1].trim();
+
+            // Logic check: if starts with logic keywords, Ignore entire block
+            if (/^(if\s+[a-zA-Z0-9_]+|else\s+if\s+[a-zA-Z0-9_]+|else|endif)(\s|$)/.test(content)) {
+                continue;
+            }
+
+            const parts = content.split(/\s+/);
+            const name = parts[0];
+
+            // Only validate if it looks like a variable name (alphanumeric)
+            // and is NOT a logic keyword matching strict check above
+            if (name && /^[a-zA-Z][a-zA-Z0-9_]*$/.test(name)) {
+                if (!KNOWN_PLACEHOLDERS.has(name)) {
+                    // One final check: complex expressions
+                    if (parts.length > 1) {
+                        // e.g. {{ someFunc(arg) }} - skip validation
+                        continue;
+                    }
+
+                    const startPos = document.positionAt(match.index);
+                    const endPos = document.positionAt(match.index + match[0].length);
+                    const range = new vscode.Range(startPos, endPos);
+
+                    const diagnostic = new vscode.Diagnostic(
+                        range,
+                        `Unknown placeholder: '${name}'.`,
+                        vscode.DiagnosticSeverity.Warning,
+                    );
+                    diagnostic.source = 'flutter-scaffold-template';
+                    diagnostic.code = 'unknown-placeholder';
+                    diagnostics.push(diagnostic);
+                }
             }
         }
     }
@@ -281,15 +308,92 @@ function validateDocument(document: vscode.TextDocument) {
     diagnosticCollection.set(document.uri, diagnostics);
 }
 
+function validateConditionalNesting(document: vscode.TextDocument): vscode.Diagnostic[] {
+    const diagnostics: vscode.Diagnostic[] = [];
+    const text = document.getText();
+    const lines = text.split('\n');
+    const stack: Array<{ type: string, line: number }> = [];
+    
+    const ifRegex = /^\s*\{\{\s*if\s+([a-zA-Z0-9_]+)\s*\}\}\s*$/;
+    const elIfRegex = /^\s*\{\{\s*else\s+if\s+([a-zA-Z0-9_]+)\s*\}\}\s*$/;
+    const elseRegex = /^\s*\{\{\s*else\s*\}\}\s*$/;
+    const endifRegex = /^\s*\{\{\s*endif\s*\}\}\s*$/;
+    
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        
+        if (ifRegex.test(line)) {
+            stack.push({ type: 'if', line: i });
+        } else if (elIfRegex.test(line) || elseRegex.test(line)) {
+            if (stack.length === 0) {
+                const startPos = new vscode.Position(i, 0);
+                const endPos = new vscode.Position(i, line.length);
+                const range = new vscode.Range(startPos, endPos);
+                
+                diagnostics.push(new vscode.Diagnostic(
+                    range,
+                    'Unmatched else/else if - no corresponding if block',
+                    vscode.DiagnosticSeverity.Error,
+                ));
+            }
+        } else if (endifRegex.test(line)) {
+            if (stack.length === 0) {
+                const startPos = new vscode.Position(i, 0);
+                const endPos = new vscode.Position(i, line.length);
+                const range = new vscode.Range(startPos, endPos);
+                
+                diagnostics.push(new vscode.Diagnostic(
+                    range,
+                    'Unmatched endif - no corresponding if block',
+                    vscode.DiagnosticSeverity.Error,
+                ));
+            } else {
+                stack.pop();
+            }
+        }
+    }
+    
+    // Check for unclosed if blocks
+    stack.forEach(item => {
+        const line = lines[item.line];
+        const startPos = new vscode.Position(item.line, 0);
+        const endPos = new vscode.Position(item.line, line.length);
+        const range = new vscode.Range(startPos, endPos);
+        
+        diagnostics.push(new vscode.Diagnostic(
+            range,
+            'Unclosed if block - missing endif',
+            vscode.DiagnosticSeverity.Error,
+        ));
+    });
+    
+    diagnostics.forEach(diagnostic => {
+        diagnostic.source = 'flutter-scaffold-template';
+        diagnostic.code = 'conditional-nesting';
+    });
+    
+    return diagnostics;
+}
+
 function provideTemplateHover(document: vscode.TextDocument, position: vscode.Position): vscode.Hover | undefined {
-    const range = document.getWordRangeAtPosition(position, /\{\{\s*[a-zA-Z][a-zA-Z0-9_]*\s*\}\}/);
+    // We use a simpler regex for hover detection at cursor
+    const range = document.getWordRangeAtPosition(position, /\{\{.*?\}\}/);
     if (!range) return undefined;
 
     const text = document.getText(range);
-    const match = text.match(/\{\{\s*([a-zA-Z][a-zA-Z0-9_]*)\s*\}\}/);
-    if (!match) return undefined;
+    const contentMatch = text.match(/\{\{([\s\S]*?)\}\}/);
+    if (!contentMatch) return undefined;
 
-    const placeholderName = match[1];
+    const content = contentMatch[1].trim();
+
+    // Explicit logic check
+    if (/^(if\s+[a-zA-Z0-9_]+|else\s+if\s+[a-zA-Z0-9_]+|else|endif)(\s|$)/.test(content)) {
+        return new vscode.Hover('**Template Logic**: Control flow directive', range);
+    }
+
+    const parts = content.split(/\s+/);
+    const placeholderName = parts[0];
+
     const descriptions: Record<string, string> = {
         projectName: 'The Flutter project name from pubspec.yaml (snake_case)',
         featureName: 'The feature name in snake_case (e.g., my_feature)',
@@ -298,11 +402,11 @@ function provideTemplateHover(document: vscode.TextDocument, position: vscode.Po
 
     const description = descriptions[placeholderName] || 'Template placeholder';
     const contents = new vscode.MarkdownString();
-    contents.appendMarkdown(`**Placeholder:** \`${placeholderName}\`\n\n`);
-    contents.appendMarkdown(description);
 
-    if (!KNOWN_PLACEHOLDERS.has(placeholderName)) {
-        contents.appendMarkdown('\n\n⚠️ *Unknown placeholder*');
+    if (KNOWN_PLACEHOLDERS.has(placeholderName)) {
+        contents.appendMarkdown(`**Placeholder:** \`${placeholderName}\`\n\n${description}`);
+    } else {
+        contents.appendMarkdown(`**Placeholder:** \`${placeholderName}\`\n\n⚠️ *Unknown placeholder*`);
     }
 
     return new vscode.Hover(contents, range);
@@ -310,37 +414,59 @@ function provideTemplateHover(document: vscode.TextDocument, position: vscode.Po
 
 function provideTemplatePlaceholderCompletions(document: vscode.TextDocument, position: vscode.Position): vscode.CompletionItem[] {
     const linePrefix = document.lineAt(position).text.substring(0, position.character);
-    if (!linePrefix.endsWith('{') && !linePrefix.endsWith('{{')) return [];
+
+    // Check if we are inside {{ ... }}
+    const lastOpen = linePrefix.lastIndexOf('{{');
+    const lastClose = linePrefix.lastIndexOf('}}');
+
+    // Not inside a block
+    if (lastOpen === -1 || lastOpen < lastClose) {
+        return [];
+    }
 
     const items: vscode.CompletionItem[] = [];
     const placeholderDescriptions: Record<string, string> = {
-        projectName: 'Project name from pubspec.yaml',
-        featureName: 'Feature name in snake_case',
-        FeatureName: 'Feature name in PascalCase',
+        projectName: 'Project name',
+        featureName: 'Feature name (snake_case)',
+        FeatureName: 'Feature name (PascalCase)',
+        'if ': 'If condition - {{if variableName}}',
+        'else if ': 'Else if condition - {{else if variableName}}',
+        'else': 'Else block - {{else}}',
+        'endif': 'End if block - {{endif}}'
     };
 
-    for (const [name, description] of Object.entries(placeholderDescriptions)) {
-        const item = new vscode.CompletionItem(name, vscode.CompletionItemKind.Variable);
-        item.detail = 'Template Placeholder';
-        item.documentation = description;
-        if (linePrefix.endsWith('{{')) {
-            item.insertText = `${name}}}`;
-        } else {
-            item.insertText = `{${name}}}`;
+    // Context-aware suggestions
+    const contentSinceOpen = linePrefix.substring(lastOpen + 2).trim();
+    
+    if (contentSinceOpen === '') {
+        // At start of placeholder - suggest all options
+        for (const [name, description] of Object.entries(placeholderDescriptions)) {
+            const item = new vscode.CompletionItem(name, vscode.CompletionItemKind.Keyword);
+            item.detail = 'Template Directive';
+            item.documentation = description;
+            item.insertText = name;
+            items.push(item);
         }
-        items.push(item);
+    } else if (contentSinceOpen.startsWith('if ') || contentSinceOpen.startsWith('else if ') || contentSinceOpen === 'else') {
+        // After conditional logic - suggest endif
+        const endifItem = new vscode.CompletionItem('endif', vscode.CompletionItemKind.Keyword);
+        endifItem.detail = 'Template Directive';
+        endifItem.documentation = 'End if block - {{endif}}';
+        endifItem.insertText = 'endif';
+        items.push(endifItem);
     }
+
     return items;
 }
 
 function formatTemplate(document: vscode.TextDocument): vscode.TextEdit[] {
     const text = document.getText();
-    const placeholders: { name: string, uuid: string, index: number }[] = [];
+    const placeholders: { original: string, uuid: string }[] = [];
 
-    let tempText = text.replace(PLACEHOLDER_REGEX, (match, name, offset) => {
-        const uuid = 'valid_dart_id_' + Math.random().toString(36).substring(2, 15);
-        placeholders.push({ name: `{{${name}}}`, uuid, index: offset });
-        return uuid;
+    let tempText = text.replace(PLACEHOLDER_REGEX, (match) => {
+        const uuid = 'TEMPLATE_PH_' + Math.random().toString(36).substring(2, 10).toUpperCase();
+        placeholders.push({ original: match, uuid });
+        return `/* ${uuid} */`;
     });
 
     try {
@@ -351,18 +477,17 @@ function formatTemplate(document: vscode.TextDocument): vscode.TextEdit[] {
         });
 
         let formattedText = output.toString();
+
         placeholders.forEach(p => {
-            formattedText = formattedText.replace(p.uuid, p.name);
+            const escapedUuid = p.uuid.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const regex = new RegExp(`\/\\*\\s*${escapedUuid}\\s*\\*\/`, 'g');
+            formattedText = formattedText.replace(regex, p.original);
         });
 
         const fullRange = new vscode.Range(document.positionAt(0), document.positionAt(text.length));
         return [vscode.TextEdit.replace(fullRange, formattedText)];
 
     } catch (e) {
-        console.error('Formatting failed:', e);
-        if (e instanceof Error && !e.message.includes('Could not format')) {
-            vscode.window.showErrorMessage('Dart Template formatting failed. Ensure "dart" is in your PATH.');
-        }
         return [];
     }
 }

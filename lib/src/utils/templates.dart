@@ -4,6 +4,7 @@ library;
 import 'dart:io';
 
 import 'package:path/path.dart' as p;
+import 'package:yaml/yaml.dart';
 
 import 'string_utils.dart';
 
@@ -15,6 +16,127 @@ class TemplateNotFoundException implements Exception {
 
   @override
   String toString() => 'Template not found: $templatePath';
+}
+
+/// Context for template variable substitution.
+class TemplateContext {
+  TemplateContext({
+    Map<String, dynamic>? globalVariables,
+    Map<String, dynamic>? specificVariables,
+  }) : _globalVariables = globalVariables ?? {},
+       _specificVariables = specificVariables ?? {};
+
+  final Map<String, dynamic> _globalVariables;
+  final Map<String, dynamic> _specificVariables;
+
+  /// Create a TemplateContext from a pubspec.yaml file.
+  factory TemplateContext.fromPubspec(String pubspecPath) {
+    final file = File(pubspecPath);
+    if (!file.existsSync()) {
+      return TemplateContext();
+    }
+
+    try {
+      final yamlContent = file.readAsStringSync();
+      final yaml = loadYaml(yamlContent) as YamlMap;
+
+      final globalVars = <String, dynamic>{};
+
+      // Extract project name
+      if (yaml['name'] != null) {
+        globalVars['projectName'] = yaml['name'].toString();
+      }
+
+      // Extract Dart SDK version
+      if (yaml['environment'] != null && yaml['environment']['sdk'] != null) {
+        globalVars['dartSdkVersion'] = yaml['environment']['sdk'].toString();
+      }
+
+      // Extract Flutter SDK version
+      if (yaml['dependencies'] != null &&
+          yaml['dependencies']['flutter'] != null) {
+        final flutterVersion = yaml['dependencies']['flutter'];
+        if (flutterVersion is String) {
+          globalVars['flutterVersion'] = flutterVersion;
+        }
+      }
+
+      // Add current year
+      globalVars['year'] = DateTime.now().year.toString();
+
+      return TemplateContext(globalVariables: globalVars);
+    } catch (e) {
+      // Fallback to empty context if parsing fails
+      return TemplateContext();
+    }
+  }
+
+  /// Create a TemplateContext with default global variables.
+  factory TemplateContext.withDefaults() {
+    final globalVars = <String, dynamic>{
+      'year': DateTime.now().year.toString(),
+    };
+    return TemplateContext(globalVariables: globalVars);
+  }
+
+  /// Get all variables (global + specific) merged.
+  Map<String, dynamic> get allVariables {
+    final merged = Map<String, dynamic>.from(_globalVariables);
+    merged.addAll(_specificVariables);
+    return merged;
+  }
+
+  /// Get global variables only.
+  Map<String, dynamic> get globalVariables =>
+      Map.unmodifiable(_globalVariables);
+
+  /// Get specific variables only.
+  Map<String, dynamic> get specificVariables =>
+      Map.unmodifiable(_specificVariables);
+
+  /// Add or update a global variable.
+  void setGlobal(String key, dynamic value) {
+    _globalVariables[key] = value;
+  }
+
+  /// Add or update a specific variable.
+  void setSpecific(String key, dynamic value) {
+    _specificVariables[key] = value;
+  }
+
+  /// Add multiple specific variables at once.
+  void setSpecifics(Map<String, dynamic> variables) {
+    _specificVariables.addAll(variables);
+  }
+
+  /// Get a variable value (specific takes precedence over global).
+  dynamic operator [](String key) {
+    return _specificVariables[key] ?? _globalVariables[key];
+  }
+
+  /// Check if a variable exists.
+  bool contains(String key) {
+    return _specificVariables.containsKey(key) ||
+        _globalVariables.containsKey(key);
+  }
+
+  /// Create a new context with additional specific variables.
+  TemplateContext withSpecifics(Map<String, dynamic> variables) {
+    return TemplateContext(
+      globalVariables: _globalVariables,
+      specificVariables: Map<String, dynamic>.from(_specificVariables)
+        ..addAll(variables),
+    );
+  }
+
+  /// Create a new context with additional global variables.
+  TemplateContext withGlobals(Map<String, dynamic> variables) {
+    return TemplateContext(
+      globalVariables: Map<String, dynamic>.from(_globalVariables)
+        ..addAll(variables),
+      specificVariables: _specificVariables,
+    );
+  }
 }
 
 /// Template loading utilities.
@@ -94,28 +216,136 @@ class TemplateLoader {
   /// Load a template and apply variable substitution.
   String? loadAndApplyTemplate(
     String relativePath,
-    Map<String, String> variables,
+    Map<String, dynamic> variables,
   ) {
     final content = loadTemplate(relativePath);
     if (content == null) return null;
 
-    return _applyVariables(content, variables);
+    final processed = _applyLogic(content, variables);
+    return _applyVariables(processed, variables);
   }
 
   /// Load a template, apply variables, throwing if not found.
   String loadAndApplyTemplateOrThrow(
     String relativePath,
-    Map<String, String> variables,
+    Map<String, dynamic> variables,
   ) {
     final content = loadTemplateOrThrow(relativePath);
-    return _applyVariables(content, variables);
+    final processed = _applyLogic(content, variables);
+    return _applyVariables(processed, variables);
+  }
+
+  String _applyLogic(String content, Map<String, dynamic> variables) {
+    final lines = content.split('\n');
+    final buffer = StringBuffer();
+    // Stack of booleans indicating if we are currently "inside" a true block.
+    // Top of stack is current scope.
+    final stack = <bool>[true];
+    // Stack tracking if we have already satisfied a condition in the current if/else chain.
+    final satisfiedStack = <bool>[false];
+
+    final ifRegex = RegExp(r'^\s*\{\{\s*if\s+([a-zA-Z0-9_]+)\s*\}\}\s*$');
+    final elIfRegex = RegExp(
+      r'^\s*\{\{\s*else\s+if\s+([a-zA-Z0-9_]+)\s*\}\}\s*$',
+    );
+    final elseRegex = RegExp(r'^\s*\{\{\s*else\s*\}\}\s*$');
+    final endifRegex = RegExp(r'^\s*\{\{\s*endif\s*\}\}\s*$');
+
+    for (final line in lines) {
+      final ifMatch = ifRegex.firstMatch(line);
+      if (ifMatch != null) {
+        final varName = ifMatch.group(1)!;
+        final condition = variables[varName] == true;
+
+        // Push new scope state
+        // Only enter if parent scope is active AND condition is true
+        final parentActive = stack.last;
+        stack.add(parentActive && condition);
+
+        // Track that we satisfied this chain if condition was true (and parent was active)
+        satisfiedStack.add(parentActive && condition);
+        continue;
+      }
+
+      final elIfMatch = elIfRegex.firstMatch(line);
+      if (elIfMatch != null) {
+        if (stack.length <= 1) {
+          // Should check for proper nesting
+          // Treating unmatched elseif as text or ignore?
+          // Better to throw or ignore. For now, treating as text if stack is empty (root).
+          // But stack always has [true].
+        }
+
+        final varName = elIfMatch.group(1)!;
+        final condition = variables[varName] == true;
+        final parentActive = stack[stack.length - 2];
+        final chainSatisfied = satisfiedStack.last;
+
+        // We enter this block if:
+        // 1. Parent is active
+        // 2. Previous blocks in this chain were NOT satisfied
+        // 3. Current condition IS true
+        final shouldEnter = parentActive && !chainSatisfied && condition;
+
+        stack.removeLast();
+        stack.add(shouldEnter);
+
+        if (shouldEnter) {
+          satisfiedStack.removeLast();
+          satisfiedStack.add(true);
+        }
+        continue;
+      }
+
+      final elseMatch = elseRegex.firstMatch(line);
+      if (elseMatch != null) {
+        final parentActive = stack[stack.length - 2];
+        final chainSatisfied = satisfiedStack.last;
+
+        // Enter else if parent active and nothing else satisfied
+        final shouldEnter = parentActive && !chainSatisfied;
+
+        stack.removeLast();
+        stack.add(shouldEnter);
+
+        // Mark satisfied (though logic is done)
+        satisfiedStack.removeLast();
+        satisfiedStack.add(true);
+        continue;
+      }
+
+      final endifMatch = endifRegex.firstMatch(line);
+      if (endifMatch != null) {
+        if (stack.length > 1) {
+          stack.removeLast();
+          satisfiedStack.removeLast();
+        }
+        continue;
+      }
+
+      // If current scope is active, keep the line
+      if (stack.last) {
+        buffer.writeln(line);
+      }
+    }
+
+    // Trim the trailing newline added by writeln if the original didn't have one?
+    // split('\n') behavior on trailing newline is tricky.
+    // For source templates, writeln is usually fine.
+    var result = buffer.toString();
+    if (!content.endsWith('\n') && result.endsWith('\n')) {
+      result = result.substring(0, result.length - 1);
+    }
+    return result;
   }
 
   /// Apply variable substitution to template content.
-  String _applyVariables(String content, Map<String, String> variables) {
+  String _applyVariables(String content, Map<String, dynamic> variables) {
     var result = content;
     for (final entry in variables.entries) {
-      result = result.replaceAll('{{${entry.key}}}', entry.value);
+      if (entry.value is String) {
+        result = result.replaceAll('{{${entry.key}}}', entry.value);
+      }
     }
     return result;
   }
@@ -151,10 +381,15 @@ class TemplateLoader {
 
 /// Template registry for accessing all scaffold templates.
 class TemplateRegistry {
-  const TemplateRegistry({TemplateLoader? loader})
-    : _loader = loader ?? const TemplateLoader();
+  TemplateRegistry({TemplateLoader? loader, TemplateContext? context})
+    : _loader = loader ?? const TemplateLoader(),
+      _context = context ?? TemplateContext.withDefaults();
 
   final TemplateLoader _loader;
+  final TemplateContext _context;
+
+  /// Get the template context.
+  TemplateContext get context => _context;
 
   /// Template path mappings for core files.
   static const _coreTemplates = {
@@ -198,7 +433,7 @@ class TemplateRegistry {
       return null;
     }
 
-    return _loader.loadTemplate(templatePath);
+    return _loader.loadAndApplyTemplate(templatePath, _context.allVariables);
   }
 
   /// Get a core template by its output path, throwing if not found.
@@ -210,7 +445,10 @@ class TemplateRegistry {
       );
     }
 
-    return _loader.loadTemplateOrThrow(templatePath);
+    return _loader.loadAndApplyTemplateOrThrow(
+      templatePath,
+      _context.allVariables,
+    );
   }
 
   /// Get a feature template with variable substitution.
@@ -219,20 +457,39 @@ class TemplateRegistry {
   String? getFeatureTemplate(String templateType, String featureName) {
     final pascalName = toPascalCase(featureName);
 
-    final variables = {'FEATURE_NAME': featureName, 'PASCAL_NAME': pascalName};
+    final specificVariables = {
+      'FEATURE_NAME': featureName,
+      'PASCAL_NAME': pascalName,
+      'featureName': featureName,
+      'pascalName': pascalName,
+    };
+
+    // Merge specific variables with global context
+    final context = _context.withSpecifics(specificVariables);
 
     final templatePath = 'feature/$templateType.dart.template';
-    return _loader.loadAndApplyTemplate(templatePath, variables);
+    return _loader.loadAndApplyTemplate(templatePath, context.allVariables);
   }
 
   /// Get a feature template with variable substitution, throwing if not found.
   String getFeatureTemplateOrThrow(String templateType, String featureName) {
     final pascalName = toPascalCase(featureName);
 
-    final variables = {'FEATURE_NAME': featureName, 'PASCAL_NAME': pascalName};
+    final specificVariables = {
+      'FEATURE_NAME': featureName,
+      'PASCAL_NAME': pascalName,
+      'featureName': featureName,
+      'pascalName': pascalName,
+    };
+
+    // Merge specific variables with global context
+    final context = _context.withSpecifics(specificVariables);
 
     final templatePath = 'feature/$templateType.dart.template';
-    return _loader.loadAndApplyTemplateOrThrow(templatePath, variables);
+    return _loader.loadAndApplyTemplateOrThrow(
+      templatePath,
+      context.allVariables,
+    );
   }
 
   /// Validate that all required templates exist.

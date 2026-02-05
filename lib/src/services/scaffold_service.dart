@@ -28,12 +28,17 @@ class ScaffoldService {
     FileUtils? fileUtils,
     TemplateRegistry? templates,
   }) : _logger = logger ?? ScaffoldLogger(),
-       _fileUtils = fileUtils ?? const FileUtils(),
-       _templates = templates ?? const TemplateRegistry();
+       _fileUtils = fileUtils ?? const FileUtils();
 
   final ScaffoldLogger _logger;
   final FileUtils _fileUtils;
-  final TemplateRegistry _templates;
+
+  /// Create a TemplateRegistry with context from pubspec.yaml.
+  TemplateRegistry _createTemplateRegistry(String projectPath) {
+    final pubspecPath = _fileUtils.joinPath(projectPath, 'pubspec.yaml');
+    final context = TemplateContext.fromPubspec(pubspecPath);
+    return TemplateRegistry(context: context);
+  }
 
   /// Check if a project was scaffolded with flutter_scaffold.
   bool isScaffoldedProject(String projectPath) {
@@ -84,6 +89,9 @@ class ScaffoldService {
       );
     }
 
+    // Create context-aware template registry
+    final templates = _createTemplateRegistry(projectPath);
+
     var dirsCreated = 0;
     var filesCreated = 0;
     var filesSkipped = 0;
@@ -108,7 +116,7 @@ class ScaffoldService {
     _logger.section('Creating core files...');
     for (final file in coreFiles) {
       final fullPath = _fileUtils.joinPath(projectPath, file);
-      final content = _templates.getTemplate(file);
+      final content = templates.getTemplate(file);
 
       if (content == null) {
         _logger.warn('No template found for: $file');
@@ -136,7 +144,7 @@ class ScaffoldService {
     _logger.section('Creating git hooks...');
     for (final file in hookFiles) {
       final fullPath = _fileUtils.joinPath(projectPath, file);
-      final content = _templates.getTemplate(file);
+      final content = templates.getTemplate(file);
 
       if (content == null) {
         _logger.warn('No template found for: $file');
@@ -158,20 +166,16 @@ class ScaffoldService {
       }
     }
 
-    // Create test files with project name substitution
+    // Create test files (project name substitution is now handled by TemplateContext)
     _logger.section('Creating unit tests...');
-    final projectName = _fileUtils.getProjectName(projectPath) ?? 'app';
     for (final file in testFiles) {
       final fullPath = _fileUtils.joinPath(projectPath, file);
-      var content = _templates.getTemplate(file);
+      final content = templates.getTemplate(file);
 
       if (content == null) {
         _logger.warn('No template found for: $file');
         continue;
       }
-
-      // Apply project name substitution
-      content = content.replaceAll('{{projectName}}', projectName);
 
       if (dryRun) {
         _logger.would('Create test: $file');
@@ -260,15 +264,19 @@ class ScaffoldService {
   }) {
     final mainPath = _fileUtils.joinPath(projectPath, mainDartPath);
 
-    // Get template content and apply variables
-    final rawTemplate = _templates.getTemplate(mainDartPath);
-    if (rawTemplate == null) {
+    // Create context-aware template registry with project name
+    final templates = _createTemplateRegistry(projectPath);
+    final context = templates.context.withSpecifics({
+      'projectName': projectName,
+    });
+    final contextAwareTemplates = TemplateRegistry(context: context);
+
+    // Get template content with variables applied
+    final template = contextAwareTemplates.getTemplate(mainDartPath);
+    if (template == null) {
       _logger.warn('No template found for main.dart');
       return false;
     }
-
-    // Apply project name substitution
-    final template = rawTemplate.replaceAll('{{projectName}}', projectName);
 
     if (dryRun) {
       _logger.would('Update main.dart with ProviderScope');
