@@ -38,8 +38,8 @@ echo "✅ All tests passed"
 if [ "$SKIP_E2E" != "1" ]; then
     echo ""
     echo "🚀 Running E2E test..."
-    if [ -f "scripts/e2e_test.sh" ]; then
-        if ! ./scripts/e2e_test.sh; then
+    if [ -f "scripts/e2e_test.dart" ]; then
+        if ! dart run scripts/e2e_test.dart; then
             echo "❌ E2E test failed. See e2e_test.log for details."
             exit 1
         fi

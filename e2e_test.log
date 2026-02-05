@@ -1,9 +1,8 @@
-E2E Test Log - Thu Feb  5 07:20:44 PM IST 2026
-Project: /tmp/e2e_test_app_1770299444
+E2E Test Log - 2026-02-05 19:25:45.252971
+Project: /tmp/e2e_test_app_1770299745245
 ────────────────────────────────────────
-  24s riverpod_generator on 19 inputs: 2 output, 17 no-op; spent 13s analyzing, 8s sdk, 2s resolving
-  0s freezed on 19 inputs; lib/main.dart
 
+Building flutter_scaffold CLI...
 Resolving dependencies...
 Downloading packages...
   source_span 1.10.1 (1.10.2 available)
@@ -13,9 +12,9 @@ Try `dart pub outdated` for more information.
 Package flutter_scaffold is currently active at path "/home/jinto-ag/dev/flutter_projects/flutter_scaffold".
 Installed executable flutter_scaffold.
 Activated flutter_scaffold 0.1.0 at path "/home/jinto-ag/dev/flutter_projects/flutter_scaffold".
-  0s freezed on 19 inputs: 1 output, 18 no-op
-  0s json_serializable on 38 inputs; lib/main.dart
 
+✓ CLI built and activated
+Creating project: e2e_test_app_1770299745245
 
 Creating project...
 Resolving dependencies...
@@ -24,54 +23,21 @@ Downloading packages...
 No dependencies would change in `/home/jinto-ag/dev/flutter_projects/flutter_scaffold`.
 1 package has newer versions incompatible with dependency constraints.
 Try `dart pub outdated` for more information.
-  2s json_serializable on 38 inputs: 1 skipped, 2 no-op; spent 2s analyzing; lib/src/app.freezed.dart
-
-  3s json_serializable on 38 inputs: 18 skipped, 1 output, 19 no-op; spent 2s analyzing
-  0s source_gen:combining_builder on 38 inputs; lib/main.dart
-
-  0s source_gen:combining_builder on 38 inputs: 18 skipped, 3 output, 17 no-op
-
-  Built with build_runner/jit in 34s; wrote 7 outputs.
-
-Generated code successfully!
-
-Verifying code with flutter analyze...
-
-Resolving dependencies...
-
-Downloading packages...
-
-  _fe_analyzer_shared 92.0.0 (94.0.0 available)
-  analyzer 9.0.0 (10.0.2 available)
-  analyzer_buffer 0.3.0 (0.3.1 available)
-  dart_style 3.1.3 (3.1.5 available)
-  meta 1.17.0 (1.18.1 available)
-
-  test 1.28.0 (1.29.0 available)
-  test_api 0.7.8 (0.7.9 available)
-  test_core 0.6.14 (0.6.15 available)
-
-Got dependencies!
-
-8 packages have newer versions incompatible with dependency constraints.
-Try `flutter pub outdated` for more information.
-
 
 ════════════════════════════════════════════════════════════
-  Creating Flutter Project: e2e_test_app_1770299444
+  Creating Flutter Project: e2e_test_app_1770299734763
 ════════════════════════════════════════════════════════════
 
-Location: /tmp/e2e_test_app_1770299444
+Location: /tmp/e2e_test_app_1770299734763
 
 Creating Flutter project...
-Analyzing e2e_test_app_1770299398...                            
-Creating project ../../../../../tmp/e2e_test_app_1770299444...
+Creating project ../../../../../tmp/e2e_test_app_1770299734763...
 
-Resolving dependencies in `../../../../../tmp/e2e_test_app_1770299444`...
+Resolving dependencies in `../../../../../tmp/e2e_test_app_1770299734763`...
 
 Downloading packages...
 
-Got dependencies in `../../../../../tmp/e2e_test_app_1770299444`.
+Got dependencies in `../../../../../tmp/e2e_test_app_1770299734763`.
 
 Wrote 131 files.
 
@@ -83,10 +49,10 @@ If you prefer video documentation, consider: https://www.youtube.com/c/flutterde
 
 In order to run your application, type:
 
-  $ cd ../../../../../tmp/e2e_test_app_1770299444
+  $ cd ../../../../../tmp/e2e_test_app_1770299734763
   $ flutter run
 
-Your application code is in ../../../../../tmp/e2e_test_app_1770299444/lib/main.dart.
+Your application code is in ../../../../../tmp/e2e_test_app_1770299734763/lib/main.dart.
 
 
 Flutter project created successfully!
@@ -135,7 +101,7 @@ Feature 'home' created!
   Files: 4
 
 Feature structure:
-  /tmp/e2e_test_app_1770299444/lib/src/features/home/
+  /tmp/e2e_test_app_1770299734763/lib/src/features/home/
   ├── data/{datasources, models, repositories}/
   ├── domain/{entities, repositories, usecases}/
   └── presentation/{providers, screens, widgets}/
@@ -192,217 +158,14 @@ Downloading packages...
 + webkit_inspection_protocol 1.2.1
 + yaml 3.1.3
 Changed 42 dependencies!
+
 6 packages have newer versions incompatible with dependency constraints.
 Try `flutter pub outdated` for more information.
 
 
 Adding dev dependencies...
-
-
-No issues found! (ran in 5.3s)
-
-Code analysis passed - no issues found!
-
-
-Initializing git repository...
-Initialized empty Git repository in /tmp/e2e_test_app_1770299398/.git/
-
-Initialized git repository
-Created dev branch
-Switched to a new branch 'dev'
-
-[dev (root-commit) 30dd63f] 🎉 feat(e2e_test_app_1770299398): initial project setup
- 155 files changed, 7158 insertions(+)
- create mode 100644 .flutter_scaffold/config.json
- create mode 100755 .githooks/commit-msg
- create mode 100755 .githooks/pre-commit
- create mode 100755 .githooks/setup.sh
- create mode 100644 .gitignore
- create mode 100644 .metadata
- create mode 100644 README.md
- create mode 100644 analysis_options.yaml
- create mode 100644 android/.gitignore
- create mode 100644 android/app/build.gradle.kts
- create mode 100644 android/app/src/debug/AndroidManifest.xml
- create mode 100644 android/app/src/main/AndroidManifest.xml
- create mode 100644 android/app/src/main/kotlin/com/example/e2e_test_app_1770299398/MainActivity.kt
- create mode 100644 android/app/src/main/res/drawable-v21/launch_background.xml
- create mode 100644 android/app/src/main/res/drawable/launch_background.xml
- create mode 100644 android/app/src/main/res/mipmap-hdpi/ic_launcher.png
- create mode 100644 android/app/src/main/res/mipmap-mdpi/ic_launcher.png
- create mode 100644 android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
- create mode 100644 android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
- create mode 100644 android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
- create mode 100644 android/app/src/main/res/values-night/styles.xml
- create mode 100644 android/app/src/main/res/values/styles.xml
- create mode 100644 android/app/src/profile/AndroidManifest.xml
- create mode 100644 android/build.gradle.kts
- create mode 100644 android/gradle.properties
- create mode 100644 android/gradle/wrapper/gradle-wrapper.properties
- create mode 100644 android/settings.gradle.kts
- create mode 100644 ios/.gitignore
- create mode 100644 ios/Flutter/AppFrameworkInfo.plist
- create mode 100644 ios/Flutter/Debug.xcconfig
- create mode 100644 ios/Flutter/Release.xcconfig
- create mode 100644 ios/Runner.xcodeproj/project.pbxproj
- create mode 100644 ios/Runner.xcodeproj/project.xcworkspace/contents.xcworkspacedata
- create mode 100644 ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
- create mode 100644 ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
- create mode 100644 ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme
- create mode 100644 ios/Runner.xcworkspace/contents.xcworkspacedata
- create mode 100644 ios/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
- create mode 100644 ios/Runner.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
- create mode 100644 ios/Runner/AppDelegate.swift
- create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json
- create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png
- create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@1x.png
- create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@2x.png
- create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@3x.png
- create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@1x.png
- create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@2x.png
- create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@3x.png
- create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@1x.png
- create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@2x.png
- create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@3x.png
- create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@2x.png
- create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@3x.png
- create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@1x.png
- create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@2x.png
- create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-83.5x83.5@2x.png
- create mode 100644 ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
- create mode 100644 ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage.png
- create mode 100644 ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@2x.png
- create mode 100644 ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@3x.png
- create mode 100644 ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md
- create mode 100644 ios/Runner/Base.lproj/LaunchScreen.storyboard
- create mode 100644 ios/Runner/Base.lproj/Main.storyboard
- create mode 100644 ios/Runner/Info.plist
- create mode 100644 ios/Runner/Runner-Bridging-Header.h
- create mode 100644 ios/Runner/SceneDelegate.swift
- create mode 100644 ios/RunnerTests/RunnerTests.swift
- create mode 100644 lib/main.dart
- create mode 100644 lib/src/app.dart
- create mode 100644 lib/src/core/errors/exceptions.dart
- create mode 100644 lib/src/core/errors/failures.dart
- create mode 100644 lib/src/core/extensions/context_extensions.dart
- create mode 100644 lib/src/core/theme/app_theme.dart
- create mode 100644 lib/src/core/utils/logger.dart
- create mode 100644 lib/src/features/home/domain/entities/home_entity.dart
- create mode 100644 lib/src/features/home/domain/entities/home_entity.freezed.dart
- create mode 100644 lib/src/features/home/domain/entities/home_entity.g.dart
- create mode 100644 lib/src/features/home/domain/repositories/home_repository.dart
- create mode 100644 lib/src/features/home/presentation/providers/home_providers.dart
- create mode 100644 lib/src/features/home/presentation/providers/home_providers.g.dart
- create mode 100644 lib/src/features/home/presentation/screens/home_screen.dart
- create mode 100644 lib/src/routing/app_router.dart
- create mode 100644 lib/src/routing/routes.dart
- create mode 100644 lib/src/shared/providers/shared_providers.dart
- create mode 100644 lib/src/shared/providers/shared_providers.g.dart
- create mode 100644 linux/.gitignore
- create mode 100644 linux/CMakeLists.txt
- create mode 100644 linux/flutter/CMakeLists.txt
- create mode 100644 linux/flutter/generated_plugin_registrant.cc
- create mode 100644 linux/flutter/generated_plugin_registrant.h
- create mode 100644 linux/flutter/generated_plugins.cmake
- create mode 100644 linux/runner/CMakeLists.txt
- create mode 100644 linux/runner/main.cc
- create mode 100644 linux/runner/my_application.cc
- create mode 100644 linux/runner/my_application.h
- create mode 100644 macos/.gitignore
- create mode 100644 macos/Flutter/Flutter-Debug.xcconfig
- create mode 100644 macos/Flutter/Flutter-Release.xcconfig
- create mode 100644 macos/Flutter/GeneratedPluginRegistrant.swift
- create mode 100644 macos/Runner.xcodeproj/project.pbxproj
- create mode 100644 macos/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
- create mode 100644 macos/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme
- create mode 100644 macos/Runner.xcworkspace/contents.xcworkspacedata
- create mode 100644 macos/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
- create mode 100644 macos/Runner/AppDelegate.swift
- create mode 100644 macos/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json
- create mode 100644 macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_1024.png
- create mode 100644 macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_128.png
- create mode 100644 macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_16.png
- create mode 100644 macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_256.png
- create mode 100644 macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_32.png
- create mode 100644 macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_512.png
- create mode 100644 macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_64.png
- create mode 100644 macos/Runner/Base.lproj/MainMenu.xib
- create mode 100644 macos/Runner/Configs/AppInfo.xcconfig
- create mode 100644 macos/Runner/Configs/Debug.xcconfig
- create mode 100644 macos/Runner/Configs/Release.xcconfig
- create mode 100644 macos/Runner/Configs/Warnings.xcconfig
- create mode 100644 macos/Runner/DebugProfile.entitlements
- create mode 100644 macos/Runner/Info.plist
- create mode 100644 macos/Runner/MainFlutterWindow.swift
- create mode 100644 macos/Runner/Release.entitlements
- create mode 100644 macos/RunnerTests/RunnerTests.swift
- create mode 100644 pubspec.lock
- create mode 100644 pubspec.yaml
- create mode 100644 test/app_test.dart
- create mode 100644 test/core/app_theme_test.dart
- create mode 100644 test/core/errors_test.dart
- create mode 100644 test/routing_test.dart
- create mode 100644 test/widget_test.dart
- create mode 100644 web/favicon.png
- create mode 100644 web/icons/Icon-192.png
- create mode 100644 web/icons/Icon-512.png
- create mode 100644 web/icons/Icon-maskable-192.png
- create mode 100644 web/icons/Icon-maskable-512.png
- create mode 100644 web/index.html
- create mode 100644 web/manifest.json
- create mode 100644 windows/.gitignore
- create mode 100644 windows/CMakeLists.txt
- create mode 100644 windows/flutter/CMakeLists.txt
- create mode 100644 windows/flutter/generated_plugin_registrant.cc
- create mode 100644 windows/flutter/generated_plugin_registrant.h
- create mode 100644 windows/flutter/generated_plugins.cmake
- create mode 100644 windows/runner/CMakeLists.txt
- create mode 100644 windows/runner/Runner.rc
- create mode 100644 windows/runner/flutter_window.cpp
- create mode 100644 windows/runner/flutter_window.h
- create mode 100644 windows/runner/main.cpp
- create mode 100644 windows/runner/resource.h
- create mode 100644 windows/runner/resources/app_icon.ico
- create mode 100644 windows/runner/runner.exe.manifest
- create mode 100644 windows/runner/utils.cpp
- create mode 100644 windows/runner/utils.h
- create mode 100644 windows/runner/win32_window.cpp
- create mode 100644 windows/runner/win32_window.h
-
-Created initial commit
-
-────────────────────────────────────────────────────────────
-
-Project 'e2e_test_app_1770299398' created with clean architecture!
-
-Project Details:
-  Location: /tmp/e2e_test_app_1770299398
-  Name: e2e_test_app_1770299398
-
-✓ Dependencies installed
-✓ Code generation complete
-✓ Code analysis passed
-
-Next steps:
-  1. cd /tmp/e2e_test_app_1770299398
-  2. flutter run
-
-Running flutter analyze...
-Resolving dependencies...
-Downloading packages...
 Resolving dependencies...
 
-  _fe_analyzer_shared 92.0.0 (94.0.0 available)
-  analyzer 9.0.0 (10.0.2 available)
-  analyzer_buffer 0.3.0 (0.3.1 available)
-  dart_style 3.1.3 (3.1.5 available)
-  meta 1.17.0 (1.18.1 available)
-  test 1.28.0 (1.29.0 available)
-  test_api 0.7.8 (0.7.9 available)
-  test_core 0.6.14 (0.6.15 available)
-Got dependencies!
-8 packages have newer versions incompatible with dependency constraints.
-Try `flutter pub outdated` for more information.
 Downloading packages...
 
   _fe_analyzer_shared 92.0.0 (94.0.0 available)
@@ -445,7 +208,7 @@ Try `flutter pub outdated` for more information.
 
 
 Resolving dependencies...
-Analyzing e2e_test_app_1770299398...                            Resolving dependencies...
+Resolving dependencies...
 
 Downloading packages...
 
@@ -458,6 +221,7 @@ Downloading packages...
   test_api 0.7.8 (0.7.9 available)
   test_core 0.6.14 (0.6.15 available)
 Got dependencies!
+
 8 packages have newer versions incompatible with dependency constraints.
 Try `flutter pub outdated` for more information.
 
@@ -465,53 +229,29 @@ Dependencies installed!
 
 Running build_runner to generate code...
 
+  1s compiling builders/jit
 
-No issues found! (ran in 2.9s)
+  2s compiling builders/jit
 
-Running flutter test...
-Resolving dependencies...
-Downloading packages...
-  _fe_analyzer_shared 92.0.0 (94.0.0 available)
-  analyzer 9.0.0 (10.0.2 available)
-  analyzer_buffer 0.3.0 (0.3.1 available)
-  dart_style 3.1.3 (3.1.5 available)
-  meta 1.17.0 (1.18.1 available)
-  test 1.28.0 (1.29.0 available)
-  test_api 0.7.8 (0.7.9 available)
-  test_core 0.6.14 (0.6.15 available)
-Got dependencies!
-8 packages have newer versions incompatible with dependency constraints.
-Try `flutter pub outdated` for more information.
-00:00 +0: loading /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart                                                                                                                           00:01 +0: loading /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart                                                                                                                           00:02 +0: loading /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart                                                                                                                           00:03 +0: loading /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart                                                                                                                           00:04 +0: loading /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart                                                                                                                           00:05 +0: loading /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart                                                                                                                             0s compiling builders/jit
+  3s compiling builders/jit
 
-00:06 +0: loading /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart                                                                                                                             2s compiling builders/jit
+  4s compiling builders/jit
 
-00:07 +0: loading /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart                                                                                                                             3s compiling builders/jit
+  5s compiling builders/jit
 
-00:08 +0: loading /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart                                                                                                                             4s compiling builders/jit
+  6s compiling builders/jit
 
-00:09 +0: loading /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart                                                                                                                             5s compiling builders/jit
+  7s compiling builders/jit
 
-00:10 +0: loading /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart                                                                                                                             6s compiling builders/jit
-
-00:11 +0: loading /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart                                                                                                                           00:11 +0: /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart: AppTheme Light Theme returns ThemeData with light brightness                                                                     00:11 +1: /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart: AppTheme Light Theme returns ThemeData with light brightness                                                                     00:11 +1: /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart: AppTheme Light Theme uses Material3 design                                                                                       00:11 +2: /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart: AppTheme Light Theme uses Material3 design                                                                                       00:11 +2: /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart: AppTheme Light Theme has correct colorScheme brightness                                                                          00:11 +3: /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart: AppTheme Light Theme has correct colorScheme brightness                                                                          00:11 +3: /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart: AppTheme Light Theme appBar is centered                                                                                          00:11 +4: /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart: AppTheme Light Theme appBar is centered                                                                                          00:11 +4: /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart: AppTheme Light Theme appBar has no elevation                                                                                     00:11 +5: /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart: AppTheme Light Theme appBar has no elevation                                                                                     00:11 +5: /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart: AppTheme Light Theme card has elevation                                                                                          00:11 +6: /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart: AppTheme Light Theme card has elevation                                                                                          00:11 +6: /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart: AppTheme Dark Theme returns ThemeData with dark brightness                                                                       00:11 +7: /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart: AppTheme Dark Theme returns ThemeData with dark brightness                                                                       00:11 +7: /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart: AppTheme Dark Theme uses Material3 design                                                                                        00:11 +8: /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart: AppTheme Dark Theme uses Material3 design                                                                                        00:11 +8: /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart: AppTheme Dark Theme has correct colorScheme brightness                                                                           00:11 +9: /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart: AppTheme Dark Theme has correct colorScheme brightness                                                                           00:11 +9: /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart: AppTheme Dark Theme appBar is centered                                                                                           00:11 +10: /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart: AppTheme Dark Theme appBar is centered                                                                                          00:11 +10: /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart: AppTheme Theme Consistency light and dark themes use same seed color                                                            00:11 +11: /tmp/e2e_test_app_1770299398/test/core/app_theme_test.dart: AppTheme Theme Consistency light and dark themes use same seed color                                                            00:11 +11: loading /tmp/e2e_test_app_1770299398/test/core/errors_test.dart                                                                                                                             00:11 +11: /tmp/e2e_test_app_1770299398/test/core/errors_test.dart: Exceptions ServerException has correct message                                                                                     00:11 +12: /tmp/e2e_test_app_1770299398/test/core/errors_test.dart: Exceptions ServerException has correct message                                                                                     00:11 +12: /tmp/e2e_test_app_1770299398/test/core/errors_test.dart: Exceptions CacheException has correct message                                                                                      00:11 +13: /tmp/e2e_test_app_1770299398/test/core/errors_test.dart: Exceptions CacheException has correct message                                                                                      00:11 +13: /tmp/e2e_test_app_1770299398/test/core/errors_test.dart: Exceptions NetworkException has correct message                                                                                    00:11 +14: /tmp/e2e_test_app_1770299398/test/core/errors_test.dart: Exceptions NetworkException has correct message                                                                                    00:11 +14: /tmp/e2e_test_app_1770299398/test/core/errors_test.dart: Failures ServerFailure has correct message                                                                                         00:11 +15: /tmp/e2e_test_app_1770299398/test/core/errors_test.dart: Failures ServerFailure has correct message                                                                                         00:11 +15: /tmp/e2e_test_app_1770299398/test/core/errors_test.dart: Failures CacheFailure has correct message                                                                                          00:11 +16: /tmp/e2e_test_app_1770299398/test/core/errors_test.dart: Failures CacheFailure has correct message                                                                                          00:11 +16: /tmp/e2e_test_app_1770299398/test/core/errors_test.dart: Failures NetworkFailure has correct message                                                                                        00:11 +17: /tmp/e2e_test_app_1770299398/test/core/errors_test.dart: Failures NetworkFailure has correct message                                                                                        00:11 +17: /tmp/e2e_test_app_1770299398/test/core/errors_test.dart: Failures failures are equatable                                                                                                    00:11 +18: /tmp/e2e_test_app_1770299398/test/core/errors_test.dart: Failures failures are equatable                                                                                                      7s compiling builders/jit
-
-00:12 +18: /tmp/e2e_test_app_1770299398/test/core/errors_test.dart: Failures failures are equatable                                                                                                    00:12 +18: loading /tmp/e2e_test_app_1770299398/test/widget_test.dart                                                                                                                                  00:12 +18: /tmp/e2e_test_app_1770299398/test/widget_test.dart: Counter increments smoke test                                                                                                             8s compiling builders/jit
-
-00:13 +18: /tmp/e2e_test_app_1770299398/test/widget_test.dart: Counter increments smoke test                                                                                                           00:14 +18: /tmp/e2e_test_app_1770299398/test/widget_test.dart: Counter increments smoke test                                                                                                             9s compiling builders/jit
-
-00:14 +19: /tmp/e2e_test_app_1770299398/test/widget_test.dart: Counter increments smoke test                                                                                                           00:14 +19: loading /tmp/e2e_test_app_1770299398/test/app_test.dart                                                                                                                                     00:14 +19: /tmp/e2e_test_app_1770299398/test/app_test.dart: App Widget renders MaterialApp.router                                                                                                        10s compiling builders/jit
-
-00:15 +19: /tmp/e2e_test_app_1770299398/test/app_test.dart: App Widget renders MaterialApp.router                                                                                                      00:15 +20: /tmp/e2e_test_app_1770299398/test/app_test.dart: App Widget renders MaterialApp.router                                                                                                      00:15 +21: /tmp/e2e_test_app_1770299398/test/app_test.dart: App Widget renders MaterialApp.router                                                                                                      00:15 +22: /tmp/e2e_test_app_1770299398/test/app_test.dart: App Widget renders MaterialApp.router                                                                                                      00:15 +23: /tmp/e2e_test_app_1770299398/test/app_test.dart: App Widget renders MaterialApp.router                                                                                                      00:15 +24: /tmp/e2e_test_app_1770299398/test/app_test.dart: App Widget renders MaterialApp.router                                                                                                      00:15 +25: /tmp/e2e_test_app_1770299398/test/app_test.dart: App Widget renders MaterialApp.router                                                                                                      00:15 +25: /tmp/e2e_test_app_1770299398/test/app_test.dart: App Widget uses correct theme mode                                                                                                         00:15 +26: /tmp/e2e_test_app_1770299398/test/app_test.dart: App Widget uses correct theme mode                                                                                                         00:15 +26: /tmp/e2e_test_app_1770299398/test/app_test.dart: App Widget has debug banner disabled                                                                                                       00:15 +27: /tmp/e2e_test_app_1770299398/test/app_test.dart: App Widget has debug banner disabled                                                                                                       00:15 +27: /tmp/e2e_test_app_1770299398/test/app_test.dart: App Widget has both light and dark themes configured                                                                                       00:15 +28: /tmp/e2e_test_app_1770299398/test/app_test.dart: App Widget has both light and dark themes configured                                                                                       00:15 +28: All tests passed!                                                                                                                                                                           
   0s riverpod_generator on 19 inputs; lib/main.dart
 
-  6s riverpod_generator on 19 inputs: 1 no-op; spent 6s sdk; lib/src/app.dart
+  10s riverpod_generator on 19 inputs: 1 no-op; spent 10s sdk; lib/src/app.dart
 
-  9s riverpod_generator on 19 inputs: 1 output, 9 no-op; spent 6s sdk, 2s analyzing; lib/src/features/home/presentation/screens/home_screen.dart
+  14s riverpod_generator on 19 inputs: 1 output, 9 no-op; spent 10s sdk, 3s analyzing; lib/src/features/home/presentation/screens/home_screen.dart
 
-  21s riverpod_generator on 19 inputs: 2 output, 12 no-op; spent 12s analyzing, 6s sdk, 2s resolving; test/app_test.dart
+  28s riverpod_generator on 19 inputs: 2 output, 12 no-op; spent 15s analyzing, 10s sdk, 2s resolving; test/app_test.dart
 
-  21s riverpod_generator on 19 inputs: 2 output, 17 no-op; spent 12s analyzing, 6s sdk, 2s resolving
+  29s riverpod_generator on 19 inputs: 2 output, 17 no-op; spent 15s analyzing, 10s sdk, 2s resolving
   0s freezed on 19 inputs; lib/main.dart
 
   0s freezed on 19 inputs: 1 output, 18 no-op
@@ -524,7 +264,7 @@ Try `flutter pub outdated` for more information.
 
   0s source_gen:combining_builder on 38 inputs: 18 skipped, 3 output, 17 no-op
 
-  Built with build_runner/jit in 35s; wrote 7 outputs.
+  Built with build_runner/jit in 41s; wrote 7 outputs.
 
 Generated code successfully!
 
@@ -543,25 +283,26 @@ Downloading packages...
   test_api 0.7.8 (0.7.9 available)
   test_core 0.6.14 (0.6.15 available)
 Got dependencies!
+
 8 packages have newer versions incompatible with dependency constraints.
 Try `flutter pub outdated` for more information.
 
-Analyzing e2e_test_app_1770299444...                            
+Analyzing e2e_test_app_1770299734763...                         
 
 
-No issues found! (ran in 3.2s)
+No issues found! (ran in 4.8s)
 
 Code analysis passed - no issues found!
 
 
 Initializing git repository...
-Initialized empty Git repository in /tmp/e2e_test_app_1770299444/.git/
+Initialized empty Git repository in /tmp/e2e_test_app_1770299734763/.git/
 
 Initialized git repository
 Switched to a new branch 'dev'
 
 Created dev branch
-[dev (root-commit) daacd1c] 🎉 feat(e2e_test_app_1770299444): initial project setup
+[dev (root-commit) 933f6ed] 🎉 feat(e2e_test_app_1770299734763): initial project setup
  155 files changed, 7158 insertions(+)
  create mode 100644 .flutter_scaffold/config.json
  create mode 100755 .githooks/commit-msg
@@ -575,7 +316,7 @@ Created dev branch
  create mode 100644 android/app/build.gradle.kts
  create mode 100644 android/app/src/debug/AndroidManifest.xml
  create mode 100644 android/app/src/main/AndroidManifest.xml
- create mode 100644 android/app/src/main/kotlin/com/example/e2e_test_app_1770299444/MainActivity.kt
+ create mode 100644 android/app/src/main/kotlin/com/example/e2e_test_app_1770299734763/MainActivity.kt
  create mode 100644 android/app/src/main/res/drawable-v21/launch_background.xml
  create mode 100644 android/app/src/main/res/drawable/launch_background.xml
  create mode 100644 android/app/src/main/res/mipmap-hdpi/ic_launcher.png
@@ -723,19 +464,22 @@ Created initial commit
 
 ────────────────────────────────────────────────────────────
 
-Project 'e2e_test_app_1770299444' created with clean architecture!
+Project 'e2e_test_app_1770299734763' created with clean architecture!
 
 Project Details:
-  Location: /tmp/e2e_test_app_1770299444
-  Name: e2e_test_app_1770299444
+  Location: /tmp/e2e_test_app_1770299734763
+  Name: e2e_test_app_1770299734763
 
 ✓ Dependencies installed
 ✓ Code generation complete
 ✓ Code analysis passed
 
 Next steps:
-  1. cd /tmp/e2e_test_app_1770299444
+  1. cd /tmp/e2e_test_app_1770299734763
   2. flutter run
+
+✓ Project created and scaffolded
+Running flutter analyze...
 
 Running flutter analyze...
 Resolving dependencies...
@@ -751,8 +495,474 @@ Downloading packages...
 Got dependencies!
 8 packages have newer versions incompatible with dependency constraints.
 Try `flutter pub outdated` for more information.
-Analyzing e2e_test_app_1770299444...                            
-No issues found! (ran in 2.2s)
+Analyzing e2e_test_app_1770299734763...                         
+No issues found! (ran in 2.4s)
+
+✓ Flutter analyze passed
+Running flutter test...
+
+Running flutter test...
+Resolving dependencies...
+Downloading packages...
+  source_span 1.10.1 (1.10.2 available)
+No dependencies would change in `/home/jinto-ag/dev/flutter_projects/flutter_scaffold`.
+1 package has newer versions incompatible with dependency constraints.
+Try `dart pub outdated` for more information.
+
+════════════════════════════════════════════════════════════
+  Creating Flutter Project: e2e_test_app_1770299745245
+════════════════════════════════════════════════════════════
+
+Location: /tmp/e2e_test_app_1770299745245
+
+Creating Flutter project...
+Creating project ../../../../../tmp/e2e_test_app_1770299745245...
+
+Resolving dependencies in `../../../../../tmp/e2e_test_app_1770299745245`...
+
+Downloading packages...
+
+Got dependencies in `../../../../../tmp/e2e_test_app_1770299745245`.
+
+Wrote 131 files.
+
+All done!
+
+You can find general documentation for Flutter at: https://docs.flutter.dev/
+Detailed API documentation is available at: https://api.flutter.dev/
+If you prefer video documentation, consider: https://www.youtube.com/c/flutterdev
+
+In order to run your application, type:
+
+  $ cd ../../../../../tmp/e2e_test_app_1770299745245
+  $ flutter run
+
+Your application code is in ../../../../../tmp/e2e_test_app_1770299745245/lib/main.dart.
+
+
+Flutter project created successfully!
+
+Applying clean architecture scaffold...
+
+Creating core directories...
+
+Creating core files...
+  + lib/src/app.dart
+  + lib/src/core/errors/exceptions.dart
+  + lib/src/core/errors/failures.dart
+  + lib/src/core/extensions/context_extensions.dart
+  + lib/src/core/theme/app_theme.dart
+  + lib/src/core/utils/logger.dart
+  + lib/src/routing/app_router.dart
+  + lib/src/routing/routes.dart
+  + lib/src/shared/providers/shared_providers.dart
+
+Creating git hooks...
+  + .githooks/pre-commit
+  + .githooks/commit-msg
+  + .githooks/setup.sh
+
+Creating unit tests...
+  + test/core/app_theme_test.dart
+  + test/core/errors_test.dart
+  + test/routing_test.dart
+  + test/app_test.dart
+Created scaffold marker directory
+
+Adding 'home' feature...
+
+Creating directories...
+
+Creating files...
+  + presentation/screens/home_screen.dart
+  + presentation/providers/home_providers.dart
+  + domain/entities/home_entity.dart
+  + domain/repositories/home_repository.dart
+
+────────────────────────────────────────────────────────────
+
+Feature 'home' created!
+  Directories: 9
+  Files: 4
+
+Feature structure:
+  /tmp/e2e_test_app_1770299745245/lib/src/features/home/
+  ├── data/{datasources, models, repositories}/
+  ├── domain/{entities, repositories, usecases}/
+  └── presentation/{providers, screens, widgets}/
+
+
+Installing dependencies...
+Adding core dependencies...
+Resolving dependencies...
+
+Downloading packages...
+
++ _fe_analyzer_shared 92.0.0 (94.0.0 available)
++ analyzer 9.0.0 (10.0.2 available)
++ args 2.7.0
++ cli_config 0.2.0
++ convert 3.1.2
++ coverage 1.15.0
++ crypto 3.0.7
++ file 7.0.1
++ flutter_riverpod 3.2.1
++ flutter_web_plugins 0.0.0 from sdk flutter
++ freezed_annotation 3.1.0
++ frontend_server_client 4.0.0
++ glob 2.1.3
++ go_router 17.1.0
++ http_multi_server 3.2.2
++ http_parser 4.1.2
++ io 1.0.5
++ json_annotation 4.10.0
++ logging 1.3.0
+  meta 1.17.0 (1.18.1 available)
++ mime 2.0.0
++ node_preamble 2.0.2
++ package_config 2.2.0
++ pool 1.5.2
++ pub_semver 2.2.0
++ riverpod 3.2.1
++ riverpod_annotation 4.0.2
++ shelf 1.4.2
++ shelf_packages_handler 3.0.2
++ shelf_static 1.1.3
++ shelf_web_socket 3.0.0
++ source_map_stack_trace 2.1.2
++ source_maps 0.10.13
++ state_notifier 1.0.0
++ test 1.28.0 (1.29.0 available)
+  test_api 0.7.8 (0.7.9 available)
++ test_core 0.6.14 (0.6.15 available)
++ typed_data 1.4.0
++ watcher 1.2.1
++ web 1.1.1
++ web_socket 1.0.1
++ web_socket_channel 3.0.3
+
++ webkit_inspection_protocol 1.2.1
++ yaml 3.1.3
+Changed 42 dependencies!
+
+6 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+
+
+Adding dev dependencies...
+Resolving dependencies...
+
+Downloading packages...
+
+  _fe_analyzer_shared 92.0.0 (94.0.0 available)
+  analyzer 9.0.0 (10.0.2 available)
++ analyzer_buffer 0.3.0 (0.3.1 available)
++ build 4.0.4
++ build_config 1.2.0
++ build_daemon 4.1.1
++ build_runner 2.11.0
++ built_collection 5.1.1
++ built_value 8.12.3
++ checked_yaml 2.0.4
++ code_builder 4.11.1
++ dart_style 3.1.3 (3.1.5 available)
++ fixnum 1.1.1
++ freezed 3.2.5
++ graphs 2.3.2
++ http 1.6.0
++ json_schema 5.2.2
++ json_serializable 6.12.0
+  meta 1.17.0 (1.18.1 available)
++ mockito 5.6.3
++ pubspec_parse 1.5.0
++ quiver 3.2.2
++ rfc_6901 0.2.1
++ riverpod_analyzer_utils 1.0.0-dev.9
++ riverpod_generator 4.0.3
++ source_gen 4.2.0
++ source_helper 1.3.10
++ stream_transform 2.1.1
+  test 1.28.0 (1.29.0 available)
+  test_api 0.7.8 (0.7.9 available)
+  test_core 0.6.14 (0.6.15 available)
+
++ uri 1.0.0
+
+Changed 26 dependencies!
+
+8 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+
+
+Resolving dependencies...
+Resolving dependencies...
+
+Downloading packages...
+
+  _fe_analyzer_shared 92.0.0 (94.0.0 available)
+  analyzer 9.0.0 (10.0.2 available)
+  analyzer_buffer 0.3.0 (0.3.1 available)
+  dart_style 3.1.3 (3.1.5 available)
+  meta 1.17.0 (1.18.1 available)
+  test 1.28.0 (1.29.0 available)
+  test_api 0.7.8 (0.7.9 available)
+  test_core 0.6.14 (0.6.15 available)
+Got dependencies!
+8 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+
+Dependencies installed!
+
+Running build_runner to generate code...
+
+  0s compiling builders/jit
+
+  1s compiling builders/jit
+
+  2s compiling builders/jit
+
+  3s compiling builders/jit
+
+  4s compiling builders/jit
+
+  6s compiling builders/jit
+
+  7s compiling builders/jit
+
+  8s compiling builders/jit
+
+  8s compiling builders/jit
+
+  0s riverpod_generator on 19 inputs; lib/main.dart
+
+  8s riverpod_generator on 19 inputs: 1 no-op; spent 8s sdk; lib/src/app.dart
+
+  12s riverpod_generator on 19 inputs: 1 output, 9 no-op; spent 8s sdk, 3s analyzing; lib/src/features/home/presentation/screens/home_screen.dart
+
+  30s riverpod_generator on 19 inputs: 2 output, 12 no-op; spent 18s analyzing, 8s sdk, 4s resolving; test/app_test.dart
+
+  30s riverpod_generator on 19 inputs: 2 output, 17 no-op; spent 18s analyzing, 8s sdk, 4s resolving
+
+  0s freezed on 19 inputs; lib/main.dart
+
+  0s freezed on 19 inputs: 1 output, 18 no-op
+
+  0s json_serializable on 38 inputs; lib/main.dart
+
+  2s json_serializable on 38 inputs: 1 skipped, 2 no-op; spent 1s analyzing; lib/src/app.freezed.dart
+
+  2s json_serializable on 38 inputs: 18 skipped, 1 output, 19 no-op; spent 2s analyzing
+
+  0s source_gen:combining_builder on 38 inputs; lib/main.dart
+
+  0s source_gen:combining_builder on 38 inputs: 18 skipped, 3 output, 17 no-op
+
+  Built with build_runner/jit in 43s; wrote 7 outputs.
+
+Generated code successfully!
+
+Verifying code with flutter analyze...
+
+Analyzing e2e_test_app_1770299745245...                         
+
+
+No issues found! (ran in 5.0s)
+
+Code analysis passed - no issues found!
+
+
+Initializing git repository...
+Initialized empty Git repository in /tmp/e2e_test_app_1770299745245/.git/
+
+Initialized git repository
+Switched to a new branch 'dev'
+
+Created dev branch
+[dev (root-commit) b8df913] 🎉 feat(e2e_test_app_1770299745245): initial project setup
+ 155 files changed, 7158 insertions(+)
+ create mode 100644 .flutter_scaffold/config.json
+ create mode 100755 .githooks/commit-msg
+ create mode 100755 .githooks/pre-commit
+ create mode 100755 .githooks/setup.sh
+ create mode 100644 .gitignore
+ create mode 100644 .metadata
+ create mode 100644 README.md
+ create mode 100644 analysis_options.yaml
+ create mode 100644 android/.gitignore
+ create mode 100644 android/app/build.gradle.kts
+ create mode 100644 android/app/src/debug/AndroidManifest.xml
+ create mode 100644 android/app/src/main/AndroidManifest.xml
+ create mode 100644 android/app/src/main/kotlin/com/example/e2e_test_app_1770299745245/MainActivity.kt
+ create mode 100644 android/app/src/main/res/drawable-v21/launch_background.xml
+ create mode 100644 android/app/src/main/res/drawable/launch_background.xml
+ create mode 100644 android/app/src/main/res/mipmap-hdpi/ic_launcher.png
+ create mode 100644 android/app/src/main/res/mipmap-mdpi/ic_launcher.png
+ create mode 100644 android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
+ create mode 100644 android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+ create mode 100644 android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+ create mode 100644 android/app/src/main/res/values-night/styles.xml
+ create mode 100644 android/app/src/main/res/values/styles.xml
+ create mode 100644 android/app/src/profile/AndroidManifest.xml
+ create mode 100644 android/build.gradle.kts
+ create mode 100644 android/gradle.properties
+ create mode 100644 android/gradle/wrapper/gradle-wrapper.properties
+ create mode 100644 android/settings.gradle.kts
+ create mode 100644 ios/.gitignore
+ create mode 100644 ios/Flutter/AppFrameworkInfo.plist
+ create mode 100644 ios/Flutter/Debug.xcconfig
+ create mode 100644 ios/Flutter/Release.xcconfig
+ create mode 100644 ios/Runner.xcodeproj/project.pbxproj
+ create mode 100644 ios/Runner.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+ create mode 100644 ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+ create mode 100644 ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
+ create mode 100644 ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme
+ create mode 100644 ios/Runner.xcworkspace/contents.xcworkspacedata
+ create mode 100644 ios/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+ create mode 100644 ios/Runner.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
+ create mode 100644 ios/Runner/AppDelegate.swift
+ create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json
+ create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png
+ create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@1x.png
+ create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@2x.png
+ create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@3x.png
+ create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@1x.png
+ create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@2x.png
+ create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@3x.png
+ create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@1x.png
+ create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@2x.png
+ create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@3x.png
+ create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@2x.png
+ create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@3x.png
+ create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@1x.png
+ create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@2x.png
+ create mode 100644 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-83.5x83.5@2x.png
+ create mode 100644 ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json
+ create mode 100644 ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage.png
+ create mode 100644 ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@2x.png
+ create mode 100644 ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@3x.png
+ create mode 100644 ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md
+ create mode 100644 ios/Runner/Base.lproj/LaunchScreen.storyboard
+ create mode 100644 ios/Runner/Base.lproj/Main.storyboard
+ create mode 100644 ios/Runner/Info.plist
+ create mode 100644 ios/Runner/Runner-Bridging-Header.h
+ create mode 100644 ios/Runner/SceneDelegate.swift
+ create mode 100644 ios/RunnerTests/RunnerTests.swift
+ create mode 100644 lib/main.dart
+ create mode 100644 lib/src/app.dart
+ create mode 100644 lib/src/core/errors/exceptions.dart
+ create mode 100644 lib/src/core/errors/failures.dart
+ create mode 100644 lib/src/core/extensions/context_extensions.dart
+ create mode 100644 lib/src/core/theme/app_theme.dart
+ create mode 100644 lib/src/core/utils/logger.dart
+ create mode 100644 lib/src/features/home/domain/entities/home_entity.dart
+ create mode 100644 lib/src/features/home/domain/entities/home_entity.freezed.dart
+ create mode 100644 lib/src/features/home/domain/entities/home_entity.g.dart
+ create mode 100644 lib/src/features/home/domain/repositories/home_repository.dart
+ create mode 100644 lib/src/features/home/presentation/providers/home_providers.dart
+ create mode 100644 lib/src/features/home/presentation/providers/home_providers.g.dart
+ create mode 100644 lib/src/features/home/presentation/screens/home_screen.dart
+ create mode 100644 lib/src/routing/app_router.dart
+ create mode 100644 lib/src/routing/routes.dart
+ create mode 100644 lib/src/shared/providers/shared_providers.dart
+ create mode 100644 lib/src/shared/providers/shared_providers.g.dart
+ create mode 100644 linux/.gitignore
+ create mode 100644 linux/CMakeLists.txt
+ create mode 100644 linux/flutter/CMakeLists.txt
+ create mode 100644 linux/flutter/generated_plugin_registrant.cc
+ create mode 100644 linux/flutter/generated_plugin_registrant.h
+ create mode 100644 linux/flutter/generated_plugins.cmake
+ create mode 100644 linux/runner/CMakeLists.txt
+ create mode 100644 linux/runner/main.cc
+ create mode 100644 linux/runner/my_application.cc
+ create mode 100644 linux/runner/my_application.h
+ create mode 100644 macos/.gitignore
+ create mode 100644 macos/Flutter/Flutter-Debug.xcconfig
+ create mode 100644 macos/Flutter/Flutter-Release.xcconfig
+ create mode 100644 macos/Flutter/GeneratedPluginRegistrant.swift
+ create mode 100644 macos/Runner.xcodeproj/project.pbxproj
+ create mode 100644 macos/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+ create mode 100644 macos/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme
+ create mode 100644 macos/Runner.xcworkspace/contents.xcworkspacedata
+ create mode 100644 macos/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+ create mode 100644 macos/Runner/AppDelegate.swift
+ create mode 100644 macos/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json
+ create mode 100644 macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_1024.png
+ create mode 100644 macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_128.png
+ create mode 100644 macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_16.png
+ create mode 100644 macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_256.png
+ create mode 100644 macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_32.png
+ create mode 100644 macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_512.png
+ create mode 100644 macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_64.png
+ create mode 100644 macos/Runner/Base.lproj/MainMenu.xib
+ create mode 100644 macos/Runner/Configs/AppInfo.xcconfig
+ create mode 100644 macos/Runner/Configs/Debug.xcconfig
+ create mode 100644 macos/Runner/Configs/Release.xcconfig
+ create mode 100644 macos/Runner/Configs/Warnings.xcconfig
+ create mode 100644 macos/Runner/DebugProfile.entitlements
+ create mode 100644 macos/Runner/Info.plist
+ create mode 100644 macos/Runner/MainFlutterWindow.swift
+ create mode 100644 macos/Runner/Release.entitlements
+ create mode 100644 macos/RunnerTests/RunnerTests.swift
+ create mode 100644 pubspec.lock
+ create mode 100644 pubspec.yaml
+ create mode 100644 test/app_test.dart
+ create mode 100644 test/core/app_theme_test.dart
+ create mode 100644 test/core/errors_test.dart
+ create mode 100644 test/routing_test.dart
+ create mode 100644 test/widget_test.dart
+ create mode 100644 web/favicon.png
+ create mode 100644 web/icons/Icon-192.png
+ create mode 100644 web/icons/Icon-512.png
+ create mode 100644 web/icons/Icon-maskable-192.png
+ create mode 100644 web/icons/Icon-maskable-512.png
+ create mode 100644 web/index.html
+ create mode 100644 web/manifest.json
+ create mode 100644 windows/.gitignore
+ create mode 100644 windows/CMakeLists.txt
+ create mode 100644 windows/flutter/CMakeLists.txt
+ create mode 100644 windows/flutter/generated_plugin_registrant.cc
+ create mode 100644 windows/flutter/generated_plugin_registrant.h
+ create mode 100644 windows/flutter/generated_plugins.cmake
+ create mode 100644 windows/runner/CMakeLists.txt
+ create mode 100644 windows/runner/Runner.rc
+ create mode 100644 windows/runner/flutter_window.cpp
+ create mode 100644 windows/runner/flutter_window.h
+ create mode 100644 windows/runner/main.cpp
+ create mode 100644 windows/runner/resource.h
+ create mode 100644 windows/runner/resources/app_icon.ico
+ create mode 100644 windows/runner/runner.exe.manifest
+ create mode 100644 windows/runner/utils.cpp
+ create mode 100644 windows/runner/utils.h
+ create mode 100644 windows/runner/win32_window.cpp
+ create mode 100644 windows/runner/win32_window.h
+
+Created initial commit
+
+────────────────────────────────────────────────────────────
+
+Project 'e2e_test_app_1770299745245' created with clean architecture!
+
+Project Details:
+  Location: /tmp/e2e_test_app_1770299745245
+  Name: e2e_test_app_1770299745245
+
+✓ Dependencies installed
+✓ Code generation complete
+✓ Code analysis passed
+
+Next steps:
+  1. cd /tmp/e2e_test_app_1770299745245
+  2. flutter run
+
+✓ Project created and scaffolded
+Running flutter analyze...
+
+Running flutter analyze...
+Analyzing e2e_test_app_1770299745245...                         
+No issues found! (ran in 4.1s)
+
+✓ Flutter analyze passed
+Running flutter test...
 
 Running flutter test...
 Resolving dependencies...
@@ -768,4 +978,13 @@ Downloading packages...
 Got dependencies!
 8 packages have newer versions incompatible with dependency constraints.
 Try `flutter pub outdated` for more information.
-00:00 +0: loading /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart                                                                                                                           00:01 +0: loading /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart                                                                                                                           00:02 +0: loading /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart                                                                                                                           00:03 +0: loading /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart                                                                                                                           00:04 +0: loading /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart                                                                                                                           00:05 +0: loading /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart                                                                                                                           00:06 +0: loading /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart                                                                                                                           00:07 +0: loading /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart                                                                                                                           00:07 +0: /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart: AppTheme Light Theme returns ThemeData with light brightness                                                                     00:07 +1: /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart: AppTheme Light Theme returns ThemeData with light brightness                                                                     00:07 +1: /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart: AppTheme Light Theme uses Material3 design                                                                                       00:07 +2: /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart: AppTheme Light Theme uses Material3 design                                                                                       00:07 +2: /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart: AppTheme Light Theme has correct colorScheme brightness                                                                          00:07 +3: /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart: AppTheme Light Theme has correct colorScheme brightness                                                                          00:07 +3: /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart: AppTheme Light Theme appBar is centered                                                                                          00:07 +4: /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart: AppTheme Light Theme appBar is centered                                                                                          00:07 +4: /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart: AppTheme Light Theme appBar has no elevation                                                                                     00:07 +5: /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart: AppTheme Light Theme appBar has no elevation                                                                                     00:07 +5: /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart: AppTheme Light Theme card has elevation                                                                                          00:07 +6: /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart: AppTheme Light Theme card has elevation                                                                                          00:07 +6: /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart: AppTheme Dark Theme returns ThemeData with dark brightness                                                                       00:07 +7: /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart: AppTheme Dark Theme returns ThemeData with dark brightness                                                                       00:07 +7: /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart: AppTheme Dark Theme uses Material3 design                                                                                        00:07 +8: /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart: AppTheme Dark Theme uses Material3 design                                                                                        00:07 +8: /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart: AppTheme Dark Theme has correct colorScheme brightness                                                                           00:07 +9: /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart: AppTheme Dark Theme has correct colorScheme brightness                                                                           00:07 +9: /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart: AppTheme Dark Theme appBar is centered                                                                                           00:07 +10: /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart: AppTheme Dark Theme appBar is centered                                                                                          00:07 +10: /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart: AppTheme Theme Consistency light and dark themes use same seed color                                                            00:07 +11: /tmp/e2e_test_app_1770299444/test/core/app_theme_test.dart: AppTheme Theme Consistency light and dark themes use same seed color                                                            00:07 +11: loading /tmp/e2e_test_app_1770299444/test/core/errors_test.dart                                                                                                                             00:07 +11: /tmp/e2e_test_app_1770299444/test/core/errors_test.dart: Exceptions ServerException has correct message                                                                                     00:07 +12: /tmp/e2e_test_app_1770299444/test/core/errors_test.dart: Exceptions ServerException has correct message                                                                                     00:07 +12: /tmp/e2e_test_app_1770299444/test/core/errors_test.dart: Exceptions CacheException has correct message                                                                                      00:07 +13: /tmp/e2e_test_app_1770299444/test/core/errors_test.dart: Exceptions CacheException has correct message                                                                                      00:07 +13: /tmp/e2e_test_app_1770299444/test/core/errors_test.dart: Exceptions NetworkException has correct message                                                                                    00:07 +14: /tmp/e2e_test_app_1770299444/test/core/errors_test.dart: Exceptions NetworkException has correct message                                                                                    00:07 +14: /tmp/e2e_test_app_1770299444/test/core/errors_test.dart: Failures ServerFailure has correct message                                                                                         00:07 +15: /tmp/e2e_test_app_1770299444/test/core/errors_test.dart: Failures ServerFailure has correct message                                                                                         00:07 +15: /tmp/e2e_test_app_1770299444/test/core/errors_test.dart: Failures CacheFailure has correct message                                                                                          00:07 +16: /tmp/e2e_test_app_1770299444/test/core/errors_test.dart: Failures CacheFailure has correct message                                                                                          00:07 +16: /tmp/e2e_test_app_1770299444/test/core/errors_test.dart: Failures NetworkFailure has correct message                                                                                        00:07 +17: /tmp/e2e_test_app_1770299444/test/core/errors_test.dart: Failures NetworkFailure has correct message                                                                                        00:07 +17: /tmp/e2e_test_app_1770299444/test/core/errors_test.dart: Failures failures are equatable                                                                                                    00:07 +18: /tmp/e2e_test_app_1770299444/test/core/errors_test.dart: Failures failures are equatable                                                                                                    00:08 +18: /tmp/e2e_test_app_1770299444/test/core/errors_test.dart: Failures failures are equatable                                                                                                    00:08 +18: loading /tmp/e2e_test_app_1770299444/test/widget_test.dart                                                                                                                                  00:08 +18: /tmp/e2e_test_app_1770299444/test/widget_test.dart: Counter increments smoke test                                                                                                           00:09 +18: /tmp/e2e_test_app_1770299444/test/widget_test.dart: Counter increments smoke test                                                                                                           00:09 +19: /tmp/e2e_test_app_1770299444/test/widget_test.dart: Counter increments smoke test                                                                                                           00:09 +19: loading /tmp/e2e_test_app_1770299444/test/app_test.dart                                                                                                                                     00:09 +19: /tmp/e2e_test_app_1770299444/test/app_test.dart: App Widget renders MaterialApp.router                                                                                                      00:10 +19: /tmp/e2e_test_app_1770299444/test/app_test.dart: App Widget renders MaterialApp.router                                                                                                      00:10 +20: /tmp/e2e_test_app_1770299444/test/app_test.dart: App Widget renders MaterialApp.router                                                                                                      00:10 +21: /tmp/e2e_test_app_1770299444/test/app_test.dart: App Widget renders MaterialApp.router                                                                                                      00:10 +22: /tmp/e2e_test_app_1770299444/test/routing_test.dart: AppRouter appRouterProvider returns GoRouter                                                                                           00:10 +23: /tmp/e2e_test_app_1770299444/test/app_test.dart: App Widget uses correct theme mode                                                                                                         00:10 +24: /tmp/e2e_test_app_1770299444/test/app_test.dart: App Widget uses correct theme mode                                                                                                         00:10 +25: /tmp/e2e_test_app_1770299444/test/app_test.dart: App Widget uses correct theme mode                                                                                                         00:10 +26: /tmp/e2e_test_app_1770299444/test/app_test.dart: App Widget uses correct theme mode                                                                                                         00:10 +26: /tmp/e2e_test_app_1770299444/test/app_test.dart: App Widget has debug banner disabled                                                                                                       00:10 +27: /tmp/e2e_test_app_1770299444/test/app_test.dart: App Widget has debug banner disabled                                                                                                       00:10 +27: /tmp/e2e_test_app_1770299444/test/app_test.dart: App Widget has both light and dark themes configured                                                                                       00:10 +28: /tmp/e2e_test_app_1770299444/test/app_test.dart: App Widget has both light and dark themes configured                                                                                       00:10 +28: All tests passed!                                                                                                                                                                           
+00:00 +0: loading /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart                                                                                                                        00:01 +0: loading /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart                                                                                                                        00:02 +0: loading /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart                                                                                                                        00:03 +0: loading /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart                                                                                                                        00:04 +0: loading /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart                                                                                                                        00:05 +0: loading /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart                                                                                                                        00:06 +0: loading /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart                                                                                                                        00:07 +0: loading /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart                                                                                                                        00:08 +0: loading /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart                                                                                                                        00:09 +0: loading /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart                                                                                                                        00:10 +0: loading /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart                                                                                                                        00:11 +0: loading /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart                                                                                                                        00:12 +0: loading /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart                                                                                                                        00:12 +0: /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart: AppTheme Light Theme returns ThemeData with light brightness                                                                  00:12 +1: /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart: AppTheme Light Theme returns ThemeData with light brightness                                                                  00:12 +1: /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart: AppTheme Light Theme uses Material3 design                                                                                    00:12 +2: /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart: AppTheme Light Theme uses Material3 design                                                                                    00:12 +2: /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart: AppTheme Light Theme has correct colorScheme brightness                                                                       00:12 +3: /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart: AppTheme Light Theme has correct colorScheme brightness                                                                       00:12 +3: /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart: AppTheme Light Theme appBar is centered                                                                                       00:12 +4: /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart: AppTheme Light Theme appBar is centered                                                                                       00:12 +4: /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart: AppTheme Light Theme appBar has no elevation                                                                                  00:12 +5: /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart: AppTheme Light Theme appBar has no elevation                                                                                  00:12 +5: /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart: AppTheme Light Theme card has elevation                                                                                       00:12 +6: /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart: AppTheme Light Theme card has elevation                                                                                       00:12 +6: /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart: AppTheme Dark Theme returns ThemeData with dark brightness                                                                    00:12 +7: /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart: AppTheme Dark Theme returns ThemeData with dark brightness                                                                    00:12 +7: /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart: AppTheme Dark Theme uses Material3 design                                                                                     00:12 +8: /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart: AppTheme Dark Theme uses Material3 design                                                                                     00:12 +8: /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart: AppTheme Dark Theme has correct colorScheme brightness                                                                        00:12 +9: /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart: AppTheme Dark Theme has correct colorScheme brightness                                                                        00:12 +9: /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart: AppTheme Dark Theme appBar is centered                                                                                        00:12 +10: /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart: AppTheme Dark Theme appBar is centered                                                                                       00:12 +10: /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart: AppTheme Theme Consistency light and dark themes use same seed color                                                         00:12 +11: /tmp/e2e_test_app_1770299734763/test/core/app_theme_test.dart: AppTheme Theme Consistency light and dark themes use same seed color                                                         00:12 +11: loading /tmp/e2e_test_app_1770299734763/test/core/errors_test.dart                                                                                                                          00:12 +11: /tmp/e2e_test_app_1770299734763/test/core/errors_test.dart: Exceptions ServerException has correct message                                                                                  00:12 +12: /tmp/e2e_test_app_1770299734763/test/core/errors_test.dart: Exceptions ServerException has correct message                                                                                  00:12 +12: /tmp/e2e_test_app_1770299734763/test/core/errors_test.dart: Exceptions CacheException has correct message                                                                                   00:12 +13: /tmp/e2e_test_app_1770299734763/test/core/errors_test.dart: Exceptions CacheException has correct message                                                                                   00:12 +13: /tmp/e2e_test_app_1770299734763/test/core/errors_test.dart: Exceptions NetworkException has correct message                                                                                 00:12 +14: /tmp/e2e_test_app_1770299734763/test/core/errors_test.dart: Exceptions NetworkException has correct message                                                                                 00:12 +14: /tmp/e2e_test_app_1770299734763/test/core/errors_test.dart: Failures ServerFailure has correct message                                                                                      00:12 +15: /tmp/e2e_test_app_1770299734763/test/core/errors_test.dart: Failures ServerFailure has correct message                                                                                      00:12 +15: /tmp/e2e_test_app_1770299734763/test/core/errors_test.dart: Failures CacheFailure has correct message                                                                                       00:12 +16: /tmp/e2e_test_app_1770299734763/test/core/errors_test.dart: Failures CacheFailure has correct message                                                                                       00:12 +16: /tmp/e2e_test_app_1770299734763/test/core/errors_test.dart: Failures NetworkFailure has correct message                                                                                     00:12 +17: /tmp/e2e_test_app_1770299734763/test/core/errors_test.dart: Failures NetworkFailure has correct message                                                                                     00:12 +17: /tmp/e2e_test_app_1770299734763/test/core/errors_test.dart: Failures failures are equatable                                                                                                 00:12 +18: /tmp/e2e_test_app_1770299734763/test/core/errors_test.dart: Failures failures are equatable                                                                                                 00:13 +18: /tmp/e2e_test_app_1770299734763/test/core/errors_test.dart: Failures failures are equatable                                                                                                 00:14 +18: /tmp/e2e_test_app_1770299734763/test/core/errors_test.dart: Failures failures are equatable                                                                                                 00:14 +18: loading /tmp/e2e_test_app_1770299734763/test/widget_test.dart                                                                                                                               00:14 +18: /tmp/e2e_test_app_1770299734763/test/widget_test.dart: Counter increments smoke test                                                                                                        00:15 +18: /tmp/e2e_test_app_1770299734763/test/widget_test.dart: Counter increments smoke test                                                                                                        00:15 +19: /tmp/e2e_test_app_1770299734763/test/widget_test.dart: Counter increments smoke test                                                                                                        00:16 +19: /tmp/e2e_test_app_1770299734763/test/widget_test.dart: Counter increments smoke test                                                                                                        00:16 +19: loading /tmp/e2e_test_app_1770299734763/test/app_test.dart                                                                                                                                  00:16 +19: /tmp/e2e_test_app_1770299734763/test/app_test.dart: App Widget renders MaterialApp.router                                                                                                   00:17 +19: /tmp/e2e_test_app_1770299734763/test/app_test.dart: App Widget renders MaterialApp.router                                                                                                   00:17 +20: /tmp/e2e_test_app_1770299734763/test/app_test.dart: App Widget renders MaterialApp.router                                                                                                   00:17 +21: /tmp/e2e_test_app_1770299734763/test/app_test.dart: App Widget renders MaterialApp.router                                                                                                   00:17 +22: /tmp/e2e_test_app_1770299734763/test/app_test.dart: App Widget renders MaterialApp.router                                                                                                   00:17 +23: /tmp/e2e_test_app_1770299734763/test/app_test.dart: App Widget renders MaterialApp.router                                                                                                   00:17 +24: /tmp/e2e_test_app_1770299734763/test/app_test.dart: App Widget renders MaterialApp.router                                                                                                   00:17 +25: /tmp/e2e_test_app_1770299734763/test/app_test.dart: App Widget renders MaterialApp.router                                                                                                   00:17 +25: /tmp/e2e_test_app_1770299734763/test/app_test.dart: App Widget uses correct theme mode                                                                                                      00:17 +26: /tmp/e2e_test_app_1770299734763/test/app_test.dart: App Widget uses correct theme mode                                                                                                      00:17 +26: /tmp/e2e_test_app_1770299734763/test/app_test.dart: App Widget has debug banner disabled                                                                                                    00:17 +27: /tmp/e2e_test_app_1770299734763/test/app_test.dart: App Widget has debug banner disabled                                                                                                    00:17 +27: /tmp/e2e_test_app_1770299734763/test/app_test.dart: App Widget has both light and dark themes configured                                                                                    00:17 +28: /tmp/e2e_test_app_1770299734763/test/app_test.dart: App Widget has both light and dark themes configured                                                                                    00:17 +28: All tests passed!                                                                                                                                                                           
+
+✓ All tests passed
+Cleaning up /tmp/e2e_test_app_1770299734763...
+✓ Cleanup complete
+00:00 +0: loading /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart                                                                                                                        00:01 +0: loading /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart                                                                                                                        00:02 +0: loading /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart                                                                                                                        00:03 +0: loading /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart                                                                                                                        00:04 +0: loading /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart                                                                                                                        00:05 +0: loading /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart                                                                                                                        00:06 +0: loading /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart                                                                                                                        00:07 +0: loading /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart                                                                                                                        00:08 +0: loading /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart                                                                                                                        00:08 +0: /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart: AppTheme Light Theme returns ThemeData with light brightness                                                                  00:08 +1: /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart: AppTheme Light Theme returns ThemeData with light brightness                                                                  00:08 +1: /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart: AppTheme Light Theme uses Material3 design                                                                                    00:08 +2: /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart: AppTheme Light Theme uses Material3 design                                                                                    00:08 +2: /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart: AppTheme Light Theme has correct colorScheme brightness                                                                       00:08 +3: /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart: AppTheme Light Theme has correct colorScheme brightness                                                                       00:08 +3: /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart: AppTheme Light Theme appBar is centered                                                                                       00:08 +4: /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart: AppTheme Light Theme appBar is centered                                                                                       00:08 +4: /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart: AppTheme Light Theme appBar has no elevation                                                                                  00:08 +5: /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart: AppTheme Light Theme appBar has no elevation                                                                                  00:08 +5: /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart: AppTheme Light Theme card has elevation                                                                                       00:08 +6: /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart: AppTheme Light Theme card has elevation                                                                                       00:08 +6: /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart: AppTheme Dark Theme returns ThemeData with dark brightness                                                                    00:08 +7: /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart: AppTheme Dark Theme returns ThemeData with dark brightness                                                                    00:08 +7: /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart: AppTheme Dark Theme uses Material3 design                                                                                     00:08 +8: /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart: AppTheme Dark Theme uses Material3 design                                                                                     00:08 +8: /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart: AppTheme Dark Theme has correct colorScheme brightness                                                                        00:08 +9: /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart: AppTheme Dark Theme has correct colorScheme brightness                                                                        00:08 +9: /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart: AppTheme Dark Theme appBar is centered                                                                                        00:08 +10: /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart: AppTheme Dark Theme appBar is centered                                                                                       00:08 +10: /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart: AppTheme Theme Consistency light and dark themes use same seed color                                                         00:08 +11: /tmp/e2e_test_app_1770299745245/test/core/app_theme_test.dart: AppTheme Theme Consistency light and dark themes use same seed color                                                         00:08 +11: loading /tmp/e2e_test_app_1770299745245/test/core/errors_test.dart                                                                                                                          00:08 +11: /tmp/e2e_test_app_1770299745245/test/core/errors_test.dart: Exceptions ServerException has correct message                                                                                  00:08 +12: /tmp/e2e_test_app_1770299745245/test/core/errors_test.dart: Exceptions ServerException has correct message                                                                                  00:08 +12: /tmp/e2e_test_app_1770299745245/test/core/errors_test.dart: Exceptions CacheException has correct message                                                                                   00:08 +13: /tmp/e2e_test_app_1770299745245/test/core/errors_test.dart: Exceptions CacheException has correct message                                                                                   00:08 +13: /tmp/e2e_test_app_1770299745245/test/core/errors_test.dart: Exceptions NetworkException has correct message                                                                                 00:08 +14: /tmp/e2e_test_app_1770299745245/test/core/errors_test.dart: Exceptions NetworkException has correct message                                                                                 00:08 +14: /tmp/e2e_test_app_1770299745245/test/core/errors_test.dart: Failures ServerFailure has correct message                                                                                      00:08 +15: /tmp/e2e_test_app_1770299745245/test/core/errors_test.dart: Failures ServerFailure has correct message                                                                                      00:08 +15: /tmp/e2e_test_app_1770299745245/test/core/errors_test.dart: Failures CacheFailure has correct message                                                                                       00:08 +16: /tmp/e2e_test_app_1770299745245/test/core/errors_test.dart: Failures CacheFailure has correct message                                                                                       00:08 +16: /tmp/e2e_test_app_1770299745245/test/core/errors_test.dart: Failures NetworkFailure has correct message                                                                                     00:08 +17: /tmp/e2e_test_app_1770299745245/test/core/errors_test.dart: Failures NetworkFailure has correct message                                                                                     00:08 +17: /tmp/e2e_test_app_1770299745245/test/core/errors_test.dart: Failures failures are equatable                                                                                                 00:08 +18: /tmp/e2e_test_app_1770299745245/test/core/errors_test.dart: Failures failures are equatable                                                                                                 00:09 +18: /tmp/e2e_test_app_1770299745245/test/core/errors_test.dart: Failures failures are equatable                                                                                                 00:09 +18: loading /tmp/e2e_test_app_1770299745245/test/widget_test.dart                                                                                                                               00:09 +18: /tmp/e2e_test_app_1770299745245/test/widget_test.dart: Counter increments smoke test                                                                                                        00:10 +18: /tmp/e2e_test_app_1770299745245/test/widget_test.dart: Counter increments smoke test                                                                                                        00:11 +18: /tmp/e2e_test_app_1770299745245/test/widget_test.dart: Counter increments smoke test                                                                                                        00:11 +19: /tmp/e2e_test_app_1770299745245/test/app_test.dart: App Widget renders MaterialApp.router                                                                                                   00:12 +19: /tmp/e2e_test_app_1770299745245/test/app_test.dart: App Widget renders MaterialApp.router                                                                                                   00:12 +20: /tmp/e2e_test_app_1770299745245/test/app_test.dart: App Widget renders MaterialApp.router                                                                                                   00:12 +20: /tmp/e2e_test_app_1770299745245/test/app_test.dart: App Widget uses correct theme mode                                                                                                      00:12 +21: /tmp/e2e_test_app_1770299745245/test/routing_test.dart: Routes home route is defined                                                                                                        00:12 +22: /tmp/e2e_test_app_1770299745245/test/app_test.dart: App Widget has debug banner disabled                                                                                                    00:12 +23: /tmp/e2e_test_app_1770299745245/test/app_test.dart: App Widget has debug banner disabled                                                                                                    00:12 +24: /tmp/e2e_test_app_1770299745245/test/routing_test.dart: AppRouter appRouterProvider returns GoRouter                                                                                        00:12 +25: /tmp/e2e_test_app_1770299745245/test/routing_test.dart: AppRouter appRouterProvider returns GoRouter                                                                                        00:12 +26: /tmp/e2e_test_app_1770299745245/test/routing_test.dart: AppRouter appRouterProvider returns GoRouter                                                                                        00:12 +26: /tmp/e2e_test_app_1770299745245/test/routing_test.dart: AppRouter home route exists in configuration                                                                                        00:12 +27: /tmp/e2e_test_app_1770299745245/test/routing_test.dart: AppRouter home route exists in configuration                                                                                        00:12 +27: /tmp/e2e_test_app_1770299745245/test/routing_test.dart: AppRouter router has routes configured                                                                                              00:12 +28: /tmp/e2e_test_app_1770299745245/test/routing_test.dart: AppRouter router has routes configured                                                                                              00:12 +28: All tests passed!                                                                                                                                                                           
+
+✓ All tests passed
+Cleaning up /tmp/e2e_test_app_1770299745245...
+✓ Cleanup complete
