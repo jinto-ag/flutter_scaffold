@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 
+import '../core/version.dart';
 import '../utils/logger.dart';
 import '../utils/process_utils.dart';
 
@@ -126,7 +127,7 @@ class GitService {
 - Run code generation: dart run build_runner build
 - Start developing your app!
 
-Generated with flutter_scaffold v0.1.0''';
+Generated with flutter_scaffold v$appVersion''';
   }
 
   /// Check if git is available on the system.
