@@ -1,0 +1,37 @@
+#!/bin/bash
+# Pre-commit hook for flutter_scaffold
+# This hook runs before each commit to ensure code quality
+
+set -e
+
+echo "🔍 Running pre-commit checks..."
+
+# 1. Run Dart analyzer
+echo ""
+echo "📊 Running Dart analyzer..."
+if ! dart analyze; then
+    echo "❌ Dart analyzer found issues. Please fix them before committing."
+    exit 1
+fi
+echo "✅ Dart analyzer passed"
+
+# 2. Run Dart format check
+echo ""
+echo "📝 Checking Dart formatting..."
+if ! dart format --set-exit-if-changed --output=none lib/ bin/ test/ 2>/dev/null; then
+    echo "❌ Some files need formatting. Run 'dart format .' to fix."
+    exit 1
+fi
+echo "✅ Dart formatting passed"
+
+# 3. Run tests
+echo ""
+echo "🧪 Running tests..."
+if ! dart test --reporter compact; then
+    echo "❌ Tests failed. Please fix them before committing."
+    exit 1
+fi
+echo "✅ All tests passed"
+
+echo ""
+echo "✅ All pre-commit checks passed!"

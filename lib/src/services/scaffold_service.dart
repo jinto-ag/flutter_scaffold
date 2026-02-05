@@ -3,6 +3,7 @@ library;
 
 import '../core/constants.dart';
 import '../core/errors.dart';
+import '../core/version.dart';
 import '../utils/file_utils.dart';
 import '../utils/logger.dart';
 import '../utils/templates.dart';
@@ -59,7 +60,7 @@ class ScaffoldService {
 {
   "scaffolded_at": "${DateTime.now().toIso8601String()}",
   "project_name": "$projectName",
-  "version": "0.1.0"
+  "flutter_scaffold_version": "$appVersion"
 }
 ''';
     _fileUtils.createFile(configPath, config, force: true);
