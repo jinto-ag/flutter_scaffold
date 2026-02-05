@@ -17,6 +17,7 @@ export 'src/utils/string_utils.dart';
 export 'src/utils/templates.dart';
 
 // Services
+export 'src/services/config_service.dart';
 export 'src/services/dependency_service.dart';
 export 'src/services/feature_service.dart';
 export 'src/services/flutter_service.dart';
@@ -25,6 +26,7 @@ export 'src/services/scaffold_service.dart';
 
 // Commands
 export 'src/commands/add_command.dart';
+export 'src/commands/config_command.dart';
 export 'src/commands/create_command.dart';
 export 'src/commands/info_command.dart';
 export 'src/commands/remove_command.dart';

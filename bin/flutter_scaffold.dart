@@ -15,7 +15,8 @@ Future<void> main(List<String> arguments) async {
     ..addCommand(AddCommand())
     ..addCommand(RemoveCommand())
     ..addCommand(ResetCommand())
-    ..addCommand(InfoCommand());
+    ..addCommand(InfoCommand())
+    ..addCommand(ConfigCommand());
 
   // Add global options
   runner.argParser
@@ -71,6 +72,7 @@ Future<void> main(List<String> arguments) async {
         logger.info('  remove    Remove modules (e.g., remove feature <name>)');
         logger.info('  reset     Reset project or feature to initial state');
         logger.info('  info      Display project features information');
+        logger.info('  config    Manage configuration (init, show)');
         logger.info('');
         logger.info('Global options:');
         logger.info('  --version, -v     Print the version');
