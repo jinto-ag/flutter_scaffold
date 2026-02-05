@@ -3,6 +3,9 @@ description: A production-grade Flutter project scaffolding tool with Clean Arch
 version: 0.1.0
 repository: https://github.com/jinto-ag/flutter_scaffold
 
+executables:
+  flutter_scaffold:
+
 environment:
   sdk: ^3.11.0-296.4.beta
 
