@@ -1,0 +1,33 @@
+import 'package:flutter/material.dart';
+
+extension ContextExtensions on BuildContext {
+  // Theme
+  ColorScheme get colorScheme => Theme.of(this).colorScheme;
+  TextTheme get textTheme => Theme.of(this).textTheme;
+  
+  // Media Query
+  double get width => MediaQuery.of(this).size.width;
+  double get height => MediaQuery.of(this).size.height;
+  bool get isMobile => width < 600;
+  bool get isTablet => width >= 600 && width < 1200;
+  bool get isDesktop => width >= 1200;
+  
+  // Navigation
+  void pop<T extends Object?>([T? result]) => Navigator.of(this).pop<T>(result);
+  Future<T?> push<T extends Object?>(Route<T> route) => Navigator.of(this).push<T>(route);
+  
+  // SnackBar
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
+    String message, {
+    Duration duration = const Duration(seconds: 3),
+    SnackBarAction? action,
+  }) {
+    return ScaffoldMessenger.of(this).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: duration,
+        action: action,
+      ),
+    );
+  }
+}

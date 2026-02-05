@@ -1,0 +1,24 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part '{{FEATURE_NAME}}_entity.freezed.dart';
+part '{{FEATURE_NAME}}_entity.g.dart';
+
+/// Entity for the {{PASCAL_NAME}} feature.
+/// 
+/// This represents the domain model for the feature.
+/// Uses Freezed for immutability and code generation.
+
+@freezed
+abstract class {{PASCAL_NAME}}Entity with _${{PASCAL_NAME}}Entity {
+  const factory {{PASCAL_NAME}}Entity({
+    required String id,
+    required String name,
+    @Default('') String description,
+    @Default(false) bool isActive,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) = _{{PASCAL_NAME}}Entity;
+
+  factory {{PASCAL_NAME}}Entity.fromJson(Map<String, dynamic> json) =>
+      _${{PASCAL_NAME}}EntityFromJson(json);
+}

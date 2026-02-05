@@ -1,0 +1,55 @@
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../domain/entities/{{FEATURE_NAME}}_entity.dart';
+
+part '{{FEATURE_NAME}}_providers.g.dart';
+
+/// Provider for the {{PASCAL_NAME}} feature state.
+/// 
+/// Use these providers to manage state for the {{PASCAL_NAME}} feature.
+/// The generated .g.dart file will be created by build_runner.
+
+@riverpod
+class {{PASCAL_NAME}}Notifier extends _${{PASCAL_NAME}}Notifier {
+  @override
+  {{PASCAL_NAME}}State build() {
+    return const {{PASCAL_NAME}}State();
+  }
+
+  void setLoading(bool loading) {
+    state = state.copyWith(isLoading: loading);
+  }
+
+  void setError(String? error) {
+    state = state.copyWith(error: error);
+  }
+
+  void setData({{PASCAL_NAME}}Entity? data) {
+    state = state.copyWith(data: data, isLoading: false, error: null);
+  }
+}
+
+/// Simple state class for the {{PASCAL_NAME}} feature.
+class {{PASCAL_NAME}}State {
+  final bool isLoading;
+  final String? error;
+  final {{PASCAL_NAME}}Entity? data;
+
+  const {{PASCAL_NAME}}State({
+    this.isLoading = false,
+    this.error,
+    this.data,
+  });
+
+  {{PASCAL_NAME}}State copyWith({
+    bool? isLoading,
+    String? error,
+    {{PASCAL_NAME}}Entity? data,
+  }) {
+    return {{PASCAL_NAME}}State(
+      isLoading: isLoading ?? this.isLoading,
+      error: error,
+      data: data ?? this.data,
+    );
+  }
+}

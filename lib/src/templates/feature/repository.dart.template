@@ -1,0 +1,26 @@
+import '../entities/{{FEATURE_NAME}}_entity.dart';
+
+/// Repository interface for the {{PASCAL_NAME}} feature.
+/// 
+/// Defines the contract for data operations.
+/// Implementations go in the data layer.
+
+abstract class {{PASCAL_NAME}}Repository {
+  /// Get a single item by ID.
+  Future<{{PASCAL_NAME}}Entity?> getById(String id);
+
+  /// Get all items.
+  Future<List<{{PASCAL_NAME}}Entity>> getAll();
+
+  /// Create a new item.
+  Future<{{PASCAL_NAME}}Entity> create({{PASCAL_NAME}}Entity entity);
+
+  /// Update an existing item.
+  Future<{{PASCAL_NAME}}Entity> update({{PASCAL_NAME}}Entity entity);
+
+  /// Delete an item by ID.
+  Future<bool> delete(String id);
+
+  /// Search items by query.
+  Future<List<{{PASCAL_NAME}}Entity>> search(String query);
+}

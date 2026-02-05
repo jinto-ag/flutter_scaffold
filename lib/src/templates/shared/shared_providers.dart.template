@@ -1,0 +1,126 @@
+import 'package:flutter/material.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'shared_providers.g.dart';
+
+// Example shared providers that can be used across the app
+
+/// Theme mode provider for app-wide theme switching
+@riverpod
+class ThemeModeNotifier extends _$ThemeModeNotifier {
+  @override
+  ThemeMode build() => ThemeMode.system;
+
+  void setThemeMode(ThemeMode mode) {
+    state = mode;
+  }
+
+  void toggleTheme() {
+    state = state == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+  }
+}
+
+/// App settings provider
+@riverpod
+class AppSettingsNotifier extends _$AppSettingsNotifier {
+  @override
+  AppSettings build() => const AppSettings(
+        notificationsEnabled: true,
+        darkMode: false,
+        language: 'en',
+      );
+
+  void updateSettings(AppSettings settings) {
+    state = settings;
+  }
+
+  void setNotificationsEnabled(bool enabled) {
+    state = state.copyWith(notificationsEnabled: enabled);
+  }
+
+  void setDarkMode(bool darkMode) {
+    state = state.copyWith(darkMode: darkMode);
+  }
+
+  void setLanguage(String language) {
+    state = state.copyWith(language: language);
+  }
+}
+
+/// User session provider
+@riverpod
+class UserSessionNotifier extends _$UserSessionNotifier {
+  @override
+  UserSession? build() => null;
+
+  void setSession(UserSession session) {
+    state = session;
+  }
+
+  void clearSession() {
+    state = null;
+  }
+}
+
+/// Global loading state provider
+@riverpod
+class GlobalLoading extends _$GlobalLoading {
+  @override
+  bool build() => false;
+
+  void setLoading(bool loading) {
+    state = loading;
+  }
+}
+
+/// Global error state provider
+@riverpod
+class GlobalError extends _$GlobalError {
+  @override
+  String? build() => null;
+
+  void setError(String? error) {
+    state = error;
+  }
+
+  void clearError() {
+    state = null;
+  }
+}
+
+// Data classes
+class AppSettings {
+  final bool notificationsEnabled;
+  final bool darkMode;
+  final String language;
+
+  const AppSettings({
+    required this.notificationsEnabled,
+    required this.darkMode,
+    required this.language,
+  });
+
+  AppSettings copyWith({
+    bool? notificationsEnabled,
+    bool? darkMode,
+    String? language,
+  }) {
+    return AppSettings(
+      notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
+      darkMode: darkMode ?? this.darkMode,
+      language: language ?? this.language,
+    );
+  }
+}
+
+class UserSession {
+  final String id;
+  final String email;
+  final String name;
+
+  const UserSession({
+    required this.id,
+    required this.email,
+    required this.name,
+  });
+}

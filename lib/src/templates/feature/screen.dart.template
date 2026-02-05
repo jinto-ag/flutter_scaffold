@@ -1,0 +1,30 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../providers/{{FEATURE_NAME}}_providers.dart';
+
+class {{PASCAL_NAME}}Screen extends ConsumerWidget {
+  const {{PASCAL_NAME}}Screen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('{{PASCAL_NAME}}'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              '{{PASCAL_NAME}} Screen',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            const SizedBox(height: 16),
+            const Text('Add your content here!'),
+          ],
+        ),
+      ),
+    );
+  }
+}

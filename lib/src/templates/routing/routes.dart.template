@@ -1,0 +1,27 @@
+class Routes {
+  // Route names
+  static const String homeName = 'home';
+  static const String authName = 'auth';
+  static const String settingsName = 'settings';
+  
+  // Route paths
+  static const String home = '/';
+  static const String auth = '/auth';
+  static const String settings = '/settings';
+  
+  // Dynamic routes
+  static const String userDetail = '/user/:id';
+  static const String editProfile = '/profile/edit';
+  static const String itemDetail = '/item/:id';
+  
+  // Query parameters
+  static Map<String, String> homeQuery({
+    String? tab,
+    String? filter,
+  }) {
+    final queryParams = <String, String>{};
+    if (tab != null) queryParams['tab'] = tab;
+    if (filter != null) queryParams['filter'] = filter;
+    return queryParams;
+  }
+}
