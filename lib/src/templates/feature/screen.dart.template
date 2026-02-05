@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../providers/{{FEATURE_NAME}}_providers.dart';
-
 class {{PASCAL_NAME}}Screen extends ConsumerWidget {
   const {{PASCAL_NAME}}Screen({super.key});
 
