@@ -8,6 +8,7 @@ import 'package:args/command_runner.dart';
 import '../services/dependency_service.dart';
 import '../services/feature_service.dart';
 import '../services/flutter_service.dart';
+import '../services/git_service.dart';
 import '../services/scaffold_service.dart';
 import '../utils/file_utils.dart';
 import '../utils/logger.dart';
@@ -20,11 +21,13 @@ class CreateCommand extends Command<int> {
     ScaffoldService? scaffoldService,
     FeatureService? featureService,
     DependencyService? dependencyService,
+    GitService? gitService,
   }) : _logger = logger ?? ScaffoldLogger(),
        _flutterService = flutterService ?? FlutterService(),
        _scaffoldService = scaffoldService ?? ScaffoldService(),
        _featureService = featureService ?? FeatureService(),
-       _dependencyService = dependencyService ?? DependencyService() {
+       _dependencyService = dependencyService ?? DependencyService(),
+       _gitService = gitService ?? GitService() {
     argParser
       ..addOption(
         'org',
@@ -50,6 +53,11 @@ class CreateCommand extends Command<int> {
         negatable: false,
       )
       ..addFlag(
+        'init-git',
+        help: 'Initialize git with dev branch and initial commit',
+        defaultsTo: true,
+      )
+      ..addFlag(
         'dry-run',
         help: 'Preview without creating files',
         negatable: false,
@@ -61,6 +69,7 @@ class CreateCommand extends Command<int> {
   final ScaffoldService _scaffoldService;
   final FeatureService _featureService;
   final DependencyService _dependencyService;
+  final GitService _gitService;
 
   @override
   String get name => 'create';
@@ -144,6 +153,16 @@ class CreateCommand extends Command<int> {
         await _dependencyService.setupProject(projectPath: projectPath);
       } else {
         _logger.info('Skipping dependency installation (--skip-deps)');
+      }
+
+      // Initialize git if requested
+      final initGit = args.flag('init-git');
+      if (initGit) {
+        _logger.info('');
+        await _gitService.initializeGit(
+          projectPath: projectPath,
+          projectName: projectName,
+        );
       }
 
       // Summary
