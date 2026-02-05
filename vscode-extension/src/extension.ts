@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { execSync } from 'child_process';
 
 // Known placeholders in flutter_scaffold templates
 const KNOWN_PLACEHOLDERS = new Set([
@@ -51,14 +52,13 @@ export function activate(context: vscode.ExtensionContext) {
         ),
     );
 
-    // Register format command
+    // Register document formatting provider
     context.subscriptions.push(
-        vscode.commands.registerCommand('flutterScaffoldTemplate.format', async () => {
-            const editor = vscode.window.activeTextEditor;
-            if (editor && isTemplateFile(editor.document)) {
-                await formatTemplateDocument(editor.document);
+        vscode.languages.registerDocumentFormattingEditProvider('dart-template', {
+            provideDocumentFormattingEdits(document: vscode.TextDocument): vscode.TextEdit[] {
+                return formatTemplate(document);
             }
-        }),
+        })
     );
 }
 
@@ -182,12 +182,47 @@ function provideTemplatePlaceholderCompletions(
     return items;
 }
 
-async function formatTemplateDocument(document: vscode.TextDocument): Promise<void> {
-    if (document.languageId !== 'dart-template') {
-        return;
-    }
+function formatTemplate(document: vscode.TextDocument): vscode.TextEdit[] {
+    const text = document.getText();
+    const placeholders: { name: string, uuid: string, index: number }[] = [];
 
-    // For now, just show a message - full formatting would require
-    // replacing placeholders, running dart format, and restoring placeholders
-    vscode.window.showInformationMessage('Template formatting: Use dart format after replacing placeholders');
+    // Replace placeholders with distinct temporary identifiers that are valid Dart identifiers
+    // Using a prefix 'valid_dart_id_' + random string to avoid collisions
+    let tempText = text.replace(PLACEHOLDER_REGEX, (match, name, offset) => {
+        const uuid = 'valid_dart_id_' + Math.random().toString(36).substring(2, 15);
+        placeholders.push({ name: match, uuid, index: offset });
+        return uuid;
+    });
+
+    try {
+        // Run dart format on the temp text
+        const output = execSync('dart format --output=show', {
+            input: tempText,
+            encoding: 'utf-8',
+            timeout: 3000 // 3s timeout
+        });
+
+        let formattedText = output.toString();
+
+        // Restore placeholders
+        placeholders.forEach(p => {
+            // Replace UUIDs back with placeholders
+            formattedText = formattedText.replace(p.uuid, p.name);
+        });
+
+        const fullRange = new vscode.Range(
+            document.positionAt(0),
+            document.positionAt(text.length)
+        );
+
+        return [vscode.TextEdit.replace(fullRange, formattedText)];
+
+    } catch (e) {
+        console.error('Formatting failed:', e);
+        // Only show error message if it's not just a syntax error in the template that caused format to fail
+        if (e instanceof Error && !e.message.includes('Could not format')) {
+            vscode.window.showErrorMessage('Dart Template formatting failed. Ensure "dart" is in your PATH.');
+        }
+        return [];
+    }
 }
