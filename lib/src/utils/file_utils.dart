@@ -146,6 +146,25 @@ class FileUtils {
     return fileExists(joinPath(path, 'pubspec.yaml'));
   }
 
+  /// Get the project name from pubspec.yaml.
+  String? getProjectName(String projectPath) {
+    final pubspecPath = joinPath(projectPath, 'pubspec.yaml');
+    if (!fileExists(pubspecPath)) return null;
+
+    try {
+      final content = readFile(pubspecPath);
+
+      // Simple regex to extract 'name: project_name'
+      final nameMatch = RegExp(
+        r'^name:\s*(\S+)',
+        multiLine: true,
+      ).firstMatch(content);
+      return nameMatch?.group(1);
+    } catch (e) {
+      return null;
+    }
+  }
+
   /// Get the size of a directory in human-readable format.
   String getDirectorySize(String path) {
     final dir = Directory(path);

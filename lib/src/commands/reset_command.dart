@@ -165,6 +165,17 @@ class ResetProjectCommand extends Command<int> {
         force: true,
       );
 
+      // Reset main.dart
+      final projectName = _fileUtils.getProjectName(projectPath);
+      if (projectName != null) {
+        _logger.info('');
+        _scaffoldService.updateMainDart(
+          projectPath: projectPath,
+          projectName: projectName,
+          force: true,
+        );
+      }
+
       // Run code generation
       if (!skipDeps) {
         await _dependencyService.runBuildRunner(projectPath: projectPath);
