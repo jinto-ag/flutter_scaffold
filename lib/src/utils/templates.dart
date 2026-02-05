@@ -158,6 +158,7 @@ class TemplateRegistry {
 
   /// Template path mappings for core files.
   static const _coreTemplates = {
+    'lib/main.dart': 'core/main.dart.template',
     'lib/src/app.dart': 'core/app.dart.template',
     'lib/src/core/errors/exceptions.dart': 'core/exceptions.dart.template',
     'lib/src/core/errors/failures.dart': 'core/failures.dart.template',

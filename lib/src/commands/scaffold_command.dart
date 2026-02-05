@@ -106,6 +106,14 @@ class ScaffoldCommand extends Command<int> {
           featureName: 'home',
           force: force,
         );
+
+        // Update main.dart to use the App widget
+        _logger.info('');
+        _scaffoldService.updateMainDart(
+          projectPath: projectPath,
+          force: force,
+          dryRun: dryRun,
+        );
       }
 
       _logger.divider();

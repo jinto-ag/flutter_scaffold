@@ -155,4 +155,55 @@ class ScaffoldService {
       _logger.success('Removed existing clean architecture structure');
     }
   }
+
+  /// Update main.dart to use the generated App widget with ProviderScope.
+  ///
+  /// [projectPath] - Path to the Flutter project root.
+  /// [force] - If true, overwrite even if already updated.
+  /// [dryRun] - If true, only show what would be done.
+  bool updateMainDart({
+    required String projectPath,
+    bool force = false,
+    bool dryRun = false,
+  }) {
+    final mainPath = _fileUtils.joinPath(projectPath, mainDartPath);
+
+    // Get template content
+    final template = _templates.getTemplate(mainDartPath);
+    if (template == null) {
+      _logger.warn('No template found for main.dart');
+      return false;
+    }
+
+    if (dryRun) {
+      _logger.would('Update main.dart with ProviderScope');
+      return true;
+    }
+
+    // Check if already updated (simple check for ProviderScope)
+    if (_fileUtils.fileExists(mainPath) && !force) {
+      final content = _readFile(mainPath);
+      if (content != null && content.contains('ProviderScope')) {
+        _logger.skipped('main.dart (already using ProviderScope)');
+        return false;
+      }
+    }
+
+    // Write the updated main.dart
+    if (_fileUtils.createFile(mainPath, template, force: true)) {
+      _logger.success('Updated main.dart with ProviderScope');
+      return true;
+    }
+
+    return false;
+  }
+
+  /// Read file content safely.
+  String? _readFile(String path) {
+    try {
+      return _fileUtils.fileExists(path) ? _fileUtils.readFile(path) : null;
+    } catch (e) {
+      return null;
+    }
+  }
 }

@@ -57,6 +57,12 @@ class FileUtils {
     }
   }
 
+  /// Read file contents as string.
+  String readFile(String path) {
+    final file = File(path);
+    return file.readAsStringSync();
+  }
+
   /// Delete a file.
   void deleteFile(String path) {
     final file = File(path);

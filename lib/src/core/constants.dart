@@ -14,6 +14,9 @@ const String description =
 /// Source directory for generated scaffold.
 const String srcDir = 'lib/src';
 
+/// Path to main.dart file.
+const String mainDartPath = 'lib/main.dart';
+
 /// Core scaffold directories.
 const List<String> coreDirectories = [
   '$srcDir/core/errors',

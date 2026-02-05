@@ -98,18 +98,25 @@ class FlutterService {
     }
 
     if (location.startsWith('../')) {
-      return _fileUtils.normalize(_fileUtils.joinPath(cwd, location));
+      // Relative parent path - location may or may not include project name
+      if (location.endsWith(projectName)) {
+        return _fileUtils.normalize(_fileUtils.joinPath(cwd, location));
+      }
+      return _fileUtils.normalize(
+        _fileUtils.joinPath(cwd, location, projectName),
+      );
     }
 
     if (location.startsWith('./')) {
+      // Relative current path
       return _fileUtils.normalize(
-        _fileUtils.joinPath(cwd, location.substring(2)),
+        _fileUtils.joinPath(cwd, location.substring(2), projectName),
       );
     }
 
     if (location.startsWith('/')) {
-      // Absolute path
-      return location;
+      // Absolute path - append project name
+      return _fileUtils.joinPath(location, projectName);
     }
 
     // Relative path
