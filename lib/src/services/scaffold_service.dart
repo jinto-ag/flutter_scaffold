@@ -34,6 +34,38 @@ class ScaffoldService {
   final FileUtils _fileUtils;
   final TemplateRegistry _templates;
 
+  /// Check if a project was scaffolded with flutter_scaffold.
+  bool isScaffoldedProject(String projectPath) {
+    final markerPath = _fileUtils.joinPath(projectPath, scaffoldMarkerDir);
+    return _fileUtils.directoryExists(markerPath);
+  }
+
+  /// Create the scaffold marker directory with metadata.
+  void _createMarkerDirectory(String projectPath, {bool dryRun = false}) {
+    final markerPath = _fileUtils.joinPath(projectPath, scaffoldMarkerDir);
+
+    if (dryRun) {
+      _logger.would('Create scaffold marker: $scaffoldMarkerDir/');
+      return;
+    }
+
+    _fileUtils.createDirectory(markerPath);
+
+    // Create config file with metadata
+    final configPath = _fileUtils.joinPath(markerPath, 'config.json');
+    final projectName = _fileUtils.getProjectName(projectPath) ?? 'unknown';
+    final config =
+        '''
+{
+  "scaffolded_at": "${DateTime.now().toIso8601String()}",
+  "project_name": "$projectName",
+  "version": "0.1.0"
+}
+''';
+    _fileUtils.createFile(configPath, config, force: true);
+    _logger.success('Created scaffold marker directory');
+  }
+
   /// Create the scaffold structure in the given project directory.
   ///
   /// [projectPath] - Path to the Flutter project root.
@@ -98,6 +130,9 @@ class ScaffoldService {
         }
       }
     }
+
+    // Create scaffold marker directory
+    _createMarkerDirectory(projectPath, dryRun: dryRun);
 
     return ScaffoldResult(
       dirsCreated: dirsCreated,

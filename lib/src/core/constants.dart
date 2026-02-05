@@ -17,6 +17,9 @@ const String srcDir = 'lib/src';
 /// Path to main.dart file.
 const String mainDartPath = 'lib/main.dart';
 
+/// Scaffold marker directory - indicates project was scaffolded with flutter_scaffold.
+const String scaffoldMarkerDir = '.flutter_scaffold';
+
 /// Core scaffold directories.
 const List<String> coreDirectories = [
   '$srcDir/core/errors',

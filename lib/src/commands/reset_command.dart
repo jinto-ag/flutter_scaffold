@@ -74,6 +74,12 @@ class ResetProjectCommand extends Command<int> {
         negatable: false,
       )
       ..addFlag(
+        'yes',
+        abbr: 'y',
+        help: 'Skip all confirmations (alias for --force)',
+        negatable: false,
+      )
+      ..addFlag(
         'skip-deps',
         help: 'Skip code generation after reset',
         negatable: false,
@@ -100,11 +106,18 @@ class ResetProjectCommand extends Command<int> {
   @override
   Future<int> run() async {
     final args = argResults!;
-    final force = args.flag('force');
+    final force = args.flag('force') || args.flag('yes');
     final skipDeps = args.flag('skip-deps');
     final dryRun = args.flag('dry-run');
 
     final projectPath = _fileUtils.currentDirectory;
+
+    // Validate project is scaffolded
+    if (!_scaffoldService.isScaffoldedProject(projectPath)) {
+      _logger.error('This project was not scaffolded with flutter_scaffold');
+      _logger.info('Run "flutter_scaffold scaffold" first to initialize');
+      return 1;
+    }
 
     _logger.header('RESETTING ENTIRE PROJECT');
 
@@ -228,6 +241,12 @@ class ResetFeatureCommand extends Command<int> {
         negatable: false,
       )
       ..addFlag(
+        'yes',
+        abbr: 'y',
+        help: 'Skip all confirmations (alias for --force)',
+        negatable: false,
+      )
+      ..addFlag(
         'dry-run',
         help: 'Preview without making changes',
         negatable: false,
@@ -259,7 +278,7 @@ class ResetFeatureCommand extends Command<int> {
     }
 
     final featureName = rest[0];
-    final force = args.flag('force');
+    final force = args.flag('force') || args.flag('yes');
     final dryRun = args.flag('dry-run');
 
     final projectPath = _fileUtils.currentDirectory;

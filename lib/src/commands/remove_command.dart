@@ -53,6 +53,12 @@ class RemoveFeatureCommand extends Command<int> {
         negatable: false,
       )
       ..addFlag(
+        'yes',
+        abbr: 'y',
+        help: 'Skip all confirmations (alias for --force)',
+        negatable: false,
+      )
+      ..addFlag(
         'dry-run',
         help: 'Preview without deleting files',
         negatable: false,
@@ -84,7 +90,7 @@ class RemoveFeatureCommand extends Command<int> {
     }
 
     final featureName = rest[0];
-    final force = args.flag('force');
+    final force = args.flag('force') || args.flag('yes');
     final dryRun = args.flag('dry-run');
 
     final projectPath = _fileUtils.currentDirectory;
