@@ -132,6 +132,32 @@ class ScaffoldService {
       }
     }
 
+    // Create git hook files
+    _logger.section('Creating git hooks...');
+    for (final file in hookFiles) {
+      final fullPath = _fileUtils.joinPath(projectPath, file);
+      final content = _templates.getTemplate(file);
+
+      if (content == null) {
+        _logger.warn('No template found for: $file');
+        continue;
+      }
+
+      if (dryRun) {
+        _logger.would('Create hook: $file');
+      } else {
+        if (_fileUtils.createFile(fullPath, content, force: force)) {
+          _logger.created(file);
+          filesCreated++;
+          // Make hook executable
+          _fileUtils.makeExecutable(fullPath);
+        } else {
+          _logger.skipped(file);
+          filesSkipped++;
+        }
+      }
+    }
+
     // Create scaffold marker directory
     _createMarkerDirectory(projectPath, dryRun: dryRun);
 

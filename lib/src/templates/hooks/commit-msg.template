@@ -1,0 +1,48 @@
+#!/bin/bash
+# Commit message hook for Flutter project
+# Validates conventional commit format with emoji
+
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+# Conventional commit pattern with emoji
+# Format: <emoji> <type>(<scope>): <description>
+# Example: 🐛 fix(auth): resolve login issue
+PATTERN="^(🎉|✨|🐛|📝|🔧|♻️|🧪|⬆️|🔥|🚀|💄|🏗️|✅|🔒|📦|🗑️) (feat|fix|docs|style|refactor|test|chore|perf|build|ci|revert)\([a-z_-]+\): .{3,}"
+
+# Also allow merge commits and initial commits
+MERGE_PATTERN="^Merge "
+INITIAL_PATTERN="^Initial commit"
+
+if [[ $COMMIT_MSG =~ $MERGE_PATTERN ]] || [[ $COMMIT_MSG =~ $INITIAL_PATTERN ]]; then
+    exit 0
+fi
+
+if ! [[ $COMMIT_MSG =~ $PATTERN ]]; then
+    echo "❌ Invalid commit message format!"
+    echo ""
+    echo "Expected format: <emoji> <type>(<scope>): <description>"
+    echo ""
+    echo "Valid emojis and types:"
+    echo "  🎉 feat     - Initial commit / New feature"
+    echo "  ✨ feat     - New feature"
+    echo "  🐛 fix      - Bug fix"
+    echo "  📝 docs     - Documentation"
+    echo "  🔧 chore    - Maintenance tasks"
+    echo "  ♻️ refactor - Code refactoring"
+    echo "  🧪 test     - Tests"
+    echo "  ⬆️ chore    - Dependency updates"
+    echo "  🔥 chore    - Remove code/files"
+    echo "  🚀 perf     - Performance improvements"
+    echo "  💄 style    - Styling/formatting"
+    echo "  🏗️ build    - Build system changes"
+    echo "  ✅ test     - Add/update tests"
+    echo "  🔒 fix      - Security fix"
+    echo ""
+    echo "Example: 🐛 fix(auth): resolve login validation issue"
+    echo ""
+    echo "Your message: $COMMIT_MSG"
+    exit 1
+fi
+
+echo "✅ Commit message format valid"

@@ -87,6 +87,13 @@ class FileUtils {
     sourceFile.copySync(destination);
   }
 
+  /// Make a file executable (chmod +x on Unix systems).
+  void makeExecutable(String path) {
+    if (Platform.isLinux || Platform.isMacOS) {
+      Process.runSync('chmod', ['+x', path]);
+    }
+  }
+
   /// List all files in a directory (recursive).
   List<FileSystemEntity> listFiles(String path, {bool recursive = false}) {
     final dir = Directory(path);

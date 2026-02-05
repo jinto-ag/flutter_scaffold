@@ -170,6 +170,10 @@ class TemplateRegistry {
     'lib/src/routing/routes.dart': 'routing/routes.dart.template',
     'lib/src/shared/providers/shared_providers.dart':
         'shared/shared_providers.dart.template',
+    // Git hooks
+    '.githooks/pre-commit': 'hooks/pre-commit.template',
+    '.githooks/commit-msg': 'hooks/commit-msg.template',
+    '.githooks/setup.sh': 'hooks/setup.sh.template',
   };
 
   /// Feature template types.
