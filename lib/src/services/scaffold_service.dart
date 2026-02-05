@@ -159,21 +159,26 @@ class ScaffoldService {
   /// Update main.dart to use the generated App widget with ProviderScope.
   ///
   /// [projectPath] - Path to the Flutter project root.
+  /// [projectName] - Name of the project for package import.
   /// [force] - If true, overwrite even if already updated.
   /// [dryRun] - If true, only show what would be done.
   bool updateMainDart({
     required String projectPath,
+    required String projectName,
     bool force = false,
     bool dryRun = false,
   }) {
     final mainPath = _fileUtils.joinPath(projectPath, mainDartPath);
 
-    // Get template content
-    final template = _templates.getTemplate(mainDartPath);
-    if (template == null) {
+    // Get template content and apply variables
+    final rawTemplate = _templates.getTemplate(mainDartPath);
+    if (rawTemplate == null) {
       _logger.warn('No template found for main.dart');
       return false;
     }
+
+    // Apply project name substitution
+    final template = rawTemplate.replaceAll('{{projectName}}', projectName);
 
     if (dryRun) {
       _logger.would('Update main.dart with ProviderScope');

@@ -111,6 +111,7 @@ class ScaffoldCommand extends Command<int> {
         _logger.info('');
         _scaffoldService.updateMainDart(
           projectPath: projectPath,
+          projectName: projectName,
           force: force,
           dryRun: dryRun,
         );

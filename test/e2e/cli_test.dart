@@ -182,7 +182,7 @@ void main() {
       }
     });
 
-    test('core templates are standalone (no placeholders)', () {
+    test('core templates are standalone (no placeholders) except main.dart', () {
       final coreDir = Directory(
         p.join(Directory.current.path, 'lib', 'src', 'templates', 'core'),
       );
@@ -195,13 +195,23 @@ void main() {
 
       for (final file in templates) {
         final content = file.readAsStringSync();
+        final basename = p.basename(file.path);
 
-        expect(
-          content.contains('{{'),
-          isFalse,
-          reason:
-              '${p.basename(file.path)} should not have variable placeholders',
-        );
+        // main.dart.template is allowed to have {{projectName}} for package import
+        if (basename == 'main.dart.template') {
+          expect(
+            content.contains('{{projectName}}'),
+            isTrue,
+            reason:
+                'main.dart.template should have {{projectName}} placeholder',
+          );
+        } else {
+          expect(
+            content.contains('{{'),
+            isFalse,
+            reason: '$basename should not have variable placeholders',
+          );
+        }
       }
     });
   });
