@@ -19,6 +19,7 @@ export 'src/utils/templates.dart';
 export 'src/services/dependency_service.dart';
 export 'src/services/feature_service.dart';
 export 'src/services/flutter_service.dart';
+export 'src/services/git_service.dart';
 export 'src/services/scaffold_service.dart';
 
 // Commands

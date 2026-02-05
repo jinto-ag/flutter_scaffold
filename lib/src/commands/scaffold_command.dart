@@ -5,6 +5,7 @@ import 'package:args/command_runner.dart';
 
 import '../services/dependency_service.dart';
 import '../services/feature_service.dart';
+import '../services/git_service.dart';
 import '../services/scaffold_service.dart';
 import '../utils/file_utils.dart';
 import '../utils/logger.dart';
@@ -16,11 +17,13 @@ class ScaffoldCommand extends Command<int> {
     ScaffoldService? scaffoldService,
     FeatureService? featureService,
     DependencyService? dependencyService,
+    GitService? gitService,
     FileUtils? fileUtils,
   }) : _logger = logger ?? ScaffoldLogger(),
        _scaffoldService = scaffoldService ?? ScaffoldService(),
        _featureService = featureService ?? FeatureService(),
        _dependencyService = dependencyService ?? DependencyService(),
+       _gitService = gitService ?? GitService(),
        _fileUtils = fileUtils ?? const FileUtils() {
     argParser
       ..addFlag(
@@ -33,6 +36,11 @@ class ScaffoldCommand extends Command<int> {
         'install-deps',
         help: 'Install dependencies after scaffolding',
         negatable: false,
+      )
+      ..addFlag(
+        'init-git',
+        help: 'Initialize git with dev branch and initial commit',
+        defaultsTo: true,
       )
       ..addFlag(
         'verify',
@@ -50,6 +58,7 @@ class ScaffoldCommand extends Command<int> {
   final ScaffoldService _scaffoldService;
   final FeatureService _featureService;
   final DependencyService _dependencyService;
+  final GitService _gitService;
   final FileUtils _fileUtils;
 
   @override
@@ -64,10 +73,12 @@ class ScaffoldCommand extends Command<int> {
     final args = argResults!;
     final force = args.flag('force');
     final installDeps = args.flag('install-deps');
+    final initGit = args.flag('init-git');
     final verify = args.flag('verify');
     final dryRun = args.flag('dry-run');
 
     final projectPath = _fileUtils.currentDirectory;
+    final projectName = _fileUtils.basename(projectPath);
 
     _logger.header('Flutter Clean Architecture Scaffold');
 
@@ -109,6 +120,16 @@ class ScaffoldCommand extends Command<int> {
       if (installDeps && !dryRun) {
         _logger.info('');
         await _dependencyService.setupProject(projectPath: projectPath);
+      }
+
+      // Initialize git if requested
+      if (initGit && !dryRun) {
+        _logger.info('');
+        await _gitService.initializeGit(
+          projectPath: projectPath,
+          projectName: projectName,
+          dryRun: dryRun,
+        );
       }
 
       // Verify if requested
