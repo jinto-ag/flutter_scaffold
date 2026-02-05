@@ -33,5 +33,24 @@ if ! dart test --reporter compact; then
 fi
 echo "✅ All tests passed"
 
+# 4. Run E2E test (scaffold a project and verify)
+# This is optional and can be skipped with SKIP_E2E=1
+if [ "$SKIP_E2E" != "1" ]; then
+    echo ""
+    echo "🚀 Running E2E test..."
+    if [ -f "scripts/e2e_test.sh" ]; then
+        if ! ./scripts/e2e_test.sh; then
+            echo "❌ E2E test failed. See e2e_test.log for details."
+            exit 1
+        fi
+        echo "✅ E2E test passed"
+    else
+        echo "⚠️ E2E test script not found, skipping..."
+    fi
+else
+    echo ""
+    echo "⏭️ Skipping E2E test (SKIP_E2E=1)"
+fi
+
 echo ""
 echo "✅ All pre-commit checks passed!"
