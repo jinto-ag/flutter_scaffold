@@ -17,6 +17,9 @@
     "Linters"
   ],
   "activationEvents": [],
+  "overrides": {
+    "glob": "^10.4.5"
+  },
   "main": "./out/extension.js",
   "contributes": {
     "languages": [

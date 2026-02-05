@@ -1,0 +1,5 @@
+{
+    "files.exclude": {
+        "**/*.template.__analysis__.dart": true
+    }
+}
