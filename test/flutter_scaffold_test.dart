@@ -71,7 +71,7 @@ void main() {
 
   group('Constants', () {
     test('version is defined', () {
-      expect(version, equals('0.1.0'));
+      expect(appVersion, equals('0.1.0'));
     });
 
     test('core directories are defined', () {

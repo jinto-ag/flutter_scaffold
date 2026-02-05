@@ -7,6 +7,7 @@ library;
 // Core
 export 'src/core/constants.dart';
 export 'src/core/errors.dart';
+export 'src/core/version.dart';
 
 // Utils
 export 'src/utils/file_utils.dart';

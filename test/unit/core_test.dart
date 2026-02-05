@@ -41,7 +41,7 @@ void main() {
 
   group('Constants', () {
     test('version is 0.1.0', () {
-      expect(version, equals('0.1.0'));
+      expect(appVersion, equals('0.1.0'));
     });
 
     test('executable name is flutter_scaffold', () {

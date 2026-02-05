@@ -30,7 +30,7 @@ Future<void> main(List<String> arguments) async {
   try {
     // Handle version flag
     if (arguments.contains('-v') || arguments.contains('--version')) {
-      logger.info('flutter_scaffold version $version');
+      logger.info('flutter_scaffold version $appVersion');
       exit(0);
     }
 
@@ -60,7 +60,7 @@ Future<void> main(List<String> arguments) async {
 
       // No command provided - run scaffold by default
       if (arguments.isEmpty) {
-        logger.header('Flutter Clean Architecture Scaffold v$version');
+        logger.header('Flutter Clean Architecture Scaffold v$appVersion');
         logger.info('');
         logger.info('Usage: $executableName <command> [arguments]');
         logger.info('');

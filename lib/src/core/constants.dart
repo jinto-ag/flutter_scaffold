@@ -1,8 +1,8 @@
 /// Application-wide constants for Flutter Scaffold CLI.
 library;
 
-/// Version of the CLI tool.
-const String version = '0.1.0';
+// Version is now dynamically parsed from pubspec.yaml - see version.dart
+// Import and use `appVersion` from version.dart for the current version.
 
 /// Name of the CLI executable.
 const String executableName = 'flutter_scaffold';
