@@ -1,0 +1,49 @@
+import 'package:flutter_test/flutter_test.dart';
+
+import 'package:{{projectName}}/src/core/errors/exceptions.dart';
+import 'package:{{projectName}}/src/core/errors/failures.dart';
+
+void main() {
+  group('Exceptions', () {
+    test('ServerException has correct message', () {
+      const exception = ServerException('Server error');
+      expect(exception.message, 'Server error');
+    });
+
+    test('CacheException has correct message', () {
+      const exception = CacheException('Cache error');
+      expect(exception.message, 'Cache error');
+    });
+
+    test('NetworkException has correct message', () {
+      const exception = NetworkException('Network error');
+      expect(exception.message, 'Network error');
+    });
+  });
+
+  group('Failures', () {
+    test('ServerFailure has correct message', () {
+      const failure = ServerFailure('Server failure');
+      expect(failure.message, 'Server failure');
+    });
+
+    test('CacheFailure has correct message', () {
+      const failure = CacheFailure('Cache failure');
+      expect(failure.message, 'Cache failure');
+    });
+
+    test('NetworkFailure has correct message', () {
+      const failure = NetworkFailure('Network failure');
+      expect(failure.message, 'Network failure');
+    });
+
+    test('failures are equatable', () {
+      const failure1 = ServerFailure('error');
+      const failure2 = ServerFailure('error');
+      const failure3 = ServerFailure('different');
+
+      expect(failure1, equals(failure2));
+      expect(failure1, isNot(equals(failure3)));
+    });
+  });
+}

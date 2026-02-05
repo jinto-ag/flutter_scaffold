@@ -158,6 +158,34 @@ class ScaffoldService {
       }
     }
 
+    // Create test files with project name substitution
+    _logger.section('Creating unit tests...');
+    final projectName = _fileUtils.getProjectName(projectPath) ?? 'app';
+    for (final file in testFiles) {
+      final fullPath = _fileUtils.joinPath(projectPath, file);
+      var content = _templates.getTemplate(file);
+
+      if (content == null) {
+        _logger.warn('No template found for: $file');
+        continue;
+      }
+
+      // Apply project name substitution
+      content = content.replaceAll('{{projectName}}', projectName);
+
+      if (dryRun) {
+        _logger.would('Create test: $file');
+      } else {
+        if (_fileUtils.createFile(fullPath, content, force: force)) {
+          _logger.created(file);
+          filesCreated++;
+        } else {
+          _logger.skipped(file);
+          filesSkipped++;
+        }
+      }
+    }
+
     // Create scaffold marker directory
     _createMarkerDirectory(projectPath, dryRun: dryRun);
 

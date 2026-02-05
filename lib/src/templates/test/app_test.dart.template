@@ -1,0 +1,54 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:{{projectName}}/src/app.dart';
+
+void main() {
+  group('App Widget', () {
+    testWidgets('renders MaterialApp.router', (tester) async {
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: App(),
+        ),
+      );
+
+      // App should render successfully
+      expect(find.byType(MaterialApp), findsOneWidget);
+    });
+
+    testWidgets('uses correct theme mode', (tester) async {
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: App(),
+        ),
+      );
+
+      final MaterialApp materialApp = tester.widget(find.byType(MaterialApp));
+      expect(materialApp.themeMode, ThemeMode.system);
+    });
+
+    testWidgets('has debug banner disabled', (tester) async {
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: App(),
+        ),
+      );
+
+      final MaterialApp materialApp = tester.widget(find.byType(MaterialApp));
+      expect(materialApp.debugShowCheckedModeBanner, isFalse);
+    });
+
+    testWidgets('has both light and dark themes configured', (tester) async {
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: App(),
+        ),
+      );
+
+      final MaterialApp materialApp = tester.widget(find.byType(MaterialApp));
+      expect(materialApp.theme, isNotNull);
+      expect(materialApp.darkTheme, isNotNull);
+    });
+  });
+}

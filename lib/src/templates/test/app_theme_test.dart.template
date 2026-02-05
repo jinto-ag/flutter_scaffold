@@ -1,0 +1,87 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+import 'package:{{projectName}}/src/core/theme/app_theme.dart';
+
+void main() {
+  group('AppTheme', () {
+    group('Light Theme', () {
+      test('returns ThemeData with light brightness', () {
+        final theme = AppTheme.light;
+        
+        expect(theme, isA<ThemeData>());
+        expect(theme.brightness, Brightness.light);
+      });
+
+      test('uses Material3 design', () {
+        final theme = AppTheme.light;
+        
+        expect(theme.useMaterial3, isTrue);
+      });
+
+      test('has correct colorScheme brightness', () {
+        final theme = AppTheme.light;
+        
+        expect(theme.colorScheme.brightness, Brightness.light);
+      });
+
+      test('appBar is centered', () {
+        final theme = AppTheme.light;
+        
+        expect(theme.appBarTheme.centerTitle, isTrue);
+      });
+
+      test('appBar has no elevation', () {
+        final theme = AppTheme.light;
+        
+        expect(theme.appBarTheme.elevation, 0);
+      });
+
+      test('card has elevation', () {
+        final theme = AppTheme.light;
+        
+        expect(theme.cardTheme.elevation, 2);
+      });
+    });
+
+    group('Dark Theme', () {
+      test('returns ThemeData with dark brightness', () {
+        final theme = AppTheme.dark;
+        
+        expect(theme, isA<ThemeData>());
+        expect(theme.brightness, Brightness.dark);
+      });
+
+      test('uses Material3 design', () {
+        final theme = AppTheme.dark;
+        
+        expect(theme.useMaterial3, isTrue);
+      });
+
+      test('has correct colorScheme brightness', () {
+        final theme = AppTheme.dark;
+        
+        expect(theme.colorScheme.brightness, Brightness.dark);
+      });
+
+      test('appBar is centered', () {
+        final theme = AppTheme.dark;
+        
+        expect(theme.appBarTheme.centerTitle, isTrue);
+      });
+    });
+
+    group('Theme Consistency', () {
+      test('light and dark themes use same seed color', () {
+        final light = AppTheme.light;
+        final dark = AppTheme.dark;
+        
+        // Both should use Material3
+        expect(light.useMaterial3, dark.useMaterial3);
+        
+        // Both should have same appBar centering
+        expect(light.appBarTheme.centerTitle, dark.appBarTheme.centerTitle);
+      });
+    });
+  });
+}

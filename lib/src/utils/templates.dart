@@ -174,6 +174,11 @@ class TemplateRegistry {
     '.githooks/pre-commit': 'hooks/pre-commit.template',
     '.githooks/commit-msg': 'hooks/commit-msg.template',
     '.githooks/setup.sh': 'hooks/setup.sh.template',
+    // Unit tests
+    'test/core/app_theme_test.dart': 'test/app_theme_test.dart.template',
+    'test/core/errors_test.dart': 'test/errors_test.dart.template',
+    'test/routing_test.dart': 'test/routing_test.dart.template',
+    'test/app_test.dart': 'test/app_test.dart.template',
   };
 
   /// Feature template types.

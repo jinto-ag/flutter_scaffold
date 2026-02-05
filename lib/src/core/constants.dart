@@ -31,6 +31,7 @@ const List<String> coreDirectories = [
   '$srcDir/shared/widgets',
   '$srcDir/features',
   '.githooks',
+  'test/core',
 ];
 
 /// Core scaffold files (relative to project root).
@@ -51,6 +52,14 @@ const List<String> hookFiles = [
   '.githooks/pre-commit',
   '.githooks/commit-msg',
   '.githooks/setup.sh',
+];
+
+/// Test files (relative to project root).
+const List<String> testFiles = [
+  'test/core/app_theme_test.dart',
+  'test/core/errors_test.dart',
+  'test/routing_test.dart',
+  'test/app_test.dart',
 ];
 
 /// Feature directories template (relative to feature root).

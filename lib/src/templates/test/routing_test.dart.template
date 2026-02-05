@@ -1,0 +1,51 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import 'package:{{projectName}}/src/routing/app_router.dart';
+import 'package:{{projectName}}/src/routing/routes.dart';
+
+void main() {
+  group('Routes', () {
+    test('home route is defined', () {
+      expect(Routes.home, '/');
+    });
+
+    test('home route name is defined', () {
+      expect(Routes.homeName, 'home');
+    });
+  });
+
+  group('AppRouter', () {
+    late ProviderContainer container;
+    late GoRouter router;
+
+    setUp(() {
+      container = ProviderContainer();
+      router = container.read(appRouterProvider);
+    });
+
+    tearDown(() {
+      container.dispose();
+    });
+
+    test('appRouterProvider returns GoRouter', () {
+      expect(router, isA<GoRouter>());
+    });
+
+    test('home route exists in configuration', () {
+      // Verify router has home route configured
+      final routes = router.configuration.routes;
+      expect(routes, isNotEmpty);
+      
+      // First route should be the home route
+      final homeRoute = routes.first;
+      expect(homeRoute, isA<GoRoute>());
+    });
+
+    test('router has routes configured', () {
+      // GoRouter should have at least one route
+      expect(router.configuration.routes, isNotEmpty);
+    });
+  });
+}
