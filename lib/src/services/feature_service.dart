@@ -7,6 +7,7 @@ import '../utils/file_utils.dart';
 import '../utils/logger.dart';
 import '../utils/string_utils.dart';
 import '../utils/templates.dart';
+import 'build_runner_service.dart';
 
 /// Information about a feature.
 class FeatureInfo {
@@ -41,11 +42,14 @@ class FeatureService {
     ScaffoldLogger? logger,
     FileUtils? fileUtils,
     TemplateRegistry? templates,
+    BuildRunnerService? buildRunnerService,
   }) : _logger = logger ?? ScaffoldLogger(),
-       _fileUtils = fileUtils ?? const FileUtils();
+       _fileUtils = fileUtils ?? const FileUtils(),
+       _buildRunnerService = buildRunnerService ?? BuildRunnerService();
 
   final ScaffoldLogger _logger;
   final FileUtils _fileUtils;
+  final BuildRunnerService _buildRunnerService;
 
   /// Create a TemplateRegistry with context from pubspec.yaml.
   TemplateRegistry _createTemplateRegistry(String projectPath) {
@@ -129,12 +133,13 @@ class FeatureService {
   }
 
   /// Add a new feature module.
-  FeatureResult addFeature({
+  Future<FeatureResult> addFeature({
     required String projectPath,
     required String featureName,
     bool force = false,
     bool dryRun = false,
-  }) {
+    String? screenName,
+  }) async {
     // Normalize the feature name
     final normalized = normalizeFeatureName(featureName);
     final featurePath = _featurePath(projectPath, normalized);
@@ -171,8 +176,10 @@ class FeatureService {
     _logger.section('Creating files...');
     final files = [
       (
-        'presentation/screens/${normalized}_screen.dart',
-        templates.getFeatureTemplate('screen', normalized),
+        'presentation/screens/${screenName ?? normalized}_screen.dart',
+        screenName != null
+            ? templates.getScreenTemplate(screenName, normalized)
+            : templates.getFeatureTemplate('screen', normalized),
       ),
       (
         'presentation/providers/${normalized}_providers.dart',
@@ -205,10 +212,43 @@ class FeatureService {
       }
     }
 
+    // Update routes if screen is specified
+    if (screenName != null && !dryRun) {
+      _updateRoutes(projectPath, screenName, normalized);
+    }
+
+    if (!dryRun) {
+      // Run pub get if needed
+      await _buildRunnerService.runPubGet(projectPath);
+
+      // Run build runner if needed
+      final buildResult = await _buildRunnerService.runBuildRunner(projectPath);
+      if (!buildResult.success) {
+        _logger.warn('Build runner completed with issues');
+      }
+
+      // Run verification
+      final verificationResult = await _buildRunnerService.verifyCode(
+        projectPath,
+      );
+      if (!verificationResult.success) {
+        _logger.warn('Code verification found issues');
+        if (verificationResult.issues.isNotEmpty) {
+          for (final issue in verificationResult.issues) {
+            _logger.warn('  • $issue');
+          }
+        }
+      }
+    }
+
     _logger.divider();
     _logger.success("Feature '$normalized' created!");
     _logger.info('  Directories: $dirsCreated');
     _logger.info('  Files: $filesCreated');
+    if (screenName != null) {
+      _logger.info('  Screen: $screenName');
+      _logger.info('  Route: /$screenName');
+    }
     _logger.info('');
     _logger.info('Feature structure:');
     _logger.info('  $featurePath/');
@@ -294,5 +334,113 @@ class FeatureService {
     _logger.info('');
     _logger.success('✓ All custom content removed');
     _logger.success('✓ Basic structure recreated');
+  }
+
+  /// Update routes to include the new screen.
+  void _updateRoutes(
+    String projectPath,
+    String screenName,
+    String featureName,
+  ) {
+    final routesPath = _fileUtils.joinPath(
+      projectPath,
+      srcDir,
+      'routing',
+      'routes.dart',
+    );
+    final routerPath = _fileUtils.joinPath(
+      projectPath,
+      srcDir,
+      'routing',
+      'app_router.dart',
+    );
+
+    try {
+      // Update routes.dart
+      if (_fileUtils.fileExists(routesPath)) {
+        _updateRoutesFile(routesPath, screenName);
+        _logger.success('Updated routes.dart');
+      }
+
+      // Update app_router.dart
+      if (_fileUtils.fileExists(routerPath)) {
+        _updateRouterFile(routerPath, screenName, featureName);
+        _logger.success('Updated app_router.dart');
+      }
+    } catch (e) {
+      _logger.warn('Could not update routes: $e');
+    }
+  }
+
+  /// Update the routes.dart file with new route definitions.
+  void _updateRoutesFile(String routesPath, String screenName) {
+    final content = _fileUtils.readFile(routesPath);
+
+    // Add new route name and path
+    final routeNameLine =
+        "  static const String ${screenName}Name = '$screenName';";
+    final routePathLine = "  static const String $screenName = '/$screenName';";
+
+    // Find where to insert (before the closing brace of the class)
+    final lines = content.split('\n');
+    final insertIndex = lines.indexWhere((line) => line.contains('}')) - 1;
+
+    if (insertIndex > 0) {
+      lines.insert(insertIndex, routeNameLine);
+      lines.insert(insertIndex + 1, routePathLine);
+
+      final updatedContent = lines.join('\n');
+      _fileUtils.writeFile(routesPath, updatedContent);
+    }
+  }
+
+  /// Update the app_router.dart file with new route registration.
+  void _updateRouterFile(
+    String routerPath,
+    String screenName,
+    String featureName,
+  ) {
+    final content = _fileUtils.readFile(routerPath);
+
+    final pascalScreenName = toPascalCase(screenName);
+
+    // Add import
+    final importLine =
+        "import '../features/$featureName/presentation/screens/${screenName}_screen.dart';";
+
+    // Add route configuration
+    final routeConfig =
+        '''      GoRoute(
+        path: Routes.$screenName,
+        name: Routes.${screenName}Name,
+        builder: (context, state) => const ${pascalScreenName}Screen(),
+      ),''';
+
+    var updatedContent = content;
+
+    // Add import after existing imports
+    if (!content.contains(importLine)) {
+      final importInsertPoint = content.lastIndexOf("import 'routes.dart';");
+      if (importInsertPoint != -1) {
+        updatedContent =
+            '${updatedContent.substring(0, importInsertPoint)}$importLine\n${updatedContent.substring(importInsertPoint)}';
+      }
+    }
+
+    // Add route to the routes array
+    if (!content.contains("path: Routes.$screenName")) {
+      final routesArrayStart = updatedContent.indexOf('routes: [');
+      if (routesArrayStart != -1) {
+        final routesArrayEnd = updatedContent.indexOf('],', routesArrayStart);
+        if (routesArrayEnd != -1) {
+          updatedContent =
+              '${updatedContent.substring(0, routesArrayEnd)},\n$routeConfig${updatedContent.substring(routesArrayEnd)}';
+        }
+      }
+    }
+
+    if (updatedContent != content) {
+      _fileUtils.writeFile(routerPath, updatedContent);
+    }
   }
 }

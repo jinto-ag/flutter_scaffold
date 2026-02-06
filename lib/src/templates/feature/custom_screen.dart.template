@@ -1,0 +1,159 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class {{PASCAL_SCREEN_NAME}}Screen extends ConsumerWidget {
+  const {{PASCAL_SCREEN_NAME}}Screen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('{{PASCAL_SCREEN_NAME}}'),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header section
+            Row(
+              children: [
+                Icon(
+                  _getScreenIcon(),
+                  size: 32,
+                  color: Theme.of(context).primaryColor,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '{{PASCAL_SCREEN_NAME}}',
+                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        'Customize this screen as needed',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            
+            const SizedBox(height: 24),
+            
+            // Main content area - customize this section
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Content Area',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'This is the {{PASCAL_SCREEN_NAME}} screen. You can customize this content by editing the file:\nlib/src/features/{{FEATURE_NAME}}/presentation/screens/{{screenName}}_screen.dart',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: 16),
+                    
+                    // Example buttons - customize as needed
+                    Wrap(
+                      spacing: 8,
+                      children: [
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            // Add your action here
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Action 1 triggered')),
+                            );
+                          },
+                          icon: const Icon(Icons.play_arrow),
+                          label: const Text('Action 1'),
+                        ),
+                        OutlinedButton.icon(
+                          onPressed: () {
+                            // Add your action here
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Action 2 triggered')),
+                            );
+                          },
+                          icon: const Icon(Icons.settings),
+                          label: const Text('Action 2'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            
+            const SizedBox(height: 16),
+            
+            // Additional content section
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Additional Information',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Feature: {{PASCAL_FEATURE_NAME}}\n'
+                      'Screen: {{PASCAL_SCREEN_NAME}}\n'
+                      'Route: /{{screenName}}',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontFamily: 'monospace',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Add your floating action button logic here
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('FAB pressed')),
+          );
+        },
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+  
+  /// Get an appropriate icon for this screen - customize as needed
+  IconData _getScreenIcon() {
+    switch('{{screenName}}') {
+      case 'about':
+        return Icons.info;
+      case 'profile':
+        return Icons.person;
+      case 'settings':
+        return Icons.settings;
+      case 'help':
+        return Icons.help;
+      case 'contact':
+        return Icons.contact_mail;
+      default:
+        return Icons.dashboard;
+    }
+  }
+}

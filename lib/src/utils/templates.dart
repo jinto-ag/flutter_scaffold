@@ -422,6 +422,9 @@ class TemplateRegistry {
     'providers',
     'entity',
     'repository',
+    'basic_model',
+    'json_serializable_model',
+    'freezed_model',
   ];
 
   /// Get a core template by its output path.
@@ -490,6 +493,31 @@ class TemplateRegistry {
       templatePath,
       context.allVariables,
     );
+  }
+
+  /// Get a screen template with customizable content.
+  ///
+  /// Returns null if template not found.
+  String? getScreenTemplate(String screenName, String featureName) {
+    final pascalScreenName = toPascalCase(screenName);
+    final pascalFeatureName = toPascalCase(featureName);
+
+    final specificVariables = {
+      'SCREEN_NAME': screenName,
+      'FEATURE_NAME': featureName,
+      'PASCAL_SCREEN_NAME': pascalScreenName,
+      'PASCAL_FEATURE_NAME': pascalFeatureName,
+      'screenName': screenName,
+      'featureName': featureName,
+      'pascalScreenName': pascalScreenName,
+      'pascalFeatureName': pascalFeatureName,
+    };
+
+    // Merge specific variables with global context
+    final context = _context.withSpecifics(specificVariables);
+
+    final templatePath = 'feature/custom_screen.dart.template';
+    return _loader.loadAndApplyTemplate(templatePath, context.allVariables);
   }
 
   /// Validate that all required templates exist.

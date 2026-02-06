@@ -130,6 +130,73 @@ class GitService {
 Generated with flutter_scaffold v$appVersion''';
   }
 
+  /// Commit staged changes with conventional commit format.
+  ///
+  /// [projectPath] - Path to the project directory.
+  /// [type] - Commit type (feat, fix, chore, etc.).
+  /// [scope] - Commit scope.
+  /// [message] - Commit message description.
+  /// [emoji] - Optional emoji prefix.
+  Future<bool> commitChanges({
+    required String projectPath,
+    required String type,
+    required String scope,
+    required String message,
+    String? emoji,
+  }) async {
+    try {
+      // Check if there are changes to commit
+      final statusResult = await _processUtils.run('git', [
+        'status',
+        '--porcelain',
+      ], workingDirectory: projectPath);
+
+      if (statusResult.exitCode != 0) {
+        _logger.warn('Failed to check git status');
+        return false;
+      }
+
+      final hasChanges = statusResult.stdout.toString().trim().isNotEmpty;
+      if (!hasChanges) {
+        _logger.info('No changes to commit');
+        return true;
+      }
+
+      // Stage all changes
+      final addResult = await _processUtils.run('git', [
+        'add',
+        '-A',
+      ], workingDirectory: projectPath);
+
+      if (addResult.exitCode != 0) {
+        _logger.warn('Failed to stage changes');
+        return false;
+      }
+
+      // Build commit message
+      final emojiPrefix = emoji != null ? '$emoji ' : '';
+      final commitMessage = '$emojiPrefix$type($scope): $message';
+
+      // Commit
+      final commitResult = await _processUtils.run('git', [
+        'commit',
+        '-m',
+        commitMessage,
+      ], workingDirectory: projectPath);
+
+      if (commitResult.exitCode != 0) {
+        _logger.warn('Failed to commit: ${commitResult.stderr}');
+        return false;
+      }
+
+      _logger.success('Committed: $commitMessage');
+      return true;
+    } catch (e) {
+      _logger.warn('Git commit failed: $e');
+      return false;
+    }
+  }
+
   /// Check if git is available on the system.
   Future<bool> isGitAvailable() async {
     try {

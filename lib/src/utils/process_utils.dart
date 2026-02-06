@@ -40,7 +40,8 @@ class ProcessUtils {
       executable,
       arguments,
       workingDirectory: workingDirectory,
-      runInShell: Platform.isWindows,
+      runInShell:
+          true, // Enable shell for all platforms to resolve PATH properly
     );
 
     final stdout = StringBuffer();

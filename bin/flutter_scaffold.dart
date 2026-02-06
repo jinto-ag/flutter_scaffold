@@ -11,7 +11,7 @@ Future<void> main(List<String> arguments) async {
   // Create command runner
   final runner = CommandRunner<int>(executableName, description)
     ..addCommand(CreateCommand())
-    ..addCommand(ScaffoldCommand())
+    ..addCommand(InitCommand())
     ..addCommand(AddCommand())
     ..addCommand(RemoveCommand())
     ..addCommand(ResetCommand())
@@ -67,7 +67,7 @@ Future<void> main(List<String> arguments) async {
         logger.info('');
         logger.info('Available commands:');
         logger.info('  create    Create a new Flutter project with scaffold');
-        logger.info('  scaffold  Apply scaffold to existing project');
+        logger.info('  init      Initialize scaffold in existing project');
         logger.info('  add       Add new modules (e.g., add feature <name>)');
         logger.info('  remove    Remove modules (e.g., remove feature <name>)');
         logger.info('  reset     Reset project or feature to initial state');

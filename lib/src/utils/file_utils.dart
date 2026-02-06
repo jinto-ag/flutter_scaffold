@@ -63,6 +63,12 @@ class FileUtils {
     return file.readAsStringSync();
   }
 
+  /// Write content to a file, overwriting existing content.
+  void writeFile(String path, String content) {
+    final file = File(path);
+    file.writeAsStringSync(content);
+  }
+
   /// Delete a file.
   void deleteFile(String path) {
     final file = File(path);

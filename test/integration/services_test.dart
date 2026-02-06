@@ -124,8 +124,11 @@ environment:
       }
     });
 
-    test('addFeature creates feature structure', () {
-      featureService.addFeature(projectPath: tempDir.path, featureName: 'auth');
+    test('addFeature creates feature structure', () async {
+      await featureService.addFeature(
+        projectPath: tempDir.path,
+        featureName: 'auth',
+      );
 
       final featurePath = p.join(
         tempDir.path,
@@ -151,8 +154,11 @@ environment:
       );
     });
 
-    test('addFeature creates feature files', () {
-      featureService.addFeature(projectPath: tempDir.path, featureName: 'user');
+    test('addFeature creates feature files', () async {
+      await featureService.addFeature(
+        projectPath: tempDir.path,
+        featureName: 'user',
+      );
 
       final featurePath = p.join(
         tempDir.path,
@@ -176,8 +182,8 @@ environment:
       );
     });
 
-    test('addFeature normalizes feature name', () {
-      featureService.addFeature(
+    test('addFeature normalizes feature name', () async {
+      await featureService.addFeature(
         projectPath: tempDir.path,
         featureName: 'MyFeature',
       );
@@ -192,8 +198,8 @@ environment:
       expect(Directory(featurePath).existsSync(), isTrue);
     });
 
-    test('addFeature throws if feature exists without force', () {
-      featureService.addFeature(
+    test('addFeature throws if feature exists without force', () async {
+      await featureService.addFeature(
         projectPath: tempDir.path,
         featureName: 'existing',
       );
@@ -208,9 +214,15 @@ environment:
       );
     });
 
-    test('listFeatures returns all features', () {
-      featureService.addFeature(projectPath: tempDir.path, featureName: 'auth');
-      featureService.addFeature(projectPath: tempDir.path, featureName: 'home');
+    test('listFeatures returns all features', () async {
+      await featureService.addFeature(
+        projectPath: tempDir.path,
+        featureName: 'auth',
+      );
+      await featureService.addFeature(
+        projectPath: tempDir.path,
+        featureName: 'home',
+      );
 
       final features = featureService.listFeatures(tempDir.path);
       expect(features, hasLength(2));
@@ -218,8 +230,11 @@ environment:
       expect(features, contains('home'));
     });
 
-    test('removeFeature deletes feature directory', () {
-      featureService.addFeature(projectPath: tempDir.path, featureName: 'temp');
+    test('removeFeature deletes feature directory', () async {
+      await featureService.addFeature(
+        projectPath: tempDir.path,
+        featureName: 'temp',
+      );
       final featurePath = p.join(
         tempDir.path,
         'lib',
@@ -236,8 +251,11 @@ environment:
       expect(Directory(featurePath).existsSync(), isFalse);
     });
 
-    test('getFeatureInfo returns correct information', () {
-      featureService.addFeature(projectPath: tempDir.path, featureName: 'info');
+    test('getFeatureInfo returns correct information', () async {
+      await featureService.addFeature(
+        projectPath: tempDir.path,
+        featureName: 'info',
+      );
 
       final info = featureService.getFeatureInfo(tempDir.path, 'info');
       expect(info.name, equals('info'));

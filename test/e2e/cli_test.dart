@@ -62,14 +62,14 @@ void main() {
       expect(result.stdout.toString(), contains('feature'));
     });
 
-    test('scaffold command in non-flutter project fails gracefully', () async {
+    test('init command in non-flutter project fails gracefully', () async {
       final nonFlutterDir = Directory(p.join(tempDir.path, 'non_flutter'))
         ..createSync();
 
       final result = await Process.run('dart', [
         'run',
         cliPath,
-        'scaffold',
+        'init',
       ], workingDirectory: nonFlutterDir.path);
 
       expect(result.exitCode, isNot(0));
@@ -80,6 +80,7 @@ void main() {
           contains('not a flutter project'),
           contains('pubspec'),
           contains('error'),
+          contains('exception'),
         ),
       );
     });
@@ -175,7 +176,9 @@ void main() {
 
         expect(
           content.contains('{{FEATURE_NAME}}') ||
-              content.contains('{{PASCAL_NAME}}'),
+              content.contains('{{PASCAL_NAME}}') ||
+              content.contains('{{PASCAL_MODEL_NAME}}') ||
+              content.contains('{{MODEL_NAME}}'),
           isTrue,
           reason: '${p.basename(file.path)} should have variable placeholders',
         );

@@ -1,0 +1,47 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part '{{MODEL_NAME}}_model.g.dart';
+
+@JsonSerializable()
+class {{PASCAL_MODEL_NAME}}Model {
+  const {{PASCAL_MODEL_NAME}}Model({
+{{#HAS_FIELDS}}
+{{FIELDS}}
+{{/HAS_FIELDS}}
+  });
+
+  factory {{PASCAL_MODEL_NAME}}Model.fromJson(Map<String, dynamic> json) =>
+      _${{MODEL_NAME}}ModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _${{MODEL_NAME}}ModelToJson(this);
+
+{{#HAS_FIELDS}}
+  // Properties
+{{FIELDS}}
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is {{PASCAL_MODEL_NAME}}Model &&
+          runtimeType == other.runtimeType;
+
+  @override
+  int get hashCode => Object.hash({{FIELD_NAMES}});
+
+  @override
+  String toString() => '{{PASCAL_MODEL_NAME}}Model({{FIELD_NAMES}})';
+{{/HAS_FIELDS}}
+{{^HAS_FIELDS}}
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is {{PASCAL_MODEL_NAME}}Model &&
+          runtimeType == other.runtimeType;
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  String toString() => '{{PASCAL_MODEL_NAME}}Model()';
+{{/HAS_FIELDS}}
+}
