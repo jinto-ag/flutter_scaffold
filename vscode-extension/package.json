@@ -2,7 +2,7 @@
   "name": "flutter-scaffold-template",
   "displayName": "Flutter Scaffold Template",
   "description": "Syntax highlighting, linting, and formatting for flutter_scaffold template files",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "flutter-scaffold",
   "repository": {
     "type": "git",
@@ -52,7 +52,10 @@
       {
         "language": "dart-template",
         "scopeName": "source.dart.template",
-        "path": "./syntaxes/dart-template.tmLanguage.json"
+        "path": "./syntaxes/dart-template.tmLanguage.json",
+        "embeddedLanguages": {
+          "source.dart": "dart"
+        }
       },
       {
         "language": "shell-template",
@@ -78,6 +81,51 @@
           "default": true,
           "description": "Validate placeholder names"
         }
+      }
+    },
+    "configurationDefaults": {
+      "editor.tokenColorCustomizations": {
+        "textMateRules": [
+          {
+            "scope": "punctuation.definition.template.begin.flutter-scaffold, punctuation.definition.template.end.flutter-scaffold",
+            "settings": {
+              "foreground": "#FF6B6B",
+              "fontStyle": "bold"
+            }
+          },
+          {
+            "scope": "keyword.control.flutter-scaffold",
+            "settings": {
+              "foreground": "#C678DD",
+              "fontStyle": "bold"
+            }
+          },
+          {
+            "scope": "keyword.operator.flutter-scaffold",
+            "settings": {
+              "foreground": "#E5C07B"
+            }
+          },
+          {
+            "scope": "constant.language.flutter-scaffold",
+            "settings": {
+              "foreground": "#D19A66"
+            }
+          },
+          {
+            "scope": "variable.other.constant.flutter-scaffold",
+            "settings": {
+              "foreground": "#61AFEF",
+              "fontStyle": "italic"
+            }
+          },
+          {
+            "scope": "variable.other.placeholder.flutter-scaffold",
+            "settings": {
+              "foreground": "#98C379"
+            }
+          }
+        ]
       }
     }
   },

@@ -6,9 +6,9 @@ part '{{MODEL_NAME}}_model.g.dart';
 @freezed
 class {{PASCAL_MODEL_NAME}}Model with _${{PASCAL_MODEL_NAME}}Model {
   const factory {{PASCAL_MODEL_NAME}}Model({
-{{#HAS_FIELDS}}
+{{if HAS_FIELDS}}
 {{FIELDS}}
-{{/HAS_FIELDS}}
+{{endif}}
   }) = _{{PASCAL_MODEL_NAME}}Model;
 
   factory {{PASCAL_MODEL_NAME}}Model.fromJson(Map<String, dynamic> json) =>

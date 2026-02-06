@@ -1,12 +1,12 @@
 /// Basic model template.
 class {{PASCAL_MODEL_NAME}}Model {
   const {{PASCAL_MODEL_NAME}}Model({
-{{#HAS_FIELDS}}
+{{if HAS_FIELDS}}
 {{FIELDS}}
-{{/HAS_FIELDS}}
+{{endif}}
   });
 
-{{#HAS_FIELDS}}
+{{if HAS_FIELDS}}
   // Properties
 {{FIELDS}}
 
@@ -20,7 +20,7 @@ class {{PASCAL_MODEL_NAME}}Model {
   int get hashCode => Object.hash([{{FIELD_NAMES}}]);
 
   @override
-  String toString() => '{{PASCAL_MODEL_NAME}}Model({{#HAS_FIELDS}}{{FIELD_NAMES}}{{/HAS_FIELDS}})';
+  String toString() => '{{PASCAL_MODEL_NAME}}Model({{FIELD_NAMES}})';
 
   /// Create a copy with updated values
   {{PASCAL_MODEL_NAME}}Model copyWith({
@@ -44,8 +44,7 @@ class {{PASCAL_MODEL_NAME}}Model {
 {{FROM_JSON_FIELDS}}
     );
   }
-{{/HAS_FIELDS}}
-{{^HAS_FIELDS}}
+{{else}}
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -70,5 +69,6 @@ class {{PASCAL_MODEL_NAME}}Model {
   factory {{PASCAL_MODEL_NAME}}Model.fromJson(Map<String, dynamic> json) {
     return const {{PASCAL_MODEL_NAME}}Model();
   }
-{{/HAS_FIELDS}}
+{{endif}}
+
 }

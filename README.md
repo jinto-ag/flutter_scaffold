@@ -1,15 +1,26 @@
 # Flutter Scaffold CLI
 
-A **production-grade Dart CLI tool** for scaffolding Flutter projects with Clean Architecture. Replaces the bash-based `scaffold.sh` with a modular, testable, cross-platform Dart implementation.
+A **production-grade Dart CLI tool** for scaffolding Flutter projects with Clean Architecture. Replaces the legacy `scaffold.sh` with a modular, testable, cross-platform Dart implementation powered by a robust template engine.
 
 ## Features
 
 - 🏗️ **Clean Architecture Structure** - Organized layers: core, routing, shared, features
 - 📦 **Feature Modules** - Add/remove/reset feature modules with full structure
+- 📝 **Robust Template Engine** - Uses `.dart.template` files with logical conditionals (`{{if}}`, `{{else}}`)
 - 🔧 **Dependency Management** - Auto-install Riverpod, GoRouter, Freezed
 - 🛠️ **Code Generation** - Integrated build_runner support
 - ✅ **Verification** - Built-in scaffold verification
 - 🎨 **Beautiful Output** - Colored, styled console messages
+
+## 🔌 VS Code Extension
+
+For the best development experience when editing templates or working with the scaffold structure, install the **Flutter Scaffold Template** extension.
+
+- **Syntax Highlighting** for template files
+- **IntelliSense & Auto-completion**
+- **Template Formatting & Validation**
+
+[👉 View Extension README](vscode-extension/README.md)
 
 ## Installation
 

@@ -3,9 +3,28 @@ import * as fs from 'fs';
 import { execSync } from 'child_process';
 
 const KNOWN_PLACEHOLDERS = new Set([
+    // Core names
     'projectName',
     'featureName',
     'FeatureName',
+    'FEATURE_NAME',
+    'PASCAL_NAME',
+    'PASCAL_FEATURE_NAME',
+    // Model-related
+    'MODEL_NAME',
+    'PASCAL_MODEL_NAME',
+    // Screen-related
+    'screenName',
+    'PASCAL_SCREEN_NAME',
+    // Fields & data
+    'FIELDS',
+    'FIELD_NAMES',
+    'FIELDS_WITH_OPTIONAL',
+    'COPY_FIELDS',
+    'JSON_FIELDS',
+    'FROM_JSON_FIELDS',
+    // Logic markers
+    'HAS_FIELDS',
 ]);
 
 // Regex to capture the content inside {{ }}. 
@@ -14,6 +33,22 @@ const PLACEHOLDER_REGEX = /\{\{([\s\S]*?)\}\}/g;
 const SHADOW_HEADER_LINES = 1;
 
 let diagnosticCollection: vscode.DiagnosticCollection;
+
+// Decoration types for template syntax highlighting
+const bracketDecorationType = vscode.window.createTextEditorDecorationType({
+    color: '#FF6B6B',
+    fontWeight: 'bold',
+});
+
+const keywordDecorationType = vscode.window.createTextEditorDecorationType({
+    color: '#C678DD',
+    fontWeight: 'bold',
+});
+
+const variableDecorationType = vscode.window.createTextEditorDecorationType({
+    color: '#61AFEF',
+    fontStyle: 'italic',
+});
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('Flutter Scaffold Template extension activated');
@@ -30,6 +65,11 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.workspace.onDidOpenTextDocument(validateDocument),
         vscode.workspace.onDidChangeTextDocument((e) => {
             validateDocument(e.document);
+            // Update decorations for the active editor
+            const editor = vscode.window.activeTextEditor;
+            if (editor && editor.document === e.document && isTemplateFile(e.document)) {
+                updateDecorations(editor);
+            }
         }),
         vscode.workspace.onDidSaveTextDocument(validateDocument),
 
@@ -37,8 +77,20 @@ export function activate(context: vscode.ExtensionContext) {
             if (isTemplateFile(doc)) {
                 shadowProvider.deleteShadowFile(doc);
             }
+        }),
+
+        // Editor change listeners for decorations
+        vscode.window.onDidChangeActiveTextEditor((editor) => {
+            if (editor && isTemplateFile(editor.document)) {
+                updateDecorations(editor);
+            }
         })
     );
+
+    // Apply decorations to currently active editor
+    if (vscode.window.activeTextEditor && isTemplateFile(vscode.window.activeTextEditor.document)) {
+        updateDecorations(vscode.window.activeTextEditor);
+    }
 
     context.subscriptions.push(
         vscode.languages.registerHoverProvider('dart-template', {
@@ -263,7 +315,7 @@ function validateDocument(document: vscode.TextDocument) {
     // Validate conditional nesting
     if (config.get('placeholderValidation', true)) {
         diagnostics.push(...validateConditionalNesting(document));
-        
+
         let match;
         PLACEHOLDER_REGEX.lastIndex = 0;
 
@@ -313,15 +365,15 @@ function validateConditionalNesting(document: vscode.TextDocument): vscode.Diagn
     const text = document.getText();
     const lines = text.split('\n');
     const stack: Array<{ type: string, line: number }> = [];
-    
+
     const ifRegex = /^\s*\{\{\s*if\s+([a-zA-Z0-9_]+)\s*\}\}\s*$/;
     const elIfRegex = /^\s*\{\{\s*else\s+if\s+([a-zA-Z0-9_]+)\s*\}\}\s*$/;
     const elseRegex = /^\s*\{\{\s*else\s*\}\}\s*$/;
     const endifRegex = /^\s*\{\{\s*endif\s*\}\}\s*$/;
-    
+
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
-        
+
         if (ifRegex.test(line)) {
             stack.push({ type: 'if', line: i });
         } else if (elIfRegex.test(line) || elseRegex.test(line)) {
@@ -329,7 +381,7 @@ function validateConditionalNesting(document: vscode.TextDocument): vscode.Diagn
                 const startPos = new vscode.Position(i, 0);
                 const endPos = new vscode.Position(i, line.length);
                 const range = new vscode.Range(startPos, endPos);
-                
+
                 diagnostics.push(new vscode.Diagnostic(
                     range,
                     'Unmatched else/else if - no corresponding if block',
@@ -341,7 +393,7 @@ function validateConditionalNesting(document: vscode.TextDocument): vscode.Diagn
                 const startPos = new vscode.Position(i, 0);
                 const endPos = new vscode.Position(i, line.length);
                 const range = new vscode.Range(startPos, endPos);
-                
+
                 diagnostics.push(new vscode.Diagnostic(
                     range,
                     'Unmatched endif - no corresponding if block',
@@ -352,26 +404,26 @@ function validateConditionalNesting(document: vscode.TextDocument): vscode.Diagn
             }
         }
     }
-    
+
     // Check for unclosed if blocks
     stack.forEach(item => {
         const line = lines[item.line];
         const startPos = new vscode.Position(item.line, 0);
         const endPos = new vscode.Position(item.line, line.length);
         const range = new vscode.Range(startPos, endPos);
-        
+
         diagnostics.push(new vscode.Diagnostic(
             range,
             'Unclosed if block - missing endif',
             vscode.DiagnosticSeverity.Error,
         ));
     });
-    
+
     diagnostics.forEach(diagnostic => {
         diagnostic.source = 'flutter-scaffold-template';
         diagnostic.code = 'conditional-nesting';
     });
-    
+
     return diagnostics;
 }
 
@@ -425,35 +477,75 @@ function provideTemplatePlaceholderCompletions(document: vscode.TextDocument, po
     }
 
     const items: vscode.CompletionItem[] = [];
+
+    // Snippets
+
+    const ifSnippet = new vscode.CompletionItem('if', vscode.CompletionItemKind.Snippet);
+    ifSnippet.detail = 'Template Logic';
+    ifSnippet.documentation = 'Insert conditional block';
+    ifSnippet.insertText = new vscode.SnippetString('if ${1:condition} }}\n$0\n{{ endif');
+    items.push(ifSnippet);
+
+    const ifElseSnippet = new vscode.CompletionItem('ifelse', vscode.CompletionItemKind.Snippet);
+    ifElseSnippet.detail = 'Template Logic';
+    ifElseSnippet.documentation = 'Insert if-else block';
+    ifElseSnippet.insertText = new vscode.SnippetString('if ${1:condition} }}\n$2\n{{ else }}\n$0\n{{ endif');
+    items.push(ifElseSnippet);
+
     const placeholderDescriptions: Record<string, string> = {
-        projectName: 'Project name',
+        // Core names
+        projectName: 'Project name from pubspec.yaml',
         featureName: 'Feature name (snake_case)',
         FeatureName: 'Feature name (PascalCase)',
-        'if ': 'If condition - {{if variableName}}',
-        'else if ': 'Else if condition - {{else if variableName}}',
-        'else': 'Else block - {{else}}',
-        'endif': 'End if block - {{endif}}'
+        FEATURE_NAME: 'Feature name (UPPER_SNAKE_CASE)',
+        PASCAL_NAME: 'Entity/Feature name in PascalCase',
+        PASCAL_FEATURE_NAME: 'Feature name in PascalCase',
+        // Model-related
+        MODEL_NAME: 'Model name (snake_case)',
+        PASCAL_MODEL_NAME: 'Model name (PascalCase)',
+        // Screen-related
+        screenName: 'Screen name (snake_case)',
+        PASCAL_SCREEN_NAME: 'Screen name (PascalCase)',
+        // Fields & data
+        FIELDS: 'List of model fields',
+        FIELD_NAMES: 'Comma-separated field names',
+        FIELDS_WITH_OPTIONAL: 'Fields marked as optional',
+        COPY_FIELDS: 'Fields for copyWith method',
+        JSON_FIELDS: 'Fields for JSON serialization',
+        FROM_JSON_FIELDS: 'Fields for JSON deserialization',
+        // Logic markers
+        HAS_FIELDS: 'Boolean - true if model has fields',
     };
 
+    const keywords = ['if', 'else', 'else if', 'endif', 'true', 'false'];
+
     // Context-aware suggestions
-    const contentSinceOpen = linePrefix.substring(lastOpen + 2).trim();
-    
+    const contentSinceOpen = linePrefix.substring(lastOpen + 2).trimStart();
+
     if (contentSinceOpen === '') {
         // At start of placeholder - suggest all options
         for (const [name, description] of Object.entries(placeholderDescriptions)) {
-            const item = new vscode.CompletionItem(name, vscode.CompletionItemKind.Keyword);
-            item.detail = 'Template Directive';
+            const item = new vscode.CompletionItem(name, vscode.CompletionItemKind.Variable);
+            item.detail = 'Template Variable';
             item.documentation = description;
             item.insertText = name;
             items.push(item);
         }
-    } else if (contentSinceOpen.startsWith('if ') || contentSinceOpen.startsWith('else if ') || contentSinceOpen === 'else') {
-        // After conditional logic - suggest endif
-        const endifItem = new vscode.CompletionItem('endif', vscode.CompletionItemKind.Keyword);
-        endifItem.detail = 'Template Directive';
-        endifItem.documentation = 'End if block - {{endif}}';
-        endifItem.insertText = 'endif';
-        items.push(endifItem);
+    } else {
+        // We are typing something - suggest keywords too if applicable
+        // Simple heuristic: if it looks like start of expression
+        const currentWord = contentSinceOpen.split(/\s+/).pop() || '';
+
+        if (['if', 'else', 'endif'].some(k => k.startsWith(currentWord))) {
+            // Add keyword completions logic if needed, but snippets usually cover 'if'
+            // Let's add 'endif' and 'else' manually as keywords
+            if ('endif'.startsWith(currentWord)) {
+                items.push(new vscode.CompletionItem('endif', vscode.CompletionItemKind.Keyword));
+            }
+            if ('else'.startsWith(currentWord)) {
+                items.push(new vscode.CompletionItem('else', vscode.CompletionItemKind.Keyword));
+            }
+        }
     }
 
     return items;
@@ -461,33 +553,358 @@ function provideTemplatePlaceholderCompletions(document: vscode.TextDocument, po
 
 function formatTemplate(document: vscode.TextDocument): vscode.TextEdit[] {
     const text = document.getText();
-    const placeholders: { original: string, uuid: string }[] = [];
+    const os = require('os');
+    const path = require('path');
+    const tempDir = os.tmpdir();
 
-    let tempText = text.replace(PLACEHOLDER_REGEX, (match) => {
-        const uuid = 'TEMPLATE_PH_' + Math.random().toString(36).substring(2, 10).toUpperCase();
-        placeholders.push({ original: match, uuid });
-        return `/* ${uuid} */`;
+    let formattedText: string;
+
+    // Step 1: Try full-file formatting (works for most templates)
+    const fullFormatResult = tryFullFileFormat(text, tempDir, path);
+    if (fullFormatResult.success) {
+        formattedText = fullFormatResult.text;
+    } else {
+        // Step 2: Fall back to zone-based formatting for templates with structural breaks
+        formattedText = formatByZones(text, tempDir, path);
+    }
+
+    // Step 3: Normalize template syntax (always applied)
+    formattedText = normalizeTemplateSyntax(formattedText);
+
+    const fullRange = new vscode.Range(document.positionAt(0), document.positionAt(text.length));
+    return [vscode.TextEdit.replace(fullRange, formattedText)];
+}
+
+/**
+ * Normalize template syntax:
+ * - Clean up whitespace inside {{ }} blocks
+ * - Normalize control line formatting
+ * - Remove excessive blank lines
+ */
+function normalizeTemplateSyntax(text: string): string {
+    let result = text;
+
+    // 1. Normalize whitespace inside {{ }} blocks
+    // {{ if  HAS_FIELDS  }} -> {{if HAS_FIELDS}}
+    result = result.replace(/\{\{\s*([^}]+?)\s*\}\}/g, (match, content) => {
+        // Normalize internal whitespace: multiple spaces/tabs become single space
+        const normalized = content.trim().replace(/\s+/g, ' ');
+        return `{{${normalized}}}`;
     });
 
-    try {
-        const output = execSync('dart format --output=show', {
-            input: tempText,
-            encoding: 'utf-8',
-            timeout: 3000
-        });
+    // 2. Ensure control lines are on their own line without leading/trailing whitespace
+    // Lines that are ONLY a control block should be trimmed
+    const lines = result.split('\n');
+    const processedLines = lines.map(line => {
+        // Check if line is only a control block (with optional whitespace)
+        const controlOnlyMatch = line.match(/^\s*(\{\{(?:if\s+[a-zA-Z0-9_]+|else\s+if\s+[a-zA-Z0-9_]+|else|endif)\}\})\s*$/);
+        if (controlOnlyMatch) {
+            // Keep leading whitespace (user's original indentation), trim trailing
+            return line.replace(/\s+$/, '');
+        }
+        return line;
+    });
 
-        let formattedText = output.toString();
+    // 3. Remove excessive blank lines (more than 1 consecutive blank line)
+    const collapsedLines: string[] = [];
+    let consecutiveBlankCount = 0;
 
-        placeholders.forEach(p => {
-            const escapedUuid = p.uuid.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            const regex = new RegExp(`\/\\*\\s*${escapedUuid}\\s*\\*\/`, 'g');
-            formattedText = formattedText.replace(regex, p.original);
-        });
-
-        const fullRange = new vscode.Range(document.positionAt(0), document.positionAt(text.length));
-        return [vscode.TextEdit.replace(fullRange, formattedText)];
-
-    } catch (e) {
-        return [];
+    for (const line of processedLines) {
+        if (line.trim() === '') {
+            consecutiveBlankCount++;
+            if (consecutiveBlankCount <= 1) {
+                collapsedLines.push(line);
+            }
+        } else {
+            consecutiveBlankCount = 0;
+            collapsedLines.push(line);
+        }
     }
+
+    // 4. Remove leading/trailing blank lines
+    while (collapsedLines.length > 0 && collapsedLines[0].trim() === '') {
+        collapsedLines.shift();
+    }
+    while (collapsedLines.length > 0 && collapsedLines[collapsedLines.length - 1].trim() === '') {
+        collapsedLines.pop();
+    }
+
+    // Ensure file ends with a newline
+    result = collapsedLines.join('\n');
+    if (!result.endsWith('\n')) {
+        result += '\n';
+    }
+
+    return result;
+}
+
+/**
+ * Try to format the entire file by converting template syntax to valid Dart.
+ * Returns success if dart format completes without parse errors.
+ */
+function tryFullFileFormat(text: string, tempDir: string, path: any): { success: boolean; text: string } {
+    const lines = text.split('\n');
+    const controlLines: { index: number; original: string; marker: string }[] = [];
+    const placeholderMap = new Map<string, string>(); // Map template var to placeholder
+    let controlCounter = 0;
+    let placeholderCounter = 0;
+
+    // Regex for control block lines
+    const controlLineRegex = /^\s*\{\{(if\s+|else\s*if\s+|else|endif)/;
+
+    // Process each line
+    const processedLines = lines.map((line, idx) => {
+        if (controlLineRegex.test(line)) {
+            const marker = `__CTRL_${controlCounter++}__`;
+            controlLines.push({ index: idx, original: line, marker });
+            // Use a valid Dart statement that can exist anywhere
+            return `/* ${marker} */`;
+        }
+
+        // Replace {{ ... }} with valid identifiers
+        // IMPORTANT: Same template variable must get same placeholder!
+        return line.replace(PLACEHOLDER_REGEX, (match) => {
+            if (!placeholderMap.has(match)) {
+                placeholderMap.set(match, `Tmpl${placeholderCounter++}Placeholder`);
+            }
+            return placeholderMap.get(match)!;
+        });
+    });
+
+    const tempText = processedLines.join('\n');
+    const tempFile = path.join(tempDir, `format_full_${Date.now()}.dart`);
+
+    try {
+        fs.writeFileSync(tempFile, tempText, 'utf-8');
+
+        // Try dart format - capture stderr to detect parse errors
+        execSync(`dart format "${tempFile}" 2>&1`, {
+            encoding: 'utf-8',
+            timeout: 10000,
+        });
+
+        let formattedText = fs.readFileSync(tempFile, 'utf-8');
+
+        // Check if the formatted text still contains our markers (parse was successful)
+        const hasAllMarkers = controlLines.every(ctrl => formattedText.includes(ctrl.marker));
+        if (!hasAllMarkers) {
+            return { success: false, text: '' };
+        }
+
+        // Restore control lines - comments might have moved
+        controlLines.forEach(ctrl => {
+            // Match the formatted comment with flexible whitespace
+            const markerPattern = new RegExp(`(\\/\\*\\s*${ctrl.marker}\\s*\\*\\/)`, 'g');
+            formattedText = formattedText.replace(markerPattern, () => {
+                return ctrl.original.trim();
+            });
+        });
+
+        // Restore template placeholders
+        placeholderMap.forEach((placeholder, original) => {
+            formattedText = formattedText.split(placeholder).join(original);
+        });
+
+        return { success: true, text: formattedText };
+    } catch (e: any) {
+        // Parse error or format error - fall back to zone-based
+        return { success: false, text: '' };
+    } finally {
+        try {
+            if (fs.existsSync(tempFile)) {
+                fs.unlinkSync(tempFile);
+            }
+        } catch { /* ignore */ }
+    }
+}
+
+/**
+ * Format by zones - splits the template into zones separated by control lines.
+ * Each zone is formatted independently if it's valid Dart.
+ */
+function formatByZones(text: string, tempDir: string, path: any): string {
+    const lines = text.split('\n');
+    const controlLineRegex = /^\s*\{\{(if\s+|else\s*if\s+|else|endif)/;
+
+    // Identify zones
+    interface Zone {
+        type: 'code' | 'control';
+        lines: string[];
+        startIndex: number;
+    }
+
+    const zones: Zone[] = [];
+    let currentZone: Zone | null = null;
+
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const isControl = controlLineRegex.test(line);
+
+        if (isControl) {
+            // End current code zone if any
+            if (currentZone && currentZone.type === 'code') {
+                zones.push(currentZone);
+                currentZone = null;
+            }
+            // Each control line is its own zone
+            zones.push({
+                type: 'control',
+                lines: [line],
+                startIndex: i
+            });
+        } else {
+            // Code line - add to current code zone or create new one
+            if (!currentZone || currentZone.type !== 'code') {
+                currentZone = {
+                    type: 'code',
+                    lines: [],
+                    startIndex: i
+                };
+            }
+            currentZone.lines.push(line);
+        }
+    }
+
+    // Push final zone
+    if (currentZone) {
+        zones.push(currentZone);
+    }
+
+    // Format each code zone
+    const formattedZones = zones.map(zone => {
+        if (zone.type === 'control') {
+            // Keep leading whitespace (user's original indentation), trim trailing
+            return zone.lines[0].replace(/\s+$/, '');
+        }
+
+        // Try to format the code zone
+        const formattedCode = tryFormatCodeZone(zone.lines, tempDir, path);
+        return formattedCode;
+    });
+
+    return formattedZones.join('\n');
+}
+
+/**
+ * Try to format a code zone. Returns formatted code or original if formatting fails.
+ */
+function tryFormatCodeZone(lines: string[], tempDir: string, path: any): string {
+    if (lines.length === 0) {
+        return '';
+    }
+
+    // Skip zones that are just whitespace
+    const nonEmptyLines = lines.filter(l => l.trim().length > 0);
+    if (nonEmptyLines.length === 0) {
+        return lines.join('\n');
+    }
+
+    // Replace placeholders with valid identifiers
+    // IMPORTANT: Same template variable must get same placeholder!
+    const placeholderMap = new Map<string, string>();
+    let placeholderCounter = 0;
+
+    const processedLines = lines.map(line => {
+        return line.replace(PLACEHOLDER_REGEX, (match) => {
+            if (!placeholderMap.has(match)) {
+                placeholderMap.set(match, `Tmpl${placeholderCounter++}Placeholder`);
+            }
+            return placeholderMap.get(match)!;
+        });
+    });
+
+    const tempText = processedLines.join('\n');
+    const tempFile = path.join(tempDir, `format_zone_${Date.now()}.dart`);
+
+    try {
+        fs.writeFileSync(tempFile, tempText, 'utf-8');
+
+        execSync(`dart format "${tempFile}" 2>&1`, {
+            encoding: 'utf-8',
+            timeout: 5000,
+        });
+
+        let formattedText = fs.readFileSync(tempFile, 'utf-8');
+
+        // Restore placeholders
+        placeholderMap.forEach((placeholder, original) => {
+            formattedText = formattedText.split(placeholder).join(original);
+        });
+
+        // Remove trailing newline that dart format adds
+        formattedText = formattedText.replace(/\n$/, '');
+
+        return formattedText;
+    } catch {
+        // Formatting failed - return original with placeholders restored
+        let originalText = lines.join('\n');
+        return originalText;
+    } finally {
+        try {
+            if (fs.existsSync(tempFile)) {
+                fs.unlinkSync(tempFile);
+            }
+        } catch { /* ignore */ }
+    }
+}
+
+
+// Update decorations for template syntax highlighting
+function updateDecorations(editor: vscode.TextEditor): void {
+    const text = editor.document.getText();
+
+    const bracketRanges: vscode.Range[] = [];
+    const keywordRanges: vscode.Range[] = [];
+    const variableRanges: vscode.Range[] = [];
+
+    // Match all {{ ... }} blocks
+    const templateRegex = /\{\{([\s\S]*?)\}\}/g;
+    let match;
+
+    while ((match = templateRegex.exec(text)) !== null) {
+        const startPos = editor.document.positionAt(match.index);
+        const endPos = editor.document.positionAt(match.index + match[0].length);
+
+        // Highlight {{ and }}
+        const openBracketEnd = editor.document.positionAt(match.index + 2);
+        bracketRanges.push(new vscode.Range(startPos, openBracketEnd));
+
+        const closeBracketStart = editor.document.positionAt(match.index + match[0].length - 2);
+        bracketRanges.push(new vscode.Range(closeBracketStart, endPos));
+
+        // Highlight content between brackets
+        const content = match[1];
+        const contentStart = match.index + 2;
+
+        // Check for keywords
+        const keywordMatch = content.match(/^\s*(if|else\s+if|else|endif)\b/);
+        if (keywordMatch) {
+            const kwStart = contentStart + content.indexOf(keywordMatch[1]);
+            const kwEnd = kwStart + keywordMatch[1].length;
+            keywordRanges.push(new vscode.Range(
+                editor.document.positionAt(kwStart),
+                editor.document.positionAt(kwEnd)
+            ));
+        }
+
+        // Highlight variable names
+        const varRegex = /\b([a-zA-Z_][a-zA-Z0-9_]*)\b/g;
+        let varMatch;
+        while ((varMatch = varRegex.exec(content)) !== null) {
+            // Skip keywords
+            if (['if', 'else', 'endif', 'true', 'false', 'null'].includes(varMatch[1])) {
+                continue;
+            }
+            const varStart = contentStart + varMatch.index;
+            const varEnd = varStart + varMatch[1].length;
+            variableRanges.push(new vscode.Range(
+                editor.document.positionAt(varStart),
+                editor.document.positionAt(varEnd)
+            ));
+        }
+    }
+
+    editor.setDecorations(bracketDecorationType, bracketRanges);
+    editor.setDecorations(keywordDecorationType, keywordRanges);
+    editor.setDecorations(variableDecorationType, variableRanges);
 }

@@ -4,25 +4,53 @@
   "scopeName": "source.dart.template",
   "patterns": [
     {
-      "include": "#template-placeholder"
+      "include": "#template-block"
     },
     {
       "include": "source.dart"
     }
   ],
   "repository": {
-    "template-placeholder": {
-      "begin": "\\{\\{",
-      "end": "\\}\\}",
-      "name": "meta.embedded.template",
+    "template-block": {
+      "begin": "(\\{\\{)",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.definition.template.begin.flutter-scaffold"
+        }
+      },
+      "end": "(\\}\\})",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.template.end.flutter-scaffold" }
+      },
+      "name": "meta.template.expression.flutter-scaffold",
       "patterns": [
         {
-          "match": "\\b(if\\s+[a-zA-Z0-9_]+|else\\s+if\\s+[a-zA-Z0-9_]+|else|endif)\\b",
-          "name": "keyword.control.template"
+          "match": "\\b(if|else\\s+if|else|endif)\\b",
+          "name": "keyword.control.flutter-scaffold"
         },
         {
-          "match": "[a-zA-Z][a-zA-Z0-9_]*",
-          "name": "variable.other.placeholder.template"
+          "match": "(!|==|!=|&&|\\|\\|)",
+          "name": "keyword.operator.flutter-scaffold"
+        },
+        {
+          "match": "\\b(true|false|null)\\b",
+          "name": "constant.language.flutter-scaffold"
+        },
+        {
+          "match": "\\b(projectName|featureName|FeatureName|FEATURE_NAME|PASCAL_NAME|PASCAL_FEATURE_NAME)\\b",
+          "name": "variable.other.constant.flutter-scaffold"
+        },
+        {
+          "match": "\\b(MODEL_NAME|PASCAL_MODEL_NAME|screenName|PASCAL_SCREEN_NAME)\\b",
+          "name": "variable.other.constant.flutter-scaffold"
+        },
+        {
+          "match": "\\b(FIELDS|FIELD_NAMES|FIELDS_WITH_OPTIONAL|COPY_FIELDS|JSON_FIELDS|FROM_JSON_FIELDS|HAS_FIELDS)\\b",
+          "name": "variable.other.constant.flutter-scaffold"
+        },
+        {
+          "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b",
+          "name": "variable.other.placeholder.flutter-scaffold"
         }
       ]
     }

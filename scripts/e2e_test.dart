@@ -200,7 +200,9 @@ void main(List<String> args) async {
 
   if (args.contains('--list-steps')) {
     print('Available steps:');
-    allSteps.keys.forEach((k) => print('  - $k'));
+    for (var k in allSteps.keys) {
+      print('  - $k');
+    }
     exit(0);
   }
 
@@ -330,18 +332,21 @@ class TestContext {
   }
 
   void expectFile(String path) {
-    if (!File(path).existsSync())
+    if (!File(path).existsSync()) {
       throw Exception('Expected file not found: $path');
+    }
   }
 
   void expectDir(String path) {
-    if (!Directory(path).existsSync())
+    if (!Directory(path).existsSync()) {
       throw Exception('Expected directory not found: $path');
+    }
   }
 
   void expectNoDir(String path) {
-    if (Directory(path).existsSync())
+    if (Directory(path).existsSync()) {
       throw Exception('Expected directory to NOT exist: $path');
+    }
   }
 }
 

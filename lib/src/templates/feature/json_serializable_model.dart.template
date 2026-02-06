@@ -5,9 +5,9 @@ part '{{MODEL_NAME}}_model.g.dart';
 @JsonSerializable()
 class {{PASCAL_MODEL_NAME}}Model {
   const {{PASCAL_MODEL_NAME}}Model({
-{{#HAS_FIELDS}}
+{{if HAS_FIELDS}}
 {{FIELDS}}
-{{/HAS_FIELDS}}
+{{endif}}
   });
 
   factory {{PASCAL_MODEL_NAME}}Model.fromJson(Map<String, dynamic> json) =>
@@ -15,7 +15,7 @@ class {{PASCAL_MODEL_NAME}}Model {
 
   Map<String, dynamic> toJson() => _${{MODEL_NAME}}ModelToJson(this);
 
-{{#HAS_FIELDS}}
+{{if HAS_FIELDS}}
   // Properties
 {{FIELDS}}
 
@@ -30,8 +30,7 @@ class {{PASCAL_MODEL_NAME}}Model {
 
   @override
   String toString() => '{{PASCAL_MODEL_NAME}}Model({{FIELD_NAMES}})';
-{{/HAS_FIELDS}}
-{{^HAS_FIELDS}}
+{{else}}
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -43,5 +42,5 @@ class {{PASCAL_MODEL_NAME}}Model {
 
   @override
   String toString() => '{{PASCAL_MODEL_NAME}}Model()';
-{{/HAS_FIELDS}}
+{{endif}}
 }

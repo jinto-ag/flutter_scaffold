@@ -44,10 +44,15 @@ Focus on making the tool robust, configurable, and easy to use.
   - [x] **VSCode Integration in Generated Project:**
     - [x] Add `.vscode/extensions.json` recommending `flutter_scaffold` extension.
     - [x] Ensure extension works with local executable priority.
-- [ ] **IDE Integration (VSCode Extension)**
-  - [ ] Update TextMate grammar to support new template keywords (e.g., `{{if}}`, variables).
-  - [ ] Implement Language Server Protocol (LSP) or CompletionItemProvider for Intellisense.
-  - [ ] Ensure syntax highlighting identifies dynamic parts of templates.
+- [x] **IDE Integration (VSCode Extension)**
+  - [x] Update TextMate grammar to support new template keywords (e.g., `{{if}}`, variables).
+  - [x] Implement Language Server Protocol (LSP) or CompletionItemProvider for Intellisense.
+  - [x] Ensure syntax highlighting identifies dynamic parts of templates.
+  - [x] **Fix Extension Validation:**
+    - [x] Add initial placeholders to known list: `FEATURE_NAME`, `PASCAL_NAME`, `MODEL_NAME`, `PASCAL_MODEL_NAME`, `FIELDS`, `FIELD_NAMES`.
+    - [x] Add remaining placeholders: `PASCAL_FEATURE_NAME`, `screenName`, `PASCAL_SCREEN_NAME`, `FIELDS_WITH_OPTIONAL`, `COPY_FIELDS`, `JSON_FIELDS`, `FROM_JSON_FIELDS`, `HAS_FIELDS`.
+    - [x] Rebuild extension (`npm run compile && npm run package`).
+    - [x] Extension version bumped to `0.2.0`.
 - [ ] **Project Configuration & Defaults**
   - [ ] **Optimal Defaults Strategy:**
     - [ ] Ship with production-ready defaults (Riverpod, GoRouter, Freezed, Linting) that work out-of-the-box.
@@ -88,10 +93,11 @@ Focus on "Go Live" requirements.
     - [ ] Refactor existing tests to use common setup/teardown logic.
   - [ ] Generate Unit Test stubs (using `mockito`).
   - [ ] Generate Widget Test boilerplate.
-  - [ ] **Comprehensive E2E Testing:**
-    - [ ] Update `scripts/e2e_test.dart` to test ALL commands (`init`, `add`, `remove`, `config`, `upgrade`).
-    - [ ] Test flag combinations (e.g., `--no-git`, `--no-backup`, `--force`, `--dry-run`).
-    - [ ] **Existing Project Verification:** Test running `init` on a pre-existing Flutter project (idempotency & integration).
+  - [x] **Comprehensive E2E Testing:**
+    - [x] Update `scripts/e2e_test.dart` to test ALL commands (`init`, `add`, `remove`, `config`, `upgrade`).
+    - [x] Test flag combinations (e.g., `--no-git`, `--no-backup`, `--force`, `--dry-run`).
+    - [x] **Existing Project Verification:** Test running `init` on a pre-existing Flutter project (idempotency & integration).
+    - [x] **Selective Execution:** Support running specific test steps via `--steps` flag.
   - [ ] Generate Integration Test boilerplate.
   - [ ] Setup `l10n` (Localization) infrastructure.
   - [ ] Implement Global Error Handling (Catcher/Boundary).
