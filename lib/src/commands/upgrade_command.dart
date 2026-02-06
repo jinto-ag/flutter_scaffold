@@ -7,18 +7,35 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 
 import '../core/version.dart';
+import '../services/distribution_service.dart';
 import '../utils/logger.dart';
 
 /// Command to check for updates and upgrade the CLI.
 class UpgradeCommand extends Command<int> {
-  UpgradeCommand() {
-    argParser.addFlag(
-      'check',
-      abbr: 'c',
-      help: 'Check for updates without installing',
-      negatable: false,
-    );
+  UpgradeCommand({DistributionService? distributionService})
+    : _distributionService = distributionService ?? DistributionService() {
+    argParser
+      ..addFlag(
+        'check',
+        abbr: 'c',
+        help: 'Check for updates without installing',
+        negatable: false,
+      )
+      ..addFlag(
+        'git',
+        abbr: 'g',
+        help: 'Upgrade from git repository (advanced users)',
+        negatable: false,
+      )
+      ..addOption(
+        'channel',
+        help: 'Git channel/branch to use (requires --git)',
+        allowed: ['stable', 'beta', 'alpha', 'main'],
+        defaultsTo: 'main',
+      );
   }
+
+  final DistributionService _distributionService;
 
   @override
   String get name => 'upgrade';
@@ -29,84 +46,117 @@ class UpgradeCommand extends Command<int> {
   @override
   Future<int> run() async {
     final logger = ScaffoldLogger();
-    final checkOnly = argResults?.flag('check') ?? false;
+    final args = argResults!;
+    final checkOnly = args.flag('check');
+    final useGit = args.flag('git');
+    final channel = args.option('channel');
 
     logger.header('Flutter Scaffold Upgrade');
 
     // Get current version
     logger.info('Current version: $appVersion');
 
-    // Check latest version from pub.dev
+    if (checkOnly && !useGit) {
+      await _checkUpdates(logger);
+      return 0;
+    }
+
+    if (useGit) {
+      return await _upgradeFromGit(logger, channel);
+    } else {
+      return await _upgradeFromPub(logger);
+    }
+  }
+
+  Future<int> _checkUpdates(ScaffoldLogger logger) async {
     final progress = logger.progress('Checking for updates...');
     try {
       final latestVersion = await _getLatestVersion();
-
       if (latestVersion == null) {
         progress.fail('Failed to check for updates');
-        logger.warn('Could not reach pub.dev. Check your internet connection.');
         return 1;
       }
-
       progress.complete('Latest version: $latestVersion');
 
-      // Compare versions
       if (_isNewerVersion(latestVersion, appVersion)) {
         logger.info('');
         logger.success('🎉 A new version is available!');
         logger.info('  Current: $appVersion');
         logger.info('  Latest:  $latestVersion');
         logger.info('');
-
-        if (checkOnly) {
-          logger.info('Run `flutter_scaffold upgrade` to install.');
-          return 0;
-        }
-
-        // Confirm upgrade
-        final confirm = logger.confirm(
-          'Would you like to upgrade now?',
-          defaultValue: true,
-        );
-
-        if (!confirm) {
-          logger.info('Upgrade cancelled.');
-          return 0;
-        }
-
-        // Perform upgrade
-        final upgradeProgress = logger.progress('Upgrading...');
-
-        final result = await Process.run('dart', [
-          'pub',
-          'global',
-          'activate',
-          'flutter_scaffold',
-        ], workingDirectory: Directory.current.path);
-
-        if (result.exitCode == 0) {
-          upgradeProgress.complete('Upgraded successfully!');
-          logger.success('');
-          logger.success(
-            '🚀 flutter_scaffold has been upgraded to $latestVersion',
-          );
-          logger.info('');
-          logger.info(
-            'Changelog: https://pub.dev/packages/flutter_scaffold/changelog',
-          );
-          return 0;
-        } else {
-          upgradeProgress.fail('Upgrade failed');
-          logger.error(result.stderr.toString());
-          return 1;
-        }
+        logger.info('Run `flutter_scaffold upgrade` to install.');
       } else {
         logger.info('');
         logger.success('✓ You are already on the latest version!');
-        return 0;
       }
+      return 0;
     } catch (e) {
       progress.fail('Error checking for updates');
-      logger.error('Error: $e');
+      return 1;
+    }
+  }
+
+  Future<int> _upgradeFromPub(ScaffoldLogger logger) async {
+    // Check updates first
+    final latestVersion = await _getLatestVersion();
+    if (latestVersion != null && !_isNewerVersion(latestVersion, appVersion)) {
+      final confirm = logger.confirm(
+        'You are already on the latest version. Re-install?',
+        defaultValue: false,
+      );
+      if (!confirm) return 0;
+    }
+
+    final progress = logger.progress('Upgrading from pub.dev...');
+    final result = await Process.run('dart', [
+      'pub',
+      'global',
+      'activate',
+      'flutter_scaffold',
+    ]);
+
+    return _handleUpgradeResult(logger, progress, result);
+  }
+
+  Future<int> _upgradeFromGit(ScaffoldLogger logger, String? channel) async {
+    final progress = logger.progress('Upgrading from git ($channel)...');
+
+    final result = await Process.run('dart', [
+      'pub',
+      'global',
+      'activate',
+      '-sgit',
+      'https://github.com/jinto-ag/flutter_scaffold',
+      '--git-ref',
+      channel ?? 'main',
+    ]);
+
+    return _handleUpgradeResult(logger, progress, result);
+  }
+
+  Future<int> _handleUpgradeResult(
+    ScaffoldLogger logger,
+    Progress progress,
+    ProcessResult result,
+  ) async {
+    if (result.exitCode == 0) {
+      progress.complete('Upgraded successfully!');
+      logger.success('');
+      logger.success('🚀 flutter_scaffold has been upgraded');
+
+      // Bundle artifacts into current project if applicable
+      if (File('pubspec.yaml').existsSync()) {
+        logger.info('');
+        logger.info('Updating local project artifacts...');
+        await _distributionService.bundleArtifacts(
+          targetDir: Directory.current.path,
+        );
+      }
+
+      return 0;
+    } else {
+      progress.fail('Upgrade failed');
+      logger.error(result.stderr.toString());
       return 1;
     }
   }

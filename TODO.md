@@ -23,6 +23,21 @@ Focus on making the tool robust, configurable, and easy to use.
   - [x] Implement `upgrade` command for self-update mechanism.
   - [x] Implement `interactive` mode (TUI) for easier option selection.
   - [x] Add `verbose` flag (`--verbose`) for detailed debugging logs.
+- [x] **Distribution & Usage**
+  - [x] **Local Distribution (Pre-Publish Strategy):**
+    - [x] **Bundled Resources:** Copy both `flutter_scaffold` executable and built VSCode extension (`.vsix`) to generated projects.
+    - [x] **Easy Installation:** Allow users to install the extension manually from the local `.vsix` file until published.
+    - [x] **Unified Upgrade:** Ensure `upgrade` command updates both the local executable and the `.vsix` file.
+  - [x] **Smart Execution Wrapper:**
+    - [x] Check local executable first (priority).
+    - [x] Fallback to global command if local missing.
+    - [x] Prompt to install if neither available.
+  - [x] **Advanced Upgrade Mechanism:**
+    - [x] Upgrade by fetching from git, building, and replacing artifacts.
+    - [x] Support upgrade channels: `stable`, `beta`, `alpha`.
+  - [x] **VSCode Integration in Generated Project:**
+    - [x] Add `.vscode/extensions.json` recommending `flutter_scaffold` extension.
+    - [x] Ensure extension works with local executable priority.
 - [ ] **IDE Integration (VSCode Extension)**
   - [ ] Update TextMate grammar to support new template keywords (e.g., `{{if}}`, variables).
   - [ ] Implement Language Server Protocol (LSP) or CompletionItemProvider for Intellisense.

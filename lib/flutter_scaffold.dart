@@ -20,6 +20,7 @@ export 'src/utils/templates.dart';
 export 'src/services/backup_service.dart';
 export 'src/services/config_service.dart';
 export 'src/services/dependency_service.dart';
+export 'src/services/distribution_service.dart';
 export 'src/services/feature_service.dart';
 export 'src/services/flutter_service.dart';
 export 'src/services/git_service.dart';

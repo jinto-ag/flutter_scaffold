@@ -193,6 +193,11 @@ class ScaffoldService {
     // Create scaffold marker directory
     _createMarkerDirectory(projectPath, dryRun: dryRun);
 
+    // Generate VSCode config
+    if (!dryRun) {
+      _generateVSCodeConfig(projectPath, force: force);
+    }
+
     return ScaffoldResult(
       dirsCreated: dirsCreated,
       filesCreated: filesCreated,
@@ -299,6 +304,32 @@ class ScaffoldService {
     }
 
     return false;
+  }
+
+  /// Generate VSCode extensions configuration.
+  void _generateVSCodeConfig(String projectPath, {bool force = false}) {
+    final vscodeDir = _fileUtils.joinPath(projectPath, '.vscode');
+    final extensionsPath = _fileUtils.joinPath(vscodeDir, 'extensions.json');
+
+    if (!_fileUtils.directoryExists(vscodeDir)) {
+      _fileUtils.createDirectory(vscodeDir);
+    }
+
+    const configContent = '''
+{
+  "recommendations": [
+    "dart-code.flutter",
+    "dart-code.dart-code",
+    "jinto-ag.flutter-scaffold"
+  ]
+}
+''';
+
+    if (_fileUtils.createFile(extensionsPath, configContent, force: force)) {
+      _logger.info('Created .vscode/extensions.json');
+    } else {
+      _logger.skipped('.vscode/extensions.json');
+    }
   }
 
   /// Read file content safely.

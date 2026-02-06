@@ -2,6 +2,7 @@
 library;
 
 import 'package:mason_logger/mason_logger.dart';
+export 'package:mason_logger/mason_logger.dart' show Progress;
 
 /// Logger instance for the scaffold CLI.
 class ScaffoldLogger {

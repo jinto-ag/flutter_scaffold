@@ -5,6 +5,7 @@ import 'package:args/command_runner.dart';
 
 import '../services/backup_service.dart';
 import '../services/dependency_service.dart';
+import '../services/distribution_service.dart';
 import '../services/feature_service.dart';
 import '../services/git_service.dart';
 import '../services/history_service.dart';
@@ -27,6 +28,7 @@ class InitCommand extends Command<int> {
     BackupService? backupService,
     HistoryService? historyService,
     SandboxService? sandboxService,
+    DistributionService? distributionService,
     FileUtils? fileUtils,
   }) : _logger = logger ?? ScaffoldLogger(),
        _scaffoldService = scaffoldService ?? ScaffoldService(),
@@ -36,6 +38,7 @@ class InitCommand extends Command<int> {
        _backupService = backupService ?? BackupService(),
        _historyService = historyService ?? HistoryService(),
        _sandboxService = sandboxService ?? SandboxService(),
+       _distributionService = distributionService ?? DistributionService(),
        _fileUtils = fileUtils ?? const FileUtils() {
     argParser
       ..addFlag(
@@ -89,6 +92,7 @@ class InitCommand extends Command<int> {
   final BackupService _backupService;
   final HistoryService _historyService;
   final SandboxService _sandboxService;
+  final DistributionService _distributionService;
   final FileUtils _fileUtils;
 
   @override
@@ -285,7 +289,20 @@ class InitCommand extends Command<int> {
     );
     filesCreated.add('lib/main.dart');
 
+    // Bundle artifacts
+    _logger.info('');
+    await _bundleArtifacts(projectPath);
+    filesCreated.add('.flutter_scaffold/dist/');
+    filesCreated.add('flutter_scaffold');
+
     return filesCreated;
+  }
+
+  /// Bundle CLI artifacts and wrapper script
+  Future<void> _bundleArtifacts(String projectPath) async {
+    _logger.info("Bundling CLI artifacts...");
+    await _distributionService.bundleArtifacts(targetDir: projectPath);
+    await _distributionService.generateWrapper(targetDir: projectPath);
   }
 
   /// Get list of existing scaffold files that may need backup.
