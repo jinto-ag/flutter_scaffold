@@ -88,6 +88,10 @@ Focus on "Go Live" requirements.
     - [ ] Refactor existing tests to use common setup/teardown logic.
   - [ ] Generate Unit Test stubs (using `mockito`).
   - [ ] Generate Widget Test boilerplate.
+  - [ ] **Comprehensive E2E Testing:**
+    - [ ] Update `scripts/e2e_test.dart` to test ALL commands (`init`, `add`, `remove`, `config`, `upgrade`).
+    - [ ] Test flag combinations (e.g., `--no-git`, `--no-backup`, `--force`, `--dry-run`).
+    - [ ] **Existing Project Verification:** Test running `init` on a pre-existing Flutter project (idempotency & integration).
   - [ ] Generate Integration Test boilerplate.
   - [ ] Setup `l10n` (Localization) infrastructure.
   - [ ] Implement Global Error Handling (Catcher/Boundary).

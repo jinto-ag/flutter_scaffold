@@ -141,7 +141,7 @@ class CreateCommand extends Command<int> {
       // Add home feature
       _logger.info('');
       _logger.info("Adding 'home' feature...");
-      _featureService.addFeature(
+      await _featureService.addFeature(
         projectPath: projectPath,
         featureName: 'home',
         force: force,
