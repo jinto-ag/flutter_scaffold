@@ -16,11 +16,18 @@ Future<void> main(List<String> arguments) async {
     ..addCommand(RemoveCommand())
     ..addCommand(ResetCommand())
     ..addCommand(InfoCommand())
-    ..addCommand(ConfigCommand());
+    ..addCommand(ConfigCommand())
+    ..addCommand(UpgradeCommand())
+    ..addCommand(InteractiveCommand());
 
   // Add global options
   runner.argParser
     ..addFlag('version', abbr: 'v', help: 'Print the version', negatable: false)
+    ..addFlag(
+      'verbose',
+      help: 'Enable verbose logging for debugging',
+      negatable: false,
+    )
     ..addFlag(
       'install-deps',
       help: 'Install dependencies (for use in existing projects)',
@@ -38,6 +45,11 @@ Future<void> main(List<String> arguments) async {
     // Handle global flags when run without a command
     if (arguments.isEmpty || arguments.every((arg) => arg.startsWith('-'))) {
       final args = runner.argParser.parse(arguments);
+
+      // Handle --verbose flag globally
+      if (args.flag('verbose')) {
+        ScaffoldLogger.globalVerbose = true;
+      }
 
       // Handle --install-deps
       if (args.flag('install-deps')) {
@@ -66,16 +78,25 @@ Future<void> main(List<String> arguments) async {
         logger.info('Usage: $executableName <command> [arguments]');
         logger.info('');
         logger.info('Available commands:');
-        logger.info('  create    Create a new Flutter project with scaffold');
-        logger.info('  init      Initialize scaffold in existing project');
-        logger.info('  add       Add new modules (e.g., add feature <name>)');
-        logger.info('  remove    Remove modules (e.g., remove feature <name>)');
-        logger.info('  reset     Reset project or feature to initial state');
-        logger.info('  info      Display project features information');
-        logger.info('  config    Manage configuration (init, show)');
+        logger.info(
+          '  create       Create a new Flutter project with scaffold',
+        );
+        logger.info('  init         Initialize scaffold in existing project');
+        logger.info(
+          '  add          Add new modules (e.g., add feature <name>)',
+        );
+        logger.info(
+          '  remove       Remove modules (e.g., remove feature <name>)',
+        );
+        logger.info('  reset        Reset project or feature to initial state');
+        logger.info('  info         Display project features information');
+        logger.info('  config       Manage configuration (init, show)');
+        logger.info('  upgrade      Upgrade to the latest version');
+        logger.info('  interactive  Launch interactive mode (alias: i)');
         logger.info('');
         logger.info('Global options:');
         logger.info('  --version, -v     Print the version');
+        logger.info('  --verbose         Enable verbose logging');
         logger.info('  --install-deps    Install dependencies');
         logger.info('  --verify          Verify scaffold structure');
         logger.info('  --help, -h        Show help');

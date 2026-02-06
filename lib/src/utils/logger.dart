@@ -5,9 +5,18 @@ import 'package:mason_logger/mason_logger.dart';
 
 /// Logger instance for the scaffold CLI.
 class ScaffoldLogger {
-  ScaffoldLogger({Logger? logger}) : _logger = logger ?? Logger();
+  ScaffoldLogger({Logger? logger, bool verbose = false})
+    : _logger = logger ?? Logger(),
+      _verbose = verbose;
 
   final Logger _logger;
+  final bool _verbose;
+
+  /// Global verbose flag for singleton usage.
+  static bool globalVerbose = false;
+
+  /// Whether verbose logging is enabled.
+  bool get isVerbose => _verbose || globalVerbose;
 
   /// Log info message.
   void info(String message) => _logger.info(message);
@@ -22,7 +31,18 @@ class ScaffoldLogger {
   void error(String message) => _logger.err(message);
 
   /// Log debug message (only in verbose mode).
-  void debug(String message) => _logger.detail(message);
+  void debug(String message) {
+    if (isVerbose) {
+      _logger.detail('[DEBUG] $message');
+    }
+  }
+
+  /// Log verbose info (only in verbose mode).
+  void verbose(String message) {
+    if (isVerbose) {
+      _logger.info(lightGray.wrap('  [VERBOSE] $message'));
+    }
+  }
 
   /// Log a file creation.
   void created(String path) => _logger.success('  + $path');

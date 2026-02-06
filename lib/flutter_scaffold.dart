@@ -33,5 +33,7 @@ export 'src/commands/config_command.dart';
 export 'src/commands/create_command.dart';
 export 'src/commands/info_command.dart';
 export 'src/commands/init_command.dart';
+export 'src/commands/interactive_command.dart';
 export 'src/commands/remove_command.dart';
 export 'src/commands/reset_command.dart';
+export 'src/commands/upgrade_command.dart';

@@ -20,9 +20,9 @@ Focus on making the tool robust, configurable, and easy to use.
   - [x] **Standardize Command Verbs:**
     - [x] Rename `scaffold` command to `init` for initializing existing projects.
     - [x] Ensure usage consistency (e.g., `flutter_scaffold add <feature|component>`).
-  - [ ] Implement `upgrade` command for self-update mechanism.
-  - [ ] Implement `interactive` mode (TUI) for easier option selection.
-  - [ ] Add `verbose` flag (`-v`) for detailed debugging logs.
+  - [x] Implement `upgrade` command for self-update mechanism.
+  - [x] Implement `interactive` mode (TUI) for easier option selection.
+  - [x] Add `verbose` flag (`--verbose`) for detailed debugging logs.
 - [ ] **IDE Integration (VSCode Extension)**
   - [ ] Update TextMate grammar to support new template keywords (e.g., `{{if}}`, variables).
   - [ ] Implement Language Server Protocol (LSP) or CompletionItemProvider for Intellisense.
@@ -74,3 +74,5 @@ Focus on "Go Live" requirements.
 ## Completed
 
 - [x] Implement `--screen` flag for feature generation.
+- [x] Add unit tests for safety services (BackupService, HistoryService, SandboxService).
+- [x] Implement CLI Infrastructure (upgrade, interactive, verbose).
