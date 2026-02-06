@@ -4,6 +4,12 @@
 
 Focus on making the tool robust, configurable, and easy to use.
 
+## Critical Bug Fixes (Next)
+
+- [x] **Fix `init` command crash:**
+  - [x] Await `_featureService.addFeature` call in `InitCommand` (missing `await` causes unhandled exception).
+  - [x] Handle existing 'home' feature gracefully (skip if exists, don't crash).
+
 - [/] **CLI Infrastructure**
   - [x] **Safety & Recovery:**
     - [x] **Automated Backups:** Backup modified files to `.flutter_scaffold/backups/` before any change.
@@ -76,6 +82,10 @@ Focus on generating "Complete" Clean Architecture support.
 Focus on "Go Live" requirements.
 
 - [ ] **Testing & Quality**
+  - [ ] **Test Refactoring (DRY):**
+    - [ ] Create shared test utilities (temp dir creation, project scaffolding).
+    - [ ] Standardize fixtures for unit and integration tests.
+    - [ ] Refactor existing tests to use common setup/teardown logic.
   - [ ] Generate Unit Test stubs (using `mockito`).
   - [ ] Generate Widget Test boilerplate.
   - [ ] Generate Integration Test boilerplate.

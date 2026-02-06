@@ -272,12 +272,20 @@ class InitCommand extends Command<int> {
     // Add home feature
     _logger.info('');
     _logger.info("Adding 'home' feature...");
-    _featureService.addFeature(
-      projectPath: projectPath,
-      featureName: 'home',
-      force: force,
-    );
-    filesCreated.add('lib/src/features/home/');
+    try {
+      await _featureService.addFeature(
+        projectPath: projectPath,
+        featureName: 'home',
+        force: force,
+      );
+      filesCreated.add('lib/src/features/home/');
+    } catch (e) {
+      if (e.toString().contains('already exists')) {
+        _logger.warn("Feature 'home' already exists (skipping)");
+      } else {
+        rethrow;
+      }
+    }
 
     // Update main.dart to use the App widget
     _logger.info('');
