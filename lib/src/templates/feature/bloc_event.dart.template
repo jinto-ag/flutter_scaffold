@@ -1,0 +1,69 @@
+part of '{{FEATURE_NAME}}_bloc.dart';
+
+/// Base event for {{PASCAL_NAME}} Bloc.
+sealed class {{PASCAL_NAME}}Event extends Equatable {
+  const {{PASCAL_NAME}}Event();
+
+  @override
+  List<Object?> get props => [];
+}
+
+/// Event to load all {{FEATURE_NAME}}s.
+final class Load{{PASCAL_NAME}}s extends {{PASCAL_NAME}}Event {
+  const Load{{PASCAL_NAME}}s();
+}
+
+/// Event to load a single {{FEATURE_NAME}} by ID.
+final class Load{{PASCAL_NAME}} extends {{PASCAL_NAME}}Event {
+  const Load{{PASCAL_NAME}}({required this.id});
+
+  final String id;
+
+  @override
+  List<Object?> get props => [id];
+}
+
+/// Event to create a new {{FEATURE_NAME}}.
+final class Create{{PASCAL_NAME}} extends {{PASCAL_NAME}}Event {
+  const Create{{PASCAL_NAME}}({required this.entity});
+
+  final {{PASCAL_NAME}}Entity entity;
+
+  @override
+  List<Object?> get props => [entity];
+}
+
+/// Event to update an existing {{FEATURE_NAME}}.
+final class Update{{PASCAL_NAME}} extends {{PASCAL_NAME}}Event {
+  const Update{{PASCAL_NAME}}({required this.entity});
+
+  final {{PASCAL_NAME}}Entity entity;
+
+  @override
+  List<Object?> get props => [entity];
+}
+
+/// Event to delete a {{FEATURE_NAME}}.
+final class Delete{{PASCAL_NAME}} extends {{PASCAL_NAME}}Event {
+  const Delete{{PASCAL_NAME}}({required this.id});
+
+  final String id;
+
+  @override
+  List<Object?> get props => [id];
+}
+
+/// Event to refresh the {{FEATURE_NAME}}s list.
+final class Refresh{{PASCAL_NAME}}s extends {{PASCAL_NAME}}Event {
+  const Refresh{{PASCAL_NAME}}s();
+}
+
+/// Event to search {{FEATURE_NAME}}s.
+final class Search{{PASCAL_NAME}}s extends {{PASCAL_NAME}}Event {
+  const Search{{PASCAL_NAME}}s({required this.query});
+
+  final String query;
+
+  @override
+  List<Object?> get props => [query];
+}

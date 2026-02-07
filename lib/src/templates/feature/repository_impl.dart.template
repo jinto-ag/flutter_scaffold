@@ -1,0 +1,261 @@
+import '../../core/errors/exceptions.dart';
+import '../../core/errors/failures.dart';
+{{if HAS_ENTITY}}
+import '../domain/entities/{{ENTITY_NAME}}_entity.dart';
+{{endif}}
+import '../domain/repositories/{{REPOSITORY_NAME}}_repository.dart';
+{{if HAS_REMOTE_DATASOURCE}}
+import '../datasources/{{REPOSITORY_NAME}}_remote_datasource.dart';
+{{endif}}
+{{if HAS_LOCAL_DATASOURCE}}
+import '../datasources/{{REPOSITORY_NAME}}_local_datasource.dart';
+{{endif}}
+
+/// Implementation of [{{PASCAL_NAME}}Repository].
+///
+/// Handles data operations by coordinating between remote and local datasources.
+/// Implements proper error handling and data caching strategies.
+class {{PASCAL_NAME}}RepositoryImpl implements {{PASCAL_NAME}}Repository {
+  const {{PASCAL_NAME}}RepositoryImpl({
+{{if HAS_REMOTE_DATASOURCE}}
+    required {{PASCAL_NAME}}RemoteDatasource remoteDatasource,
+{{endif}}
+{{if HAS_LOCAL_DATASOURCE}}
+    required {{PASCAL_NAME}}LocalDatasource localDatasource,
+{{endif}}
+{{if HAS_REMOTE_DATASOURCE}}
+  }) : _remoteDatasource = remoteDatasource{{if HAS_LOCAL_DATASOURCE}},
+       _localDatasource = localDatasource{{endif}};
+
+  final {{PASCAL_NAME}}RemoteDatasource _remoteDatasource;
+{{endif}}
+{{if HAS_LOCAL_DATASOURCE}}
+{{if HAS_REMOTE_DATASOURCE}}
+final {{PASCAL_NAME}}LocalDatasource _localDatasource;
+{{else}}
+  }) : _localDatasource = localDatasource;
+
+  final {{PASCAL_NAME}}LocalDatasource _localDatasource;
+{{endif}}
+{{endif}}
+{{if HAS_NO_DATASOURCE}}
+  });
+{{endif}}
+
+{{if HAS_ENTITY}}
+  @override
+  Future<{{PASCAL_ENTITY_NAME}}Entity?> getById(String id) async {
+{{else}}
+  @override
+  Future<Map<String, dynamic>?> getById(String id) async {
+{{endif}}
+    try {
+{{if HAS_LOCAL_DATASOURCE}}
+      // Try local cache first
+      final cached = await _localDatasource.getCached(id);
+      if (cached != null) {
+        return cached;
+      }
+{{endif}}
+{{if HAS_REMOTE_DATASOURCE}}
+// Fetch from remote
+final result = await _remoteDatasource.getById(id);
+{{if HAS_LOCAL_DATASOURCE}}
+      // Cache the result
+      if (result != null) {
+        await _localDatasource.cache(result);
+      }
+{{endif}}
+      return result;
+{{else}}
+{{if HAS_LOCAL_DATASOURCE}}
+      return cached;
+{{else}}
+      // TODO: Implement data fetching logic
+      throw UnimplementedError('getById not implemented');
+{{endif}}
+{{endif}}
+    } on ServerException catch (e) {
+      throw ServerFailure(e.message);
+    } on CacheException catch (e) {
+      throw CacheFailure(e.message);
+    } catch (e) {
+      throw UnexpectedFailure(e.toString());
+    }
+  }
+
+{{if HAS_ENTITY}}
+  @override
+  Future<List<{{PASCAL_ENTITY_NAME}}Entity>> getAll() async {
+{{else}}
+  @override
+  Future<List<Map<String, dynamic>>> getAll() async {
+{{endif}}
+    try {
+{{if HAS_REMOTE_DATASOURCE}}
+final results = await _remoteDatasource.getAll();
+{{if HAS_LOCAL_DATASOURCE}}
+      // Cache all results
+      await _localDatasource.cacheAll(results);
+{{endif}}
+      return results;
+{{else}}
+{{if HAS_LOCAL_DATASOURCE}}
+      return await _localDatasource.getAllCached();
+{{else}}
+      // TODO: Implement data fetching logic
+      throw UnimplementedError('getAll not implemented');
+{{endif}}
+{{endif}}
+    } on ServerException catch (e) {
+      throw ServerFailure(e.message);
+{{if HAS_LOCAL_DATASOURCE}}
+    } on CacheException {
+      // Fallback to remote if cache fails
+{{if HAS_REMOTE_DATASOURCE}}
+      return await _remoteDatasource.getAll();
+{{else}}
+      rethrow;
+{{endif}}
+{{endif}}
+    } catch (e) {
+      throw UnexpectedFailure(e.toString());
+    }
+  }
+
+{{if HAS_ENTITY}}
+  @override
+  Future<{{PASCAL_ENTITY_NAME}}Entity> create({{PASCAL_ENTITY_NAME}}Entity entity) async {
+{{else}}
+  @override
+  Future<Map<String, dynamic>> create(Map<String, dynamic> data) async {
+{{endif}}
+    try {
+{{if HAS_REMOTE_DATASOURCE}}
+{{if HAS_ENTITY}}
+final created = await _remoteDatasource.create(entity);
+{{else}}
+final created = await _remoteDatasource.create(data);
+{{endif}}
+{{if HAS_LOCAL_DATASOURCE}}
+      await _localDatasource.cache(created);
+{{endif}}
+      return created;
+{{else}}
+{{if HAS_LOCAL_DATASOURCE}}
+{{if HAS_ENTITY}}
+      await _localDatasource.cache(entity);
+      return entity;
+{{else}}
+      await _localDatasource.cache(data);
+      return data;
+{{endif}}
+{{else}}
+      // TODO: Implement create logic
+      throw UnimplementedError('create not implemented');
+{{endif}}
+{{endif}}
+    } on ServerException catch (e) {
+      throw ServerFailure(e.message);
+    } on CacheException catch (e) {
+      throw CacheFailure(e.message);
+    } catch (e) {
+      throw UnexpectedFailure(e.toString());
+    }
+  }
+
+{{if HAS_ENTITY}}
+  @override
+  Future<{{PASCAL_ENTITY_NAME}}Entity> update({{PASCAL_ENTITY_NAME}}Entity entity) async {
+{{else}}
+  @override
+  Future<Map<String, dynamic>> update(Map<String, dynamic> data) async {
+{{endif}}
+    try {
+{{if HAS_REMOTE_DATASOURCE}}
+{{if HAS_ENTITY}}
+final updated = await _remoteDatasource.update(entity);
+{{else}}
+final updated = await _remoteDatasource.update(data);
+{{endif}}
+{{if HAS_LOCAL_DATASOURCE}}
+      await _localDatasource.cache(updated);
+{{endif}}
+      return updated;
+{{else}}
+{{if HAS_LOCAL_DATASOURCE}}
+{{if HAS_ENTITY}}
+      await _localDatasource.cache(entity);
+      return entity;
+{{else}}
+      await _localDatasource.cache(data);
+      return data;
+{{endif}}
+{{else}}
+      // TODO: Implement update logic
+      throw UnimplementedError('update not implemented');
+{{endif}}
+{{endif}}
+    } on ServerException catch (e) {
+      throw ServerFailure(e.message);
+    } on CacheException catch (e) {
+      throw CacheFailure(e.message);
+    } catch (e) {
+      throw UnexpectedFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<bool> delete(String id) async {
+    try {
+{{if HAS_REMOTE_DATASOURCE}}
+final success = await _remoteDatasource.delete(id);
+{{if HAS_LOCAL_DATASOURCE}}
+      if (success) {
+        await _localDatasource.remove(id);
+      }
+{{endif}}
+      return success;
+{{else}}
+{{if HAS_LOCAL_DATASOURCE}}
+      await _localDatasource.remove(id);
+      return true;
+{{else}}
+      // TODO: Implement delete logic
+      throw UnimplementedError('delete not implemented');
+{{endif}}
+{{endif}}
+    } on ServerException catch (e) {
+      throw ServerFailure(e.message);
+    } on CacheException catch (e) {
+      throw CacheFailure(e.message);
+    } catch (e) {
+      throw UnexpectedFailure(e.toString());
+    }
+  }
+
+{{if HAS_ENTITY}}
+  @override
+  Future<List<{{PASCAL_ENTITY_NAME}}Entity>> search(String query) async {
+{{else}}
+  @override
+  Future<List<Map<String, dynamic>>> search(String query) async {
+{{endif}}
+    try {
+{{if HAS_REMOTE_DATASOURCE}}
+      return await _remoteDatasource.search(query);
+{{else}}
+{{if HAS_LOCAL_DATASOURCE}}
+      return await _localDatasource.search(query);
+{{else}}
+      // TODO: Implement search logic
+      throw UnimplementedError('search not implemented');
+{{endif}}
+{{endif}}
+    } on ServerException catch (e) {
+      throw ServerFailure(e.message);
+    } catch (e) {
+      throw UnexpectedFailure(e.toString());
+    }
+  }
+}

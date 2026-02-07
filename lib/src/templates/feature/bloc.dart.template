@@ -1,0 +1,112 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:equatable/equatable.dart';
+
+import '../domain/entities/{{FEATURE_NAME}}_entity.dart';
+import '../domain/repositories/{{FEATURE_NAME}}_repository.dart';
+
+part '{{FEATURE_NAME}}_event.dart';
+part '{{FEATURE_NAME}}_state.dart';
+
+/// Bloc for managing {{PASCAL_NAME}} feature state.
+///
+/// Handles events and produces states following the BLoC pattern.
+class {{PASCAL_NAME}}Bloc
+    extends Bloc<{{PASCAL_NAME}}Event, {{PASCAL_NAME}}State> {
+  {{PASCAL_NAME}}Bloc({required {{PASCAL_NAME}}Repository repository})
+    : _repository = repository,
+      super(const {{PASCAL_NAME}}Initial()) {
+    on<Load{{PASCAL_NAME}}s>(_onLoad{{PASCAL_NAME}}s);
+    on<Load{{PASCAL_NAME}}>(_onLoad{{PASCAL_NAME}});
+    on<Create{{PASCAL_NAME}}>(_onCreate{{PASCAL_NAME}});
+    on<Update{{PASCAL_NAME}}>(_onUpdate{{PASCAL_NAME}});
+    on<Delete{{PASCAL_NAME}}>(_onDelete{{PASCAL_NAME}});
+    on<Refresh{{PASCAL_NAME}}s>(_onRefresh{{PASCAL_NAME}}s);
+  }
+
+  final {{PASCAL_NAME}}Repository _repository;
+
+  Future<void> _onLoad{{PASCAL_NAME}}s(
+    Load{{PASCAL_NAME}}s event,
+    Emitter<{{PASCAL_NAME}}State> emit,
+  ) async {
+    emit(const {{PASCAL_NAME}}Loading());
+    try {
+      final items = await _repository.getAll();
+      emit({{PASCAL_NAME}}Loaded(items: items));
+    } catch (e) {
+      emit({{PASCAL_NAME}}Error(message: e.toString()));
+    }
+  }
+
+  Future<void> _onLoad{{PASCAL_NAME}}(
+    Load{{PASCAL_NAME}} event,
+    Emitter<{{PASCAL_NAME}}State> emit,
+  ) async {
+    emit(const {{PASCAL_NAME}}Loading());
+    try {
+      final item = await _repository.getById(event.id);
+      if (item != null) {
+        emit({{PASCAL_NAME}}DetailLoaded(item: item));
+      } else {
+        emit(const {{PASCAL_NAME}}Error(message: 'Item not found'));
+      }
+    } catch (e) {
+      emit({{PASCAL_NAME}}Error(message: e.toString()));
+    }
+  }
+
+  Future<void> _onCreate{{PASCAL_NAME}}(
+    Create{{PASCAL_NAME}} event,
+    Emitter<{{PASCAL_NAME}}State> emit,
+  ) async {
+    emit(const {{PASCAL_NAME}}Loading());
+    try {
+      final created = await _repository.create(event.entity);
+      emit({{PASCAL_NAME}}Created(item: created));
+    } catch (e) {
+      emit({{PASCAL_NAME}}Error(message: e.toString()));
+    }
+  }
+
+  Future<void> _onUpdate{{PASCAL_NAME}}(
+    Update{{PASCAL_NAME}} event,
+    Emitter<{{PASCAL_NAME}}State> emit,
+  ) async {
+    emit(const {{PASCAL_NAME}}Loading());
+    try {
+      final updated = await _repository.update(event.entity);
+      emit({{PASCAL_NAME}}Updated(item: updated));
+    } catch (e) {
+      emit({{PASCAL_NAME}}Error(message: e.toString()));
+    }
+  }
+
+  Future<void> _onDelete{{PASCAL_NAME}}(
+    Delete{{PASCAL_NAME}} event,
+    Emitter<{{PASCAL_NAME}}State> emit,
+  ) async {
+    emit(const {{PASCAL_NAME}}Loading());
+    try {
+      final success = await _repository.delete(event.id);
+      if (success) {
+        emit({{PASCAL_NAME}}Deleted(id: event.id));
+      } else {
+        emit(const {{PASCAL_NAME}}Error(message: 'Failed to delete'));
+      }
+    } catch (e) {
+      emit({{PASCAL_NAME}}Error(message: e.toString()));
+    }
+  }
+
+  Future<void> _onRefresh{{PASCAL_NAME}}s(
+    Refresh{{PASCAL_NAME}}s event,
+    Emitter<{{PASCAL_NAME}}State> emit,
+  ) async {
+    try {
+      final items = await _repository.getAll();
+      emit({{PASCAL_NAME}}Loaded(items: items));
+    } catch (e) {
+      emit({{PASCAL_NAME}}Error(message: e.toString()));
+    }
+  }
+}

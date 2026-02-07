@@ -1,0 +1,237 @@
+import 'dart:convert';
+
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../core/errors/exceptions.dart';
+{{if HAS_ENTITY}}
+import '../domain/entities/{{ENTITY_NAME}}_entity.dart';
+{{endif}}
+
+/// Local datasource interface for {{PASCAL_NAME}} feature.
+///
+/// Defines the contract for local storage operations (caching).
+abstract class {{PASCAL_NAME}}LocalDatasource {
+  /// Get a cached item by ID.
+{{if HAS_ENTITY}}
+  Future<{{PASCAL_ENTITY_NAME}}Entity?> getCached(String id);
+{{else}}
+  Future<Map<String, dynamic>?> getCached(String id);
+{{endif}}
+/// Get all cached items.
+{{if HAS_ENTITY}}
+  Future<List<{{PASCAL_ENTITY_NAME}}Entity>> getAllCached();
+{{else}}
+  Future<List<Map<String, dynamic>>> getAllCached();
+{{endif}}
+/// Cache a single item.
+{{if HAS_ENTITY}}
+  Future<void> cache({{PASCAL_ENTITY_NAME}}Entity entity);
+{{else}}
+  Future<void> cache(Map<String, dynamic> data);
+{{endif}}
+/// Cache multiple items.
+{{if HAS_ENTITY}}
+  Future<void> cacheAll(List<{{PASCAL_ENTITY_NAME}}Entity> entities);
+{{else}}
+  Future<void> cacheAll(List<Map<String, dynamic>> items);
+{{endif}}
+
+  /// Remove a cached item by ID.
+  Future<void> remove(String id);
+
+  /// Clear all cached items.
+  Future<void> clearCache();
+
+  /// Search cached items.
+{{if HAS_ENTITY}}
+  Future<List<{{PASCAL_ENTITY_NAME}}Entity>> search(String query);
+{{else}}
+  Future<List<Map<String, dynamic>>> search(String query);
+{{endif}}
+}
+
+/// Implementation of [{{PASCAL_NAME}}LocalDatasource] using SharedPreferences.
+///
+/// For more complex caching needs, consider using Hive, Isar, or SQLite.
+class {{PASCAL_NAME}}LocalDatasourceImpl
+    implements {{PASCAL_NAME}}LocalDatasource {
+  const {{PASCAL_NAME}}LocalDatasourceImpl({
+    required SharedPreferences sharedPreferences,
+  }) : _prefs = sharedPreferences;
+
+  final SharedPreferences _prefs;
+
+  /// Key prefix for storing items.
+  static const _keyPrefix = '{{FEATURE_NAME}}_cache_';
+
+  /// Key for storing all item IDs.
+  static const _indexKey = '{{FEATURE_NAME}}_cache_index';
+
+  @override
+{{if HAS_ENTITY}}
+  Future<{{PASCAL_ENTITY_NAME}}Entity?> getCached(String id) async {
+{{else}}
+  Future<Map<String, dynamic>?> getCached(String id) async {
+{{endif}}
+    try {
+      final jsonString = _prefs.getString('$_keyPrefix$id');
+      if (jsonString == null) {
+        return null;
+      }
+
+      final json = jsonDecode(jsonString) as Map<String, dynamic>;
+{{if HAS_ENTITY}}
+      return {{PASCAL_ENTITY_NAME}}Entity.fromJson(json);
+{{else}}
+      return json;
+{{endif}}
+    } catch (e) {
+      throw CacheException('Failed to get cached {{FEATURE_NAME}}: $e');
+    }
+  }
+
+  @override
+{{if HAS_ENTITY}}
+  Future<List<{{PASCAL_ENTITY_NAME}}Entity>> getAllCached() async {
+{{else}}
+  Future<List<Map<String, dynamic>>> getAllCached() async {
+{{endif}}
+    try {
+      final ids = _prefs.getStringList(_indexKey) ?? [];
+{{if HAS_ENTITY}}
+final entities = <{{PASCAL_ENTITY_NAME}}Entity>[];
+{{else}}
+final entities = <Map<String, dynamic>>[];
+{{endif}}
+
+      for (final id in ids) {
+        final entity = await getCached(id);
+        if (entity != null) {
+          entities.add(entity);
+        }
+      }
+
+      return entities;
+    } catch (e) {
+      throw CacheException('Failed to get cached {{FEATURE_NAME}}s: $e');
+    }
+  }
+
+  @override
+{{if HAS_ENTITY}}
+  Future<void> cache({{PASCAL_ENTITY_NAME}}Entity entity) async {
+{{else}}
+  Future<void> cache(Map<String, dynamic> data) async {
+{{endif}}
+    try {
+{{if HAS_ENTITY}}
+      final jsonString = jsonEncode(entity.toJson());
+      await _prefs.setString('$_keyPrefix${entity.id}', jsonString);
+
+      // Update index
+      final ids = _prefs.getStringList(_indexKey) ?? [];
+      if (!ids.contains(entity.id)) {
+        ids.add(entity.id);
+        await _prefs.setStringList(_indexKey, ids);
+      }
+{{else}}
+      final jsonString = jsonEncode(data);
+      final id = data['id']?.toString() ?? '';
+      await _prefs.setString('$_keyPrefix$id', jsonString);
+
+      // Update index
+      final ids = _prefs.getStringList(_indexKey) ?? [];
+      if (!ids.contains(id)) {
+        ids.add(id);
+        await _prefs.setStringList(_indexKey, ids);
+      }
+{{endif}}
+    } catch (e) {
+      throw CacheException('Failed to cache {{FEATURE_NAME}}: $e');
+    }
+  }
+
+  @override
+{{if HAS_ENTITY}}
+  Future<void> cacheAll(List<{{PASCAL_ENTITY_NAME}}Entity> entities) async {
+{{else}}
+  Future<void> cacheAll(List<Map<String, dynamic>> items) async {
+{{endif}}
+    try {
+      final ids = <String>[];
+
+{{if HAS_ENTITY}}
+      for (final entity in entities) {
+        final jsonString = jsonEncode(entity.toJson());
+        await _prefs.setString('$_keyPrefix${entity.id}', jsonString);
+        ids.add(entity.id);
+      }
+{{else}}
+      for (final item in items) {
+        final jsonString = jsonEncode(item);
+        final id = item['id']?.toString() ?? '';
+        await _prefs.setString('$_keyPrefix$id', jsonString);
+        ids.add(id);
+      }
+{{endif}}
+
+      // Update index with all IDs
+      await _prefs.setStringList(_indexKey, ids);
+    } catch (e) {
+      throw CacheException('Failed to cache {{FEATURE_NAME}}s: $e');
+    }
+  }
+
+  @override
+  Future<void> remove(String id) async {
+    try {
+      await _prefs.remove('$_keyPrefix$id');
+
+      // Update index
+      final ids = _prefs.getStringList(_indexKey) ?? [];
+      ids.remove(id);
+      await _prefs.setStringList(_indexKey, ids);
+    } catch (e) {
+      throw CacheException('Failed to remove cached {{FEATURE_NAME}}: $e');
+    }
+  }
+
+  @override
+  Future<void> clearCache() async {
+    try {
+      final ids = _prefs.getStringList(_indexKey) ?? [];
+
+      for (final id in ids) {
+        await _prefs.remove('$_keyPrefix$id');
+      }
+
+      await _prefs.remove(_indexKey);
+    } catch (e) {
+      throw CacheException('Failed to clear {{FEATURE_NAME}} cache: $e');
+    }
+  }
+
+  @override
+{{if HAS_ENTITY}}
+  Future<List<{{PASCAL_ENTITY_NAME}}Entity>> search(String query) async {
+{{else}}
+  Future<List<Map<String, dynamic>>> search(String query) async {
+{{endif}}
+    try {
+      final allEntities = await getAllCached();
+      final lowerQuery = query.toLowerCase();
+
+      return allEntities.where((entity) {
+        // Search by common fields - extend this based on your entity fields
+{{if HAS_ENTITY}}
+        return entity.name.toLowerCase().contains(lowerQuery);
+{{else}}
+        final name = entity['name']?.toString() ?? '';
+        return name.toLowerCase().contains(lowerQuery);
+{{endif}}
+      }).toList();
+    } catch (e) {
+      throw CacheException('Failed to search cached {{FEATURE_NAME}}s: $e');
+    }
+  }
+}

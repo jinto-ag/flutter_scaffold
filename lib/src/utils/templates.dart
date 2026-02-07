@@ -422,9 +422,19 @@ class TemplateRegistry {
     'providers',
     'entity',
     'repository',
+    'repository_impl',
+    'remote_datasource',
+    'local_datasource',
+    'mapper',
+    'usecase',
     'basic_model',
     'json_serializable_model',
     'freezed_model',
+    'bloc',
+    'bloc_event',
+    'bloc_state',
+    'cubit',
+    'cubit_state',
   ];
 
   /// Get a core template by its output path.

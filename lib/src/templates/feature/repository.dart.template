@@ -1,26 +1,48 @@
-import '../entities/{{FEATURE_NAME}}_entity.dart';
+{{if HAS_ENTITY}}
+import '../entities/{{ENTITY_NAME}}_entity.dart';
+{{endif}}
 
 /// Repository interface for the {{PASCAL_NAME}} feature.
-/// 
+///
 /// Defines the contract for data operations.
 /// Implementations go in the data layer.
 
 abstract class {{PASCAL_NAME}}Repository {
   /// Get a single item by ID.
-  Future<{{PASCAL_NAME}}Entity?> getById(String id);
+  {{if HAS_ENTITY}}
+  Future<{{PASCAL_ENTITY_NAME}}Entity?> getById(String id);
+  {{else}}
+  Future<Map<String, dynamic>?> getById(String id);
+  {{endif}}
 
   /// Get all items.
-  Future<List<{{PASCAL_NAME}}Entity>> getAll();
+  {{if HAS_ENTITY}}
+  Future<List<{{PASCAL_ENTITY_NAME}}Entity>> getAll();
+  {{else}}
+  Future<List<Map<String, dynamic>>> getAll();
+  {{endif}}
 
   /// Create a new item.
-  Future<{{PASCAL_NAME}}Entity> create({{PASCAL_NAME}}Entity entity);
+  {{if HAS_ENTITY}}
+  Future<{{PASCAL_ENTITY_NAME}}Entity> create({{PASCAL_ENTITY_NAME}}Entity entity);
+  {{else}}
+  Future<Map<String, dynamic>> create(Map<String, dynamic> data);
+  {{endif}}
 
   /// Update an existing item.
-  Future<{{PASCAL_NAME}}Entity> update({{PASCAL_NAME}}Entity entity);
+  {{if HAS_ENTITY}}
+  Future<{{PASCAL_ENTITY_NAME}}Entity> update({{PASCAL_ENTITY_NAME}}Entity entity);
+  {{else}}
+  Future<Map<String, dynamic>> update(Map<String, dynamic> data);
+  {{endif}}
 
   /// Delete an item by ID.
   Future<bool> delete(String id);
 
   /// Search items by query.
-  Future<List<{{PASCAL_NAME}}Entity>> search(String query);
+  {{if HAS_ENTITY}}
+  Future<List<{{PASCAL_ENTITY_NAME}}Entity>> search(String query);
+  {{else}}
+  Future<List<Map<String, dynamic>>> search(String query);
+  {{endif}}
 }

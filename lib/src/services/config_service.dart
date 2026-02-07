@@ -16,6 +16,11 @@ class ScaffoldConfig {
     this.customDependencies,
     this.customDevDependencies,
     this.featureComponents,
+    this.stateManagement = 'riverpod',
+    this.routing = 'go_router',
+    this.dataClass = 'freezed',
+    this.linting = true,
+    this.templatePaths,
   });
 
   /// Default organization for new projects.
@@ -42,6 +47,21 @@ class ScaffoldConfig {
   /// Feature components to generate.
   final List<String>? featureComponents;
 
+  /// State management solution (riverpod, bloc, provider, none).
+  final String stateManagement;
+
+  /// Routing solution (go_router, auto_route, none).
+  final String routing;
+
+  /// Data class generation (freezed, json_serializable, none).
+  final String dataClass;
+
+  /// Whether to enable linting.
+  final bool linting;
+
+  /// Custom template overrides (template_name: path).
+  final Map<String, String>? templatePaths;
+
   /// Create config from YAML map.
   factory ScaffoldConfig.fromMap(Map<String, dynamic> map) {
     return ScaffoldConfig(
@@ -53,12 +73,25 @@ class ScaffoldConfig {
       customDependencies: _parseList(map['dependencies']),
       customDevDependencies: _parseList(map['dev_dependencies']),
       featureComponents: _parseList(map['feature_components']),
+      stateManagement: map['state_management'] as String? ?? 'riverpod',
+      routing: map['routing'] as String? ?? 'go_router',
+      dataClass: map['data_class'] as String? ?? 'freezed',
+      linting: map['linting'] as bool? ?? true,
+      templatePaths: _parseMap(map['template_paths']),
     );
   }
 
   static List<String>? _parseList(dynamic value) {
     if (value == null) return null;
     if (value is List) return value.map((e) => e.toString()).toList();
+    return null;
+  }
+
+  static Map<String, String>? _parseMap(dynamic value) {
+    if (value == null) return null;
+    if (value is Map) {
+      return value.map((k, v) => MapEntry(k.toString(), v.toString()));
+    }
     return null;
   }
 }

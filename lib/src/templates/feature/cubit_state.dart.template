@@ -1,0 +1,61 @@
+part of '{{FEATURE_NAME}}_cubit.dart';
+
+/// Base state for {{PASCAL_NAME}} Cubit.
+sealed class {{PASCAL_NAME}}CubitState extends Equatable {
+  const {{PASCAL_NAME}}CubitState();
+
+  @override
+  List<Object?> get props => [];
+}
+
+/// Initial state before any action.
+final class {{PASCAL_NAME}}CubitInitial extends {{PASCAL_NAME}}CubitState {
+  const {{PASCAL_NAME}}CubitInitial();
+}
+
+/// Loading state while fetching data.
+final class {{PASCAL_NAME}}CubitLoading extends {{PASCAL_NAME}}CubitState {
+  const {{PASCAL_NAME}}CubitLoading();
+}
+
+/// State when items are successfully loaded.
+final class {{PASCAL_NAME}}CubitLoaded extends {{PASCAL_NAME}}CubitState {
+  const {{PASCAL_NAME}}CubitLoaded({required this.items});
+
+  final List<{{PASCAL_NAME}}Entity> items;
+
+  @override
+  List<Object?> get props => [items];
+}
+
+/// State when a single item detail is loaded.
+final class {{PASCAL_NAME}}CubitDetailLoaded
+    extends {{PASCAL_NAME}}CubitState {
+  const {{PASCAL_NAME}}CubitDetailLoaded({required this.item});
+
+  final {{PASCAL_NAME}}Entity item;
+
+  @override
+  List<Object?> get props => [item];
+}
+
+/// Success state after an operation completes.
+final class {{PASCAL_NAME}}CubitSuccess extends {{PASCAL_NAME}}CubitState {
+  const {{PASCAL_NAME}}CubitSuccess({this.item, required this.message});
+
+  final {{PASCAL_NAME}}Entity? item;
+  final String message;
+
+  @override
+  List<Object?> get props => [item, message];
+}
+
+/// Error state when an operation fails.
+final class {{PASCAL_NAME}}CubitError extends {{PASCAL_NAME}}CubitState {
+  const {{PASCAL_NAME}}CubitError({required this.message});
+
+  final String message;
+
+  @override
+  List<Object?> get props => [message];
+}

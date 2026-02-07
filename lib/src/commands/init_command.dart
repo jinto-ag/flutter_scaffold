@@ -4,6 +4,7 @@ library;
 import 'package:args/command_runner.dart';
 
 import '../services/backup_service.dart';
+import '../services/config_service.dart';
 import '../services/dependency_service.dart';
 import '../services/distribution_service.dart';
 import '../services/feature_service.dart';
@@ -21,6 +22,7 @@ import '../utils/logger.dart';
 class InitCommand extends Command<int> {
   InitCommand({
     ScaffoldLogger? logger,
+    ConfigService? configService,
     ScaffoldService? scaffoldService,
     FeatureService? featureService,
     DependencyService? dependencyService,
@@ -31,6 +33,7 @@ class InitCommand extends Command<int> {
     DistributionService? distributionService,
     FileUtils? fileUtils,
   }) : _logger = logger ?? ScaffoldLogger(),
+       _configService = configService ?? const ConfigService(),
        _scaffoldService = scaffoldService ?? ScaffoldService(),
        _featureService = featureService ?? FeatureService(),
        _dependencyService = dependencyService ?? DependencyService(),
@@ -81,10 +84,27 @@ class InitCommand extends Command<int> {
         'no-git',
         help: 'Skip auto-commit after successful operation',
         negatable: false,
-      );
+      )
+      ..addOption(
+        'state-management',
+        allowed: ['riverpod', 'bloc', 'provider', 'none'],
+        help: 'State management solution to use',
+      )
+      ..addOption(
+        'routing',
+        allowed: ['go_router', 'auto_route', 'none'],
+        help: 'Routing solution to use',
+      )
+      ..addOption(
+        'data-class',
+        allowed: ['freezed', 'json_serializable', 'none'],
+        help: 'Data class generation to use',
+      )
+      ..addFlag('lint', help: 'Enable linting', defaultsTo: true);
   }
 
   final ScaffoldLogger _logger;
+  final ConfigService _configService;
   final ScaffoldService _scaffoldService;
   final FeatureService _featureService;
   final DependencyService _dependencyService;
@@ -117,7 +137,24 @@ class InitCommand extends Command<int> {
     final projectPath = _fileUtils.currentDirectory;
     final projectName = _fileUtils.basename(projectPath);
 
+    // Load configuration
+    final config = _configService.loadConfig(projectPath: projectPath);
+
+    // Resolve stack preferences (Flag > Config > Default)
+    // Note: Config object already handles (Local > Global > Default)
+    final stateManagement =
+        args['state-management'] as String? ?? config.stateManagement;
+    final routing = args['routing'] as String? ?? config.routing;
+    final dataClass = args['data-class'] as String? ?? config.dataClass;
+    final linting = args.wasParsed('lint') ? args.flag('lint') : config.linting;
+
     _logger.header('Flutter Clean Architecture Scaffold');
+    _logger.info('Stack Configuration:');
+    _logger.info('  State Management: $stateManagement');
+    _logger.info('  Routing: $routing');
+    _logger.info('  Data Class: $dataClass');
+    _logger.info('  Linting: $linting');
+    _logger.info('');
 
     if (dryRun) {
       _logger.warn('DRY RUN - changes will be verified in sandbox');

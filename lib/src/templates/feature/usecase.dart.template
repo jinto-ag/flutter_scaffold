@@ -1,0 +1,82 @@
+import '../repositories/{{FEATURE_NAME}}_repository.dart';
+import '../entities/{{FEATURE_NAME}}_entity.dart';
+
+/// Use case for {{USECASE_DESCRIPTION}}.
+///
+/// Implements the business logic for a specific operation in the {{PASCAL_NAME}} feature.
+/// Use cases encapsulate and abstract business rules from the presentation layer.
+class {{PASCAL_USECASE_NAME}}UseCase {
+  const {{PASCAL_USECASE_NAME}}UseCase({
+    required {{PASCAL_NAME}}Repository repository,
+  }) : _repository = repository;
+
+  final {{PASCAL_NAME}}Repository _repository;
+
+  /// Execute the use case.
+  ///
+  /// Returns a [{{PASCAL_NAME}}Entity] on success.
+  /// Throws exceptions for validation or business rule violations.
+{{if HAS_PARAMS}}
+Future<{{RETURN_TYPE}}> call({{PASCAL_USECASE_NAME}}Params params) async {
+  // Validate parameters
+  _validateParams(params);
+
+  // Execute business logic
+  return await _execute(params);
+}
+
+/// Validate input parameters.
+void _validateParams({{PASCAL_USECASE_NAME}}Params params) {
+  // Add validation logic here
+  // Example:
+  // if (params.id.isEmpty) {
+  //   throw ValidationException('ID cannot be empty');
+  // }
+}
+
+/// Execute the core business logic.
+Future<{{RETURN_TYPE}}> _execute({{PASCAL_USECASE_NAME}}Params params) async {
+  // TODO: Implement business logic
+  // Example:
+  // return await _repository.getById(params.id);
+  throw UnimplementedError('{{PASCAL_USECASE_NAME}}UseCase not implemented');
+}
+{{else}}
+Future<{{RETURN_TYPE}}> call() async {
+  // Execute business logic without parameters
+  return await _execute();
+}
+
+/// Execute the core business logic.
+Future<{{RETURN_TYPE}}> _execute() async {
+  // TODO: Implement business logic
+  // Example:
+  // return await _repository.getAll();
+  throw UnimplementedError('{{PASCAL_USECASE_NAME}}UseCase not implemented');
+}
+{{endif}}
+}
+{{if HAS_PARAMS}}
+
+/// Parameters for [{{PASCAL_USECASE_NAME}}UseCase].
+///
+/// Encapsulates all input data required for this use case.
+class {{PASCAL_USECASE_NAME}}Params {
+  const {{PASCAL_USECASE_NAME}}Params({
+    // TODO: Add required parameters
+    // required this.id,
+  });
+
+  // TODO: Add parameter fields
+  // final String id;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is {{PASCAL_USECASE_NAME}}Params &&
+          runtimeType == other.runtimeType;
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+}
+{{endif}}

@@ -136,6 +136,17 @@ class _ConfigShowCommand extends Command<int> {
     _logger.info('default_branch: ${config.defaultBranch}');
     _logger.info('init_git: ${config.initGit}');
     _logger.info('install_deps: ${config.installDeps}');
+    _logger.info('state_management: ${config.stateManagement}');
+    _logger.info('routing: ${config.routing}');
+    _logger.info('data_class: ${config.dataClass}');
+    _logger.info('linting: ${config.linting}');
+
+    if (config.templatePaths != null && config.templatePaths!.isNotEmpty) {
+      _logger.info('template_paths:');
+      config.templatePaths!.forEach((k, v) {
+        _logger.info('  $k: $v');
+      });
+    }
 
     if (config.platforms != null) {
       _logger.info('platforms: ${config.platforms!.join(', ')}');

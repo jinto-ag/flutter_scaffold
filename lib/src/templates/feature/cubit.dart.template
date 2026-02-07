@@ -1,0 +1,112 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:equatable/equatable.dart';
+
+import '../domain/entities/{{FEATURE_NAME}}_entity.dart';
+import '../domain/repositories/{{FEATURE_NAME}}_repository.dart';
+
+part '{{FEATURE_NAME}}_state.dart';
+
+/// Cubit for managing {{PASCAL_NAME}} feature state.
+///
+/// Simpler alternative to Bloc for straightforward state management.
+/// Use this when you don't need event-driven architecture.
+class {{PASCAL_NAME}}Cubit extends Cubit<{{PASCAL_NAME}}CubitState> {
+  {{PASCAL_NAME}}Cubit({required {{PASCAL_NAME}}Repository repository})
+    : _repository = repository,
+      super(const {{PASCAL_NAME}}CubitInitial());
+
+  final {{PASCAL_NAME}}Repository _repository;
+
+  /// Load all items.
+  Future<void> loadAll() async {
+    emit(const {{PASCAL_NAME}}CubitLoading());
+    try {
+      final items = await _repository.getAll();
+      emit({{PASCAL_NAME}}CubitLoaded(items: items));
+    } catch (e) {
+      emit({{PASCAL_NAME}}CubitError(message: e.toString()));
+    }
+  }
+
+  /// Load a single item by ID.
+  Future<void> loadById(String id) async {
+    emit(const {{PASCAL_NAME}}CubitLoading());
+    try {
+      final item = await _repository.getById(id);
+      if (item != null) {
+        emit({{PASCAL_NAME}}CubitDetailLoaded(item: item));
+      } else {
+        emit(const {{PASCAL_NAME}}CubitError(message: 'Item not found'));
+      }
+    } catch (e) {
+      emit({{PASCAL_NAME}}CubitError(message: e.toString()));
+    }
+  }
+
+  /// Create a new item.
+  Future<void> create({{PASCAL_NAME}}Entity entity) async {
+    emit(const {{PASCAL_NAME}}CubitLoading());
+    try {
+      final created = await _repository.create(entity);
+      emit(
+        {{PASCAL_NAME}}CubitSuccess(
+          item: created,
+          message: '{{PASCAL_NAME}} created successfully',
+        ),
+      );
+    } catch (e) {
+      emit({{PASCAL_NAME}}CubitError(message: e.toString()));
+    }
+  }
+
+  /// Update an existing item.
+  Future<void> update({{PASCAL_NAME}}Entity entity) async {
+    emit(const {{PASCAL_NAME}}CubitLoading());
+    try {
+      final updated = await _repository.update(entity);
+      emit(
+        {{PASCAL_NAME}}CubitSuccess(
+          item: updated,
+          message: '{{PASCAL_NAME}} updated successfully',
+        ),
+      );
+    } catch (e) {
+      emit({{PASCAL_NAME}}CubitError(message: e.toString()));
+    }
+  }
+
+  /// Delete an item.
+  Future<void> delete(String id) async {
+    emit(const {{PASCAL_NAME}}CubitLoading());
+    try {
+      final success = await _repository.delete(id);
+      if (success) {
+        emit(
+          const {{PASCAL_NAME}}CubitSuccess(
+            message: '{{PASCAL_NAME}} deleted successfully',
+          ),
+        );
+      } else {
+        emit(const {{PASCAL_NAME}}CubitError(message: 'Failed to delete'));
+      }
+    } catch (e) {
+      emit({{PASCAL_NAME}}CubitError(message: e.toString()));
+    }
+  }
+
+  /// Search items.
+  Future<void> search(String query) async {
+    emit(const {{PASCAL_NAME}}CubitLoading());
+    try {
+      final items = await _repository.search(query);
+      emit({{PASCAL_NAME}}CubitLoaded(items: items));
+    } catch (e) {
+      emit({{PASCAL_NAME}}CubitError(message: e.toString()));
+    }
+  }
+
+  /// Reset to initial state.
+  void reset() {
+    emit(const {{PASCAL_NAME}}CubitInitial());
+  }
+}

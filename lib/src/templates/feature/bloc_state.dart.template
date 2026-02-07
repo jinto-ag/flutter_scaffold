@@ -1,0 +1,79 @@
+part of '{{FEATURE_NAME}}_bloc.dart';
+
+/// Base state for {{PASCAL_NAME}} Bloc.
+sealed class {{PASCAL_NAME}}State extends Equatable {
+  const {{PASCAL_NAME}}State();
+
+  @override
+  List<Object?> get props => [];
+}
+
+/// Initial state before any action.
+final class {{PASCAL_NAME}}Initial extends {{PASCAL_NAME}}State {
+  const {{PASCAL_NAME}}Initial();
+}
+
+/// Loading state while fetching data.
+final class {{PASCAL_NAME}}Loading extends {{PASCAL_NAME}}State {
+  const {{PASCAL_NAME}}Loading();
+}
+
+/// State when items are successfully loaded.
+final class {{PASCAL_NAME}}Loaded extends {{PASCAL_NAME}}State {
+  const {{PASCAL_NAME}}Loaded({required this.items});
+
+  final List<{{PASCAL_NAME}}Entity> items;
+
+  @override
+  List<Object?> get props => [items];
+}
+
+/// State when a single item detail is loaded.
+final class {{PASCAL_NAME}}DetailLoaded extends {{PASCAL_NAME}}State {
+  const {{PASCAL_NAME}}DetailLoaded({required this.item});
+
+  final {{PASCAL_NAME}}Entity item;
+
+  @override
+  List<Object?> get props => [item];
+}
+
+/// State when an item is successfully created.
+final class {{PASCAL_NAME}}Created extends {{PASCAL_NAME}}State {
+  const {{PASCAL_NAME}}Created({required this.item});
+
+  final {{PASCAL_NAME}}Entity item;
+
+  @override
+  List<Object?> get props => [item];
+}
+
+/// State when an item is successfully updated.
+final class {{PASCAL_NAME}}Updated extends {{PASCAL_NAME}}State {
+  const {{PASCAL_NAME}}Updated({required this.item});
+
+  final {{PASCAL_NAME}}Entity item;
+
+  @override
+  List<Object?> get props => [item];
+}
+
+/// State when an item is successfully deleted.
+final class {{PASCAL_NAME}}Deleted extends {{PASCAL_NAME}}State {
+  const {{PASCAL_NAME}}Deleted({required this.id});
+
+  final String id;
+
+  @override
+  List<Object?> get props => [id];
+}
+
+/// Error state when an operation fails.
+final class {{PASCAL_NAME}}Error extends {{PASCAL_NAME}}State {
+  const {{PASCAL_NAME}}Error({required this.message});
+
+  final String message;
+
+  @override
+  List<Object?> get props => [message];
+}

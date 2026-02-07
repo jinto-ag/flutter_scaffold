@@ -53,34 +53,38 @@ Focus on making the tool robust, configurable, and easy to use.
     - [x] Add remaining placeholders: `PASCAL_FEATURE_NAME`, `screenName`, `PASCAL_SCREEN_NAME`, `FIELDS_WITH_OPTIONAL`, `COPY_FIELDS`, `JSON_FIELDS`, `FROM_JSON_FIELDS`, `HAS_FIELDS`.
     - [x] Rebuild extension (`npm run compile && npm run package`).
     - [x] Extension version bumped to `0.2.0`.
-- [ ] **Project Configuration & Defaults**
-  - [ ] **Optimal Defaults Strategy:**
-    - [ ] Ship with production-ready defaults (Riverpod, GoRouter, Freezed, Linting) that work out-of-the-box.
-    - [ ] Zero-config start: `flutter_scaffold create my_app` should just work.
-  - [ ] **Full Customization Options:**
-    - [ ] **CLI Flags:** Override any default (e.g., `--state-management bloc`, `--no-routes`, `--no-lint`).
-    - [ ] **Config File (`flutter_scaffold.yaml`):** Persist overrides project-wide or globally.
-  - [ ] Enhance `flutter_scaffold.yaml`:
-    - [ ] Support custom template paths.
-    - [ ] Define default "stack" preferences.
+- [x] **Project Configuration & Defaults**
+  - [x] **Optimal Defaults Strategy:**
+    - [x] Ship with production-ready defaults (Riverpod, GoRouter, Freezed, Linting) that work out-of-the-box.
+    - [x] Zero-config start: `flutter_scaffold create my_app` should just work.
+  - [x] **Full Customization Options:**
+    - [x] **CLI Flags:** Override any default (e.g., `--state-management bloc`, `--no-routes`, `--no-lint`).
+    - [x] **Config File (`flutter_scaffold.yaml`):** Persist overrides project-wide or globally.
+  - [x] Enhance `flutter_scaffold.yaml`:
+    - [x] Support custom template paths.
+    - [x] Define default "stack" preferences.
 
 ## Phase 2: Advanced Scaffolding & Architecture
 
 Focus on generating "Complete" Clean Architecture support.
 
-- [ ] **Data Layer Generation** (High Priority)
-  - [ ] Generate `repository_impl` (Repository Implementation).
-  - [ ] Generate `datasource` (Remote & Local).
-  - [ ] Generate `mapper` classes (Entity <-> DTO).
-- [ ] **Component Generation**
-  - [ ] `add usecase` command.
-  - [ ] `add repository` command (Interface & Impl).
-  - [ ] `add model` command (with json_serializable).
-- [ ] **State Management Options**
-  - [ ] Support Bloc/Cubit generation (in addition to Riverpod).
-- [ ] **Scalability & Maintenance**
-  - [ ] Verify conditional rendering logic for all new components.
-  - [ ] Ensure `build_runner` and linters auto-run after generation.
+- [x] **Data Layer Generation** (High Priority)
+  - [x] Generate `repository_impl` (Repository Implementation).
+  - [x] Generate `datasource` (Remote & Local).
+  - [x] Generate `mapper` classes (Entity <-> DTO).
+- [x] **Component Generation**
+  - [x] `add usecase` command.
+  - [x] `add repository` command (Interface & Impl).
+  - [x] `add model` command (with json_serializable).
+- [x] **State Management Options**
+  - [x] Support Bloc/Cubit generation (in addition to Riverpod).
+- [x] **Scalability & Maintenance**
+  - [x] Verify conditional rendering logic for all new components.
+  - [x] Ensure `build_runner` and linters auto-run after generation.
+  - [x] Fix repository template entity references (E2E failure).
+  - [x] Standardize template variable naming across all commands.
+  - [x] Add conditional entity handling (`HAS_ENTITY` flag) to templates.
+  - [x] Update E2E tests to verify template generation.
 
 ## Phase 3: Production Readiness
 
@@ -111,3 +115,4 @@ Focus on "Go Live" requirements.
 - [x] Implement `--screen` flag for feature generation.
 - [x] Add unit tests for safety services (BackupService, HistoryService, SandboxService).
 - [x] Implement CLI Infrastructure (upgrade, interactive, verbose).
+- [x] **Phase 2 Complete:** Data layer templates, component commands, Bloc/Cubit templates.

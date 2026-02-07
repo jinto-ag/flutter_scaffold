@@ -1,0 +1,86 @@
+import '../domain/entities/{{FEATURE_NAME}}_entity.dart';
+import '../models/{{FEATURE_NAME}}_model.dart';
+
+/// Mapper for converting between {{PASCAL_NAME}}Entity and {{PASCAL_NAME}}Model.
+///
+/// Handles the transformation between domain entities and data transfer objects (DTOs).
+/// This separation ensures clean architecture layer boundaries are maintained.
+abstract class {{PASCAL_NAME}}Mapper {
+  /// Convert a model (DTO) to a domain entity.
+  static {{PASCAL_NAME}}Entity toEntity({{PASCAL_NAME}}Model model) {
+    return {{PASCAL_NAME}}Entity(
+      id: model.id,
+      name: model.name,
+      description: model.description ?? '',
+      isActive: model.isActive ?? false,
+      createdAt: model.createdAt != null
+          ? DateTime.parse(model.createdAt!)
+          : null,
+      updatedAt: model.updatedAt != null
+          ? DateTime.parse(model.updatedAt!)
+          : null,
+    );
+  }
+
+  /// Convert a domain entity to a model (DTO).
+  static {{PASCAL_NAME}}Model toModel({{PASCAL_NAME}}Entity entity) {
+    return {{PASCAL_NAME}}Model(
+      id: entity.id,
+      name: entity.name,
+      description: entity.description.isEmpty ? null : entity.description,
+      isActive: entity.isActive,
+      createdAt: entity.createdAt?.toIso8601String(),
+      updatedAt: entity.updatedAt?.toIso8601String(),
+    );
+  }
+
+  /// Convert a list of models to a list of entities.
+  static List<{{PASCAL_NAME}}Entity> toEntityList(
+    List<{{PASCAL_NAME}}Model> models,
+  ) {
+    return models.map(toEntity).toList();
+  }
+
+  /// Convert a list of entities to a list of models.
+  static List<{{PASCAL_NAME}}Model> toModelList(
+    List<{{PASCAL_NAME}}Entity> entities,
+  ) {
+    return entities.map(toModel).toList();
+  }
+
+  /// Convert a nullable model to a nullable entity.
+  static {{PASCAL_NAME}}Entity? toEntityOrNull({{PASCAL_NAME}}Model? model) {
+    return model != null ? toEntity(model) : null;
+  }
+
+  /// Convert a nullable entity to a nullable model.
+  static {{PASCAL_NAME}}Model? toModelOrNull({{PASCAL_NAME}}Entity? entity) {
+    return entity != null ? toModel(entity) : null;
+  }
+}
+
+/// Extension methods for convenient entity-model conversion.
+extension {{PASCAL_NAME}}ModelExtension on {{PASCAL_NAME}}Model {
+  /// Convert this model to a domain entity.
+  {{PASCAL_NAME}}Entity toEntity() => {{PASCAL_NAME}}Mapper.toEntity(this);
+}
+
+/// Extension methods for convenient model-entity conversion.
+extension {{PASCAL_NAME}}EntityExtension on {{PASCAL_NAME}}Entity {
+  /// Convert this entity to a data model (DTO).
+  {{PASCAL_NAME}}Model toModel() => {{PASCAL_NAME}}Mapper.toModel(this);
+}
+
+/// Extension for list conversions.
+extension {{PASCAL_NAME}}ModelListExtension on List<{{PASCAL_NAME}}Model> {
+  /// Convert all models in this list to entities.
+  List<{{PASCAL_NAME}}Entity> toEntities() =>
+      {{PASCAL_NAME}}Mapper.toEntityList(this);
+}
+
+/// Extension for list conversions.
+extension {{PASCAL_NAME}}EntityListExtension on List<{{PASCAL_NAME}}Entity> {
+  /// Convert all entities in this list to models.
+  List<{{PASCAL_NAME}}Model> toModels() =>
+      {{PASCAL_NAME}}Mapper.toModelList(this);
+}

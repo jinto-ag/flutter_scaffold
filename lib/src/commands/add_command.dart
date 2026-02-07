@@ -1,4 +1,4 @@
-/// Add command for adding features and models.
+/// Add command for adding features, models, repositories, and use cases.
 library;
 
 import 'package:args/command_runner.dart';
@@ -8,6 +8,8 @@ import '../services/model_service.dart';
 import '../utils/file_utils.dart';
 import '../utils/logger.dart';
 import 'add_model_command.dart';
+import 'add_repository_command.dart';
+import 'add_usecase_command.dart';
 
 /// Command to add new modules to the project.
 class AddCommand extends Command<int> {
@@ -26,6 +28,20 @@ class AddCommand extends Command<int> {
       ),
     );
     addSubcommand(AddModelCommand(logger: _logger, fileUtils: _fileUtils));
+    addSubcommand(
+      AddRepositoryCommand(
+        logger: _logger,
+        featureService: _featureService,
+        fileUtils: _fileUtils,
+      ),
+    );
+    addSubcommand(
+      AddUsecaseCommand(
+        logger: _logger,
+        featureService: _featureService,
+        fileUtils: _fileUtils,
+      ),
+    );
   }
 
   final ScaffoldLogger _logger;

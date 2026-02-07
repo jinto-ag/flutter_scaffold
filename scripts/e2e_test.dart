@@ -142,6 +142,155 @@ void main(List<String> args) async {
       },
     ),
 
+    'usecase': () => context.runStep('Add UseCase Command', () async {
+      context.ensureProjectPath();
+      final featureName = 'usecase_test';
+
+      // Create feature first
+      await context.run('flutter_scaffold', [
+        'add',
+        'feature',
+        featureName,
+      ], workingDirectory: context.projectPath);
+
+      // Add usecase
+      await context.run('flutter_scaffold', [
+        'add',
+        'usecase',
+        'get_items',
+        '--feature',
+        featureName,
+        '--return-type',
+        'List<String>',
+        '--description',
+        'Get all items from repository',
+      ], workingDirectory: context.projectPath);
+
+      context.expectFile(
+        '${context.projectPath}/lib/src/features/$featureName/domain/usecases/get_items_usecase.dart',
+      );
+
+      // Test dry-run (should not create file)
+      await context.run('flutter_scaffold', [
+        'add',
+        'usecase',
+        'delete_item',
+        '--feature',
+        featureName,
+        '--dry-run',
+      ], workingDirectory: context.projectPath);
+
+      // File should NOT exist (dry-run)
+      if (File(
+        '${context.projectPath}/lib/src/features/$featureName/domain/usecases/delete_item_usecase.dart',
+      ).existsSync()) {
+        throw Exception('Dry-run should not create file');
+      }
+    }),
+
+    'repository': () => context.runStep('Add Repository Command', () async {
+      context.ensureProjectPath();
+      final featureName = 'repo_test';
+
+      // Create feature first
+      await context.run('flutter_scaffold', [
+        'add',
+        'feature',
+        featureName,
+      ], workingDirectory: context.projectPath);
+
+      // Add repository with datasources and mapper
+      await context.run('flutter_scaffold', [
+        'add',
+        'repository',
+        'item',
+        '--feature',
+        featureName,
+        '--include-datasources',
+        '--include-mapper',
+      ], workingDirectory: context.projectPath);
+
+      // Verify all files created
+      context.expectFile(
+        '${context.projectPath}/lib/src/features/$featureName/domain/repositories/item_repository.dart',
+      );
+      context.expectFile(
+        '${context.projectPath}/lib/src/features/$featureName/data/repositories/item_repository_impl.dart',
+      );
+      context.expectFile(
+        '${context.projectPath}/lib/src/features/$featureName/data/datasources/item_remote_datasource.dart',
+      );
+      context.expectFile(
+        '${context.projectPath}/lib/src/features/$featureName/data/datasources/item_local_datasource.dart',
+      );
+      context.expectFile(
+        '${context.projectPath}/lib/src/features/$featureName/data/mappers/item_mapper.dart',
+      );
+
+      // Test remote-only
+      await context.run('flutter_scaffold', [
+        'add',
+        'repository',
+        'api_only',
+        '--feature',
+        featureName,
+        '--include-datasources',
+        '--remote-only',
+        '--force',
+      ], workingDirectory: context.projectPath);
+
+      context.expectFile(
+        '${context.projectPath}/lib/src/features/$featureName/data/datasources/api_only_remote_datasource.dart',
+      );
+    }),
+
+    'model': () => context.runStep('Add Model Command', () async {
+      context.ensureProjectPath();
+      final featureName = 'model_test';
+
+      // Create feature first
+      await context.run('flutter_scaffold', [
+        'add',
+        'feature',
+        featureName,
+      ], workingDirectory: context.projectPath);
+
+      // Add basic model (syntax: add model <feature> <model> --field ...)
+      await context.run('flutter_scaffold', [
+        'add',
+        'model',
+        featureName,
+        'user',
+        '--field',
+        'id:String',
+        '--field',
+        'name:String',
+        '--field',
+        'email:String',
+      ], workingDirectory: context.projectPath);
+
+      context.expectFile(
+        '${context.projectPath}/lib/src/features/$featureName/data/models/user_model.dart',
+      );
+
+      // Add json_serializable model
+      await context.run('flutter_scaffold', [
+        'add',
+        'model',
+        featureName,
+        'product',
+        '--json-serializable',
+        '--field',
+        'id:int',
+        '--field',
+        'title:String',
+      ], workingDirectory: context.projectPath);
+
+      context.expectFile(
+        '${context.projectPath}/lib/src/features/$featureName/data/models/product_model.dart',
+      );
+    }),
+
     'dry_run': () => context.runStep('Dry Run verification', () async {
       context.ensureProjectPath();
       final dryFeature = 'dry_feature';

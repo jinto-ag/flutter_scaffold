@@ -1,0 +1,284 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+
+import '../../core/errors/exceptions.dart';
+{{if HAS_ENTITY}}
+import '../domain/entities/{{ENTITY_NAME}}_entity.dart';
+{{endif}}
+
+/// Remote datasource interface for {{PASCAL_NAME}} feature.
+///
+/// Defines the contract for remote API operations.
+abstract class {{PASCAL_NAME}}RemoteDatasource {
+  /// Fetch a single item by ID from the remote server.
+{{if HAS_ENTITY}}
+  Future<{{PASCAL_ENTITY_NAME}}Entity?> getById(String id);
+{{else}}
+  Future<Map<String, dynamic>?> getById(String id);
+{{endif}}
+/// Fetch all items from the remote server.
+{{if HAS_ENTITY}}
+  Future<List<{{PASCAL_ENTITY_NAME}}Entity>> getAll();
+{{else}}
+  Future<List<Map<String, dynamic>>> getAll();
+{{endif}}
+/// Create a new item on the remote server.
+{{if HAS_ENTITY}}
+  Future<{{PASCAL_ENTITY_NAME}}Entity> create({{PASCAL_ENTITY_NAME}}Entity entity);
+{{else}}
+  Future<Map<String, dynamic>> create(Map<String, dynamic> data);
+{{endif}}
+/// Update an existing item on the remote server.
+{{if HAS_ENTITY}}
+  Future<{{PASCAL_ENTITY_NAME}}Entity> update({{PASCAL_ENTITY_NAME}}Entity entity);
+{{else}}
+  Future<Map<String, dynamic>> update(Map<String, dynamic> data);
+{{endif}}
+
+  /// Delete an item from the remote server.
+  Future<bool> delete(String id);
+
+  /// Search items on the remote server.
+{{if HAS_ENTITY}}
+  Future<List<{{PASCAL_ENTITY_NAME}}Entity>> search(String query);
+{{else}}
+  Future<List<Map<String, dynamic>>> search(String query);
+{{endif}}
+}
+
+/// Implementation of [{{PASCAL_NAME}}RemoteDatasource] using HTTP client.
+class {{PASCAL_NAME}}RemoteDatasourceImpl
+    implements {{PASCAL_NAME}}RemoteDatasource {
+  const {{PASCAL_NAME}}RemoteDatasourceImpl({
+    required http.Client client,
+    required String baseUrl,
+    this.authToken,
+  }) : _client = client,
+       _baseUrl = baseUrl;
+
+  final http.Client _client;
+  final String _baseUrl;
+  final String? authToken;
+
+  /// API endpoint for this resource.
+  String get _endpoint => '$_baseUrl/{{FEATURE_NAME}}s';
+
+  /// Common headers for API requests.
+  Map<String, String> get _headers => {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    if (authToken != null) 'Authorization': 'Bearer $authToken',
+  };
+
+  @override
+{{if HAS_ENTITY}}
+  Future<{{PASCAL_ENTITY_NAME}}Entity?> getById(String id) async {
+{{else}}
+  Future<Map<String, dynamic>?> getById(String id) async {
+{{endif}}
+    try {
+      final response = await _client.get(
+        Uri.parse('$_endpoint/$id'),
+        headers: _headers,
+      );
+
+      if (response.statusCode == 404) {
+        return null;
+      }
+
+      _checkResponse(response);
+
+      final json = jsonDecode(response.body) as Map<String, dynamic>;
+{{if HAS_ENTITY}}
+      return {{PASCAL_ENTITY_NAME}}Entity.fromJson(json);
+{{else}}
+      return json;
+{{endif}}
+    } on http.ClientException catch (e) {
+      throw NetworkException('Network error: ${e.message}');
+    } catch (e) {
+      if (e is ServerException) rethrow;
+      throw ServerException('Failed to fetch {{FEATURE_NAME}}: $e');
+    }
+  }
+
+  @override
+{{if HAS_ENTITY}}
+  Future<List<{{PASCAL_ENTITY_NAME}}Entity>> getAll() async {
+{{else}}
+  Future<List<Map<String, dynamic>>> getAll() async {
+{{endif}}
+    try {
+      final response = await _client.get(
+        Uri.parse(_endpoint),
+        headers: _headers,
+      );
+
+      _checkResponse(response);
+
+      final jsonList = jsonDecode(response.body) as List<dynamic>;
+{{if HAS_ENTITY}}
+      return jsonList
+          .map(
+            (json) =>
+                {{PASCAL_ENTITY_NAME}}Entity.fromJson(json as Map<String, dynamic>),
+          )
+          .toList();
+{{else}}
+      return jsonList.cast<Map<String, dynamic>>();
+{{endif}}
+    } on http.ClientException catch (e) {
+      throw NetworkException('Network error: ${e.message}');
+    } catch (e) {
+      if (e is ServerException) rethrow;
+      throw ServerException('Failed to fetch {{FEATURE_NAME}}s: $e');
+    }
+  }
+
+  @override
+{{if HAS_ENTITY}}
+  Future<{{PASCAL_ENTITY_NAME}}Entity> create({{PASCAL_ENTITY_NAME}}Entity entity) async {
+{{else}}
+  Future<Map<String, dynamic>> create(Map<String, dynamic> data) async {
+{{endif}}
+    try {
+      final response = await _client.post(
+        Uri.parse(_endpoint),
+        headers: _headers,
+{{if HAS_ENTITY}}
+        body: jsonEncode(entity.toJson()),
+{{else}}
+        body: jsonEncode(data),
+{{endif}}
+      );
+
+      _checkResponse(response);
+
+      final json = jsonDecode(response.body) as Map<String, dynamic>;
+{{if HAS_ENTITY}}
+      return {{PASCAL_ENTITY_NAME}}Entity.fromJson(json);
+{{else}}
+      return json;
+{{endif}}
+    } on http.ClientException catch (e) {
+      throw NetworkException('Network error: ${e.message}');
+    } catch (e) {
+      if (e is ServerException) rethrow;
+      throw ServerException('Failed to create {{FEATURE_NAME}}: $e');
+    }
+  }
+
+  @override
+{{if HAS_ENTITY}}
+  Future<{{PASCAL_ENTITY_NAME}}Entity> update({{PASCAL_ENTITY_NAME}}Entity entity) async {
+{{else}}
+  Future<Map<String, dynamic>> update(Map<String, dynamic> data) async {
+{{endif}}
+    try {
+{{if HAS_ENTITY}}
+final response = await _client.put(
+  Uri.parse('$_endpoint/${entity.id}'),
+  headers: _headers,
+  body: jsonEncode(entity.toJson()),
+);
+{{else}}
+final response = await _client.put(
+  Uri.parse('$_endpoint/${data['id']}'),
+  headers: _headers,
+  body: jsonEncode(data),
+);
+{{endif}}
+
+      _checkResponse(response);
+
+      final json = jsonDecode(response.body) as Map<String, dynamic>;
+{{if HAS_ENTITY}}
+      return {{PASCAL_ENTITY_NAME}}Entity.fromJson(json);
+{{else}}
+      return json;
+{{endif}}
+    } on http.ClientException catch (e) {
+      throw NetworkException('Network error: ${e.message}');
+    } catch (e) {
+      if (e is ServerException) rethrow;
+      throw ServerException('Failed to update {{FEATURE_NAME}}: $e');
+    }
+  }
+
+  @override
+  Future<bool> delete(String id) async {
+    try {
+      final response = await _client.delete(
+        Uri.parse('$_endpoint/$id'),
+        headers: _headers,
+      );
+
+      if (response.statusCode == 404) {
+        return false;
+      }
+
+      _checkResponse(response);
+      return true;
+    } on http.ClientException catch (e) {
+      throw NetworkException('Network error: ${e.message}');
+    } catch (e) {
+      if (e is ServerException) rethrow;
+      throw ServerException('Failed to delete {{FEATURE_NAME}}: $e');
+    }
+  }
+
+  @override
+{{if HAS_ENTITY}}
+  Future<List<{{PASCAL_ENTITY_NAME}}Entity>> search(String query) async {
+{{else}}
+  Future<List<Map<String, dynamic>>> search(String query) async {
+{{endif}}
+    try {
+      final response = await _client.get(
+        Uri.parse('$_endpoint?q=${Uri.encodeComponent(query)}'),
+        headers: _headers,
+      );
+
+      _checkResponse(response);
+
+      final jsonList = jsonDecode(response.body) as List<dynamic>;
+{{if HAS_ENTITY}}
+      return jsonList
+          .map(
+            (json) =>
+                {{PASCAL_ENTITY_NAME}}Entity.fromJson(json as Map<String, dynamic>),
+          )
+          .toList();
+{{else}}
+      return jsonList.cast<Map<String, dynamic>>();
+{{endif}}
+    } on http.ClientException catch (e) {
+      throw NetworkException('Network error: ${e.message}');
+    } catch (e) {
+      if (e is ServerException) rethrow;
+      throw ServerException('Failed to search {{FEATURE_NAME}}s: $e');
+    }
+  }
+
+  /// Check HTTP response and throw appropriate exceptions.
+  void _checkResponse(http.Response response) {
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      return;
+    }
+
+    switch (response.statusCode) {
+      case 400:
+        throw BadRequestException('Bad request: ${response.body}');
+      case 401:
+        throw UnauthorizedException('Unauthorized access');
+      case 403:
+        throw ForbiddenException('Access forbidden');
+      case 404:
+        throw NotFoundException('Resource not found');
+      case 500:
+      default:
+        throw ServerException('Server error: ${response.statusCode}');
+    }
+  }
+}
