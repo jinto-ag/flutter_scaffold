@@ -25,6 +25,17 @@ const KNOWN_PLACEHOLDERS = new Set([
     'FROM_JSON_FIELDS',
     // Logic markers
     'HAS_FIELDS',
+    'HAS_ENTITY',
+    'HAS_PARAMS',
+    // Feature/Component names
+    'REPOSITORY_NAME',
+    'PASCAL_REPOSITORY_NAME',
+    'USECASE_NAME',
+    'PASCAL_USECASE_NAME',
+    'USECASE_DESCRIPTION',
+    'RETURN_TYPE',
+    'ENTITY_NAME',
+    'PASCAL_ENTITY_NAME',
 ]);
 
 // Regex to capture the content inside {{ }}. 
@@ -515,6 +526,17 @@ function provideTemplatePlaceholderCompletions(document: vscode.TextDocument, po
         FROM_JSON_FIELDS: 'Fields for JSON deserialization',
         // Logic markers
         HAS_FIELDS: 'Boolean - true if model has fields',
+        HAS_ENTITY: 'Boolean - true if feature has an entity',
+        HAS_PARAMS: 'Boolean - true if use case has parameters',
+        // Component names
+        REPOSITORY_NAME: 'Repository name (snake_case)',
+        PASCAL_REPOSITORY_NAME: 'Repository name (PascalCase)',
+        USECASE_NAME: 'Use case name (snake_case)',
+        PASCAL_USECASE_NAME: 'Use case name (PascalCase)',
+        USECASE_DESCRIPTION: 'Description of the use case',
+        RETURN_TYPE: 'Return type of the use case',
+        ENTITY_NAME: 'Entity name (snake_case)',
+        PASCAL_ENTITY_NAME: 'Entity name (PascalCase)',
     };
 
     const keywords = ['if', 'else', 'else if', 'endif', 'true', 'false'];

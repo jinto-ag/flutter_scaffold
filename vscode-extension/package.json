@@ -2,7 +2,7 @@
   "name": "flutter-scaffold-template",
   "displayName": "Flutter Scaffold Template",
   "description": "Syntax highlighting, linting, and formatting for flutter_scaffold template files",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "publisher": "flutter-scaffold",
   "repository": {
     "type": "git",

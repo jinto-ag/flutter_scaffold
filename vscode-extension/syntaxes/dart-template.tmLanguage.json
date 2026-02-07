@@ -37,15 +37,15 @@
           "name": "constant.language.flutter-scaffold"
         },
         {
-          "match": "\\b(projectName|featureName|FeatureName|FEATURE_NAME|PASCAL_NAME|PASCAL_FEATURE_NAME)\\b",
+          "match": "\\b(projectName|featureName|FeatureName|FEATURE_NAME|PASCAL_NAME|PASCAL_FEATURE_NAME|REPOSITORY_NAME|PASCAL_REPOSITORY_NAME)\\b",
           "name": "variable.other.constant.flutter-scaffold"
         },
         {
-          "match": "\\b(MODEL_NAME|PASCAL_MODEL_NAME|screenName|PASCAL_SCREEN_NAME)\\b",
+          "match": "\\b(MODEL_NAME|PASCAL_MODEL_NAME|ENTITY_NAME|PASCAL_ENTITY_NAME|USECASE_NAME|PASCAL_USECASE_NAME|RETURN_TYPE|USECASE_DESCRIPTION)\\b",
           "name": "variable.other.constant.flutter-scaffold"
         },
         {
-          "match": "\\b(FIELDS|FIELD_NAMES|FIELDS_WITH_OPTIONAL|COPY_FIELDS|JSON_FIELDS|FROM_JSON_FIELDS|HAS_FIELDS)\\b",
+          "match": "\\b(screenName|PASCAL_SCREEN_NAME|HAS_ENTITY|HAS_PARAMS|FIELDS|FIELD_NAMES|FIELDS_WITH_OPTIONAL|COPY_FIELDS|JSON_FIELDS|FROM_JSON_FIELDS|HAS_FIELDS)\\b",
           "name": "variable.other.constant.flutter-scaffold"
         },
         {
