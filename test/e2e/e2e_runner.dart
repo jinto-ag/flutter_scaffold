@@ -5,18 +5,21 @@
 /// This is the main entry point for E2E tests with:
 /// - Modular step execution
 /// - File hash-based caching
+/// - Granular per-command logging
 /// - Verbose and force options
 ///
 /// Usage: dart run test/e2e/e2e_runner.dart [options]
 ///
 /// Options:
-///   --force      Force run all steps, ignore cache
-///   --verbose    Show detailed output
-///   --keep       Keep generated temp projects
-///   --quick      Skip slow steps (verification)
-///   --steps=...  Comma-separated list of steps to run
-///   --list-steps List available steps
-///   -h, --help   Show help
+///   --force        Force run all steps, ignore cache
+///   --verbose      Show detailed output
+///   --keep         Keep generated temp projects
+///   --quick        Skip slow steps (verification)
+///   --steps=...    Comma-separated list of steps to run
+///   --list-steps   List available steps
+///   --output=...   Output directory for logs (default: e2e_test_output)
+///   --reset-output Clear output directory before running
+///   -h, --help     Show help
 library;
 
 import 'dart:io';
@@ -33,6 +36,14 @@ void main(List<String> args) async {
   final quick = args.contains('--quick');
   final help = args.contains('--help') || args.contains('-h');
   final listSteps = args.contains('--list-steps');
+  final resetOutput = args.contains('--reset-output');
+
+  // Parse output directory
+  final outputArg = args.firstWhere(
+    (a) => a.startsWith('--output='),
+    orElse: () => '',
+  );
+  final outputPath = outputArg.isEmpty ? null : outputArg.substring(9);
 
   if (help) {
     _printHelp();
@@ -51,11 +62,19 @@ void main(List<String> args) async {
   // Register all steps
   final allSteps = <String, E2EStep>{
     'build_cli': BuildCliStep(),
+    'config': ConfigStep(),
+    'upgrade': UpgradeStep(),
     'create': CreateStep(),
+    'init': InitStep(),
     'features': FeatureStep(),
     'usecase': UsecaseStep(),
     'repository': RepositoryStep(),
     'model': ModelStep(),
+    'dry_run': DryRunStep(),
+    'force_flag': ForceStep(),
+    'reset': ResetStep(),
+    'info': InfoStep(),
+    'help': HelpStep(),
     'verification': VerifyStep(),
   };
 
@@ -75,11 +94,19 @@ void main(List<String> args) async {
     keepProject: keepProject,
     force: force,
     projectRoot: projectRoot,
+    outputPath: outputPath,
     logFile: logFile,
   );
 
   try {
     context.logger.header('Flutter Scaffold E2E Test Runner');
+
+    // Reset output if requested
+    if (resetOutput) {
+      context.resetOutput();
+      context.logger.info('Output directory cleared.');
+    }
+
     await context.setup();
 
     // Determine steps to run
@@ -106,6 +133,7 @@ void main(List<String> args) async {
       // Check cache
       final dependencyFiles = step.getDependencyFiles(projectRoot);
       if (!force &&
+          !step.alwaysRun &&
           context.cacheManager.isStepCached(stepName, dependencyFiles)) {
         context.logger.info(
           '${AnsiColors.gray}[SKIP] ${step.description} (cached)${AnsiColors.reset}',
@@ -131,8 +159,14 @@ void main(List<String> args) async {
       }
     }
 
+    // Generate index files
+    context.generateIndex();
+
     context.logger.success('E2E Tests Passed');
+    context.logger.info('Logs available at: ${context.outputDir.path}');
   } catch (e, st) {
+    // Generate index even on failure
+    context.generateIndex();
     context.logger.error('Test Failed: $e');
     if (verbose) print(st);
     exit(1);
@@ -184,18 +218,21 @@ E2E Test Runner for flutter_scaffold
 Usage: dart run test/e2e/e2e_runner.dart [options]
 
 Options:
-  --force        Force run all steps, ignore cache
-  --verbose      Show detailed command output
-  --keep         Keep generated temp projects
-  --quick        Skip slow steps (verification)
-  --steps=...    Comma-separated list of steps to run
-  --list-steps   List available steps
-  -h, --help     Show this help
+  --force          Force run all steps, ignore cache
+  --verbose        Show detailed command output
+  --keep           Keep generated temp projects
+  --quick          Skip slow steps (verification)
+  --steps=...      Comma-separated list of steps to run
+  --list-steps     List available steps
+  --output=...     Output directory for logs (default: e2e_test_output)
+  --reset-output   Clear output directory before running
+  -h, --help       Show this help
 
 Examples:
-  dart run test/e2e/e2e_runner.dart                    # Run all tests
-  dart run test/e2e/e2e_runner.dart --force            # Force re-run all
-  dart run test/e2e/e2e_runner.dart --steps=create,usecase
+  dart run test/e2e/e2e_runner.dart                       # Run all tests
+  dart run test/e2e/e2e_runner.dart --force               # Force re-run all
+  dart run test/e2e/e2e_runner.dart --steps=create,features,model
   dart run test/e2e/e2e_runner.dart --quick --verbose
+  dart run test/e2e/e2e_runner.dart --reset-output        # Clear logs first
 ''');
 }

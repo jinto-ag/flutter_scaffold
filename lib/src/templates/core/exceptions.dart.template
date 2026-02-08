@@ -2,11 +2,12 @@ abstract class AppException implements Exception {
   final String message;
   final String? code;
   final dynamic details;
-  
+
   const AppException(this.message, {this.code, this.details});
-  
+
   @override
-  String toString() => 'AppException: $message${code != null ? ' (Code: $code)' : ''}';
+  String toString() =>
+      'AppException: $message${code != null ? ' (Code: $code)' : ''}';
 }
 
 class ServerException extends AppException {
@@ -23,4 +24,24 @@ class NetworkException extends AppException {
 
 class ValidationException extends AppException {
   const ValidationException(super.message, {super.code, super.details});
+}
+
+/// Exception for 400 Bad Request responses.
+class BadRequestException extends AppException {
+  const BadRequestException(super.message, {super.code, super.details});
+}
+
+/// Exception for 401 Unauthorized responses.
+class UnauthorizedException extends AppException {
+  const UnauthorizedException(super.message, {super.code, super.details});
+}
+
+/// Exception for 403 Forbidden responses.
+class ForbiddenException extends AppException {
+  const ForbiddenException(super.message, {super.code, super.details});
+}
+
+/// Exception for 404 Not Found responses.
+class NotFoundException extends AppException {
+  const NotFoundException(super.message, {super.code, super.details});
 }

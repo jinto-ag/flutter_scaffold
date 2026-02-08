@@ -1,4 +1,4 @@
-import '../domain/entities/{{FEATURE_NAME}}_entity.dart';
+import '../../domain/entities/{{FEATURE_NAME}}_entity.dart';
 import '../models/{{FEATURE_NAME}}_model.dart';
 
 /// Mapper for converting between {{PASCAL_NAME}}Entity and {{PASCAL_NAME}}Model.
@@ -8,30 +8,24 @@ import '../models/{{FEATURE_NAME}}_model.dart';
 abstract class {{PASCAL_NAME}}Mapper {
   /// Convert a model (DTO) to a domain entity.
   static {{PASCAL_NAME}}Entity toEntity({{PASCAL_NAME}}Model model) {
-    return {{PASCAL_NAME}}Entity(
-      id: model.id,
-      name: model.name,
-      description: model.description ?? '',
-      isActive: model.isActive ?? false,
-      createdAt: model.createdAt != null
-          ? DateTime.parse(model.createdAt!)
-          : null,
-      updatedAt: model.updatedAt != null
-          ? DateTime.parse(model.updatedAt!)
-          : null,
-    );
+    // TODO: Implement conversion from model to entity
+    // Example:
+    // return {{PASCAL_NAME}}Entity(
+    //   id: model.id,
+    //   name: model.name,
+    // );
+    throw UnimplementedError('{{PASCAL_NAME}}Mapper.toEntity not implemented');
   }
 
   /// Convert a domain entity to a model (DTO).
   static {{PASCAL_NAME}}Model toModel({{PASCAL_NAME}}Entity entity) {
-    return {{PASCAL_NAME}}Model(
-      id: entity.id,
-      name: entity.name,
-      description: entity.description.isEmpty ? null : entity.description,
-      isActive: entity.isActive,
-      createdAt: entity.createdAt?.toIso8601String(),
-      updatedAt: entity.updatedAt?.toIso8601String(),
-    );
+    // TODO: Implement conversion from entity to model
+    // Example:
+    // return {{PASCAL_NAME}}Model(
+    //   id: entity.id,
+    //   name: entity.name,
+    // );
+    throw UnimplementedError('{{PASCAL_NAME}}Mapper.toModel not implemented');
   }
 
   /// Convert a list of models to a list of entities.

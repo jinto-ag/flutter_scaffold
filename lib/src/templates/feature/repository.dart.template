@@ -6,7 +6,6 @@ import '../entities/{{ENTITY_NAME}}_entity.dart';
 ///
 /// Defines the contract for data operations.
 /// Implementations go in the data layer.
-
 abstract class {{PASCAL_NAME}}Repository {
   /// Get a single item by ID.
   {{if HAS_ENTITY}}

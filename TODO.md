@@ -10,7 +10,7 @@ Focus on making the tool robust, configurable, and easy to use.
   - [x] Await `_featureService.addFeature` call in `InitCommand` (missing `await` causes unhandled exception).
   - [x] Handle existing 'home' feature gracefully (skip if exists, don't crash).
 
-- [/] **CLI Infrastructure**
+- [x] **CLI Infrastructure**
   - [x] **Safety & Recovery:**
     - [x] **Automated Backups:** Backup modified files to `.flutter_scaffold/backups/` before any change.
     - [x] **Sandboxed Dry-Run (Verification):**
@@ -116,3 +116,21 @@ Focus on "Go Live" requirements.
 - [x] Add unit tests for safety services (BackupService, HistoryService, SandboxService).
 - [x] Implement CLI Infrastructure (upgrade, interactive, verbose).
 - [x] **Phase 2 Complete:** Data layer templates, component commands, Bloc/Cubit templates.
+
+## Missing Features / Bugs
+
+- [x] **Template Conditional Processing Fix:**
+  - [x] Fixed `_processInlineConditionals` regex bug - changed `[^\n]` to `[^\s]` to exclude block-level conditionals from being stripped.
+  - [x] Template `{{if}}/{{else}}/{{endif}}` blocks now render correctly for both true and false conditions.
+  - [x] Auto-install `http` and `shared_preferences` dependencies when datasources are generated.
+  - [x] Fixed `projectName` variable extraction from `pubspec.yaml` for correct package imports.
+- [x] **DependencyService Enhancement:**
+  - [x] Production-grade service with `FeatureType` enum for feature-specific dependencies.
+  - [x] `isPackageInstalled()` and `ensureDependencies()` to install only missing packages.
+  - [x] Improved verification: `dart fix --apply` → `dart format` → `flutter analyze`.
+  - [x] Updated `add_repository_command` to use `DependencyService`.
+- [x] **TemplateRegistry.getFeatureTemplate Fix:**
+  - [x] Added `HAS_ENTITY: true` default for feature templates.
+  - [x] Added `ENTITY_NAME` and `PASCAL_ENTITY_NAME` variables for repository templates.
+  - [x] All 154 unit and E2E tests pass.
+- [ ] Implement `config set` command.

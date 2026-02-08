@@ -186,43 +186,61 @@ class BuildRunnerService {
     }
   }
 
-  /// Run code verification (analyzer, format, tests).
+  /// Run code verification: dart fix → dart format → flutter analyze.
   Future<VerificationResult> verifyCode(String projectPath) async {
     _logger.section('Verifying code...');
 
     final issues = <String>[];
+    ProcessResult? fixResult;
+    ProcessResult? formatResult;
+    ProcessResult? analyzeResult;
 
-    // Run dart analyze
-    _logger.info('Running dart analyze...');
-    final analyzerResult = await _processUtils.dart([
-      'analyze',
-    ], workingDirectory: projectPath);
+    // Step 1: dart fix --apply
+    try {
+      _logger.info('Running dart fix --apply...');
+      fixResult = await _processUtils.dart([
+        'fix',
+        '--apply',
+      ], workingDirectory: projectPath);
 
-    if (analyzerResult.exitCode != 0) {
-      issues.add('Analysis issues found');
-      _logger.warn('Analysis issues detected');
-    } else {
-      _logger.success('Analysis passed');
+      if (fixResult.exitCode == 0) {
+        _logger.success('Applied automatic fixes');
+      } else {
+        _logger.warn('dart fix encountered issues');
+      }
+    } catch (e) {
+      _logger.warn('Could not run dart fix: $e');
     }
 
-    // Run dart format (if available)
-    ProcessResult? formatResult;
+    // Step 2: dart format
     try {
       _logger.info('Running dart format...');
       formatResult = await _processUtils.dart([
         'format',
-        '--set-exit-if-changed',
         '.',
       ], workingDirectory: projectPath);
 
-      if (formatResult.exitCode != 0) {
+      if (formatResult.exitCode == 0) {
+        _logger.success('Code formatted');
+      } else {
         issues.add('Code formatting issues found');
         _logger.warn('Formatting issues detected');
-      } else {
-        _logger.success('Code formatted correctly');
       }
     } catch (e) {
-      _logger.warn('Could not run format check: $e');
+      _logger.warn('Could not run format: $e');
+    }
+
+    // Step 3: flutter analyze (final verification)
+    _logger.info('Running flutter analyze...');
+    analyzeResult = await _processUtils.dart([
+      'analyze',
+    ], workingDirectory: projectPath);
+
+    if (analyzeResult.exitCode != 0) {
+      issues.add('Analysis issues found');
+      _logger.warn('Analysis issues detected');
+    } else {
+      _logger.success('Analysis passed');
     }
 
     // Run tests (if test directory exists)
@@ -247,7 +265,7 @@ class BuildRunnerService {
     }
 
     final success =
-        analyzerResult.exitCode == 0 &&
+        analyzeResult.exitCode == 0 &&
         (formatResult?.exitCode ?? 0) == 0 &&
         (testResult?.exitCode ?? 0) == 0;
 
@@ -259,7 +277,7 @@ class BuildRunnerService {
 
     return VerificationResult(
       success: success,
-      analyzerResult: analyzerResult,
+      analyzerResult: analyzeResult,
       formatResult: formatResult,
       testResult: testResult,
       issues: issues,

@@ -236,7 +236,10 @@ class TemplateLoader {
   }
 
   String _applyLogic(String content, Map<String, dynamic> variables) {
-    final lines = content.split('\n');
+    // First, process inline conditionals ({{if VAR}}...{{endif}} on same line)
+    var processed = _processInlineConditionals(content, variables);
+
+    final lines = processed.split('\n');
     final buffer = StringBuffer();
     // Stack of booleans indicating if we are currently "inside" a true block.
     // Top of stack is current scope.
@@ -339,12 +342,51 @@ class TemplateLoader {
     return result;
   }
 
+  /// Process inline conditionals: {{if VAR}}content{{endif}} where {{if}} is NOT at line start
+  /// This handles patterns like: `  }) : _remote = remote{{if HAS_LOCAL}},\n       _local = local{{endif}};`
+  String _processInlineConditionals(
+    String content,
+    Map<String, dynamic> variables,
+  ) {
+    // Match inline conditionals where {{if VAR}} is preceded by a NON-WHITESPACE character
+    // This ensures we don't match block-level conditionals that have leading whitespace
+    // Block-level: "  {{if VAR}}" (whitespace only before {{if}}) - NOT matched
+    // Inline: "foo{{if VAR}}" (non-whitespace before {{if}}) - matched
+    final inlineIfRegex = RegExp(
+      r'([^\s])(\{\{\s*if\s+([a-zA-Z0-9_]+)\s*\}\})(.*?)(\{\{\s*endif\s*\}\})',
+      dotAll: true,
+    );
+
+    var result = content;
+    var match = inlineIfRegex.firstMatch(result);
+    while (match != null) {
+      final prefix = match.group(1)!; // Character before {{if}}
+      final varName = match.group(3)!; // Variable name inside {{if VAR}}
+      final innerContent = match.group(
+        4,
+      )!; // Content between {{if}} and {{endif}}
+      final condition = variables[varName] == true;
+
+      // Replace the entire match (minus the captured prefix) with inner content (if true) or empty (if false)
+      // We need to preserve the prefix character
+      final replacement = condition ? (prefix + innerContent) : prefix;
+      result = result.replaceFirst(match.group(0)!, replacement);
+
+      match = inlineIfRegex.firstMatch(result);
+    }
+
+    return result;
+  }
+
   /// Apply variable substitution to template content.
   String _applyVariables(String content, Map<String, dynamic> variables) {
     var result = content;
     for (final entry in variables.entries) {
-      if (entry.value is String) {
-        result = result.replaceAll('{{${entry.key}}}', entry.value);
+      final value = entry.value;
+      if (value is String) {
+        result = result.replaceAll('{{${entry.key}}}', value);
+      } else if (value is num) {
+        result = result.replaceAll('{{${entry.key}}}', value.toString());
       }
     }
     return result;
@@ -469,12 +511,19 @@ class TemplateRegistry {
   /// Returns null if template not found.
   String? getFeatureTemplate(String templateType, String featureName) {
     final pascalName = toPascalCase(featureName);
+    final entityName = '${pascalName}Entity';
 
     final specificVariables = {
       'FEATURE_NAME': featureName,
       'PASCAL_NAME': pascalName,
       'featureName': featureName,
       'pascalName': pascalName,
+      // Default to true for feature templates since entities are standard
+      'HAS_ENTITY': true,
+      'Entity': entityName,
+      // Entity naming for repository/impl templates
+      'ENTITY_NAME': featureName,
+      'PASCAL_ENTITY_NAME': pascalName,
     };
 
     // Merge specific variables with global context

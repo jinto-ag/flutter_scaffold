@@ -14,6 +14,9 @@ class CreateStep extends E2EStep {
   String get description => 'Creating new project';
 
   @override
+  bool get alwaysRun => true;
+
+  @override
   List<String> get dependencies => [
     'lib/src/commands/create_command.dart',
     'lib/src/templates/**/*.template',

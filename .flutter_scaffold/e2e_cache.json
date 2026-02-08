@@ -3,12 +3,62 @@
     "build_cli": {
       "hash": "c0b2c66ee60527b535c0b1cc2234d2bb",
       "passed": true,
-      "timestamp": "2026-02-07T18:38:12.643301"
+      "timestamp": "2026-02-08T12:35:22.635490"
     },
     "create": {
-      "hash": "2ccd3f9eb5124038997b941ea7b88a80",
+      "hash": "a051902fc660d1e5ffe604728634a8dd",
       "passed": true,
-      "timestamp": "2026-02-07T18:39:20.995648"
+      "timestamp": "2026-02-08T12:36:10.842417"
+    },
+    "config": {
+      "hash": "8e15fab7eabde7748a115f78840f4e63",
+      "passed": true,
+      "timestamp": "2026-02-08T12:35:22.871658"
+    },
+    "upgrade": {
+      "hash": "6ef7b7a8789b93ae285b89c5d7900e9b",
+      "passed": true,
+      "timestamp": "2026-02-08T12:35:24.031586"
+    },
+    "init": {
+      "hash": "21d2758e77ff148f4fddb81a6c189b88",
+      "passed": true,
+      "timestamp": "2026-02-08T12:36:33.563118"
+    },
+    "features": {
+      "hash": "b99834bc19bbad24580b3adfa04fb947",
+      "passed": true,
+      "timestamp": "2026-02-08T12:38:00.325883"
+    },
+    "usecase": {
+      "hash": "d88159f3654deb72bd5d11142d914f5b",
+      "passed": true,
+      "timestamp": "2026-02-08T12:39:26.540062"
+    },
+    "repository": {
+      "hash": "70865a18c1b07e1aa955f65242dd970b",
+      "passed": true,
+      "timestamp": "2026-02-08T12:41:13.177739"
+    },
+    "model": {
+      "hash": "2e33fa207a7b33c97c9531c037eaeb13",
+      "passed": true,
+      "timestamp": "2026-02-08T12:44:41.796782"
+    },
+    "dry_run": {
+      "hash": "d41d8cd98f00b204e9800998ecf8427e",
+      "passed": true,
+      "timestamp": "2026-02-08T12:45:57.441470"
+    },
+    "force_flag": {
+      "hash": "d41d8cd98f00b204e9800998ecf8427e",
+      "passed": true,
+      "timestamp": "2026-02-08T12:48:15.331085"
+    },
+    "verification": {
+      "hash": "d41d8cd98f00b204e9800998ecf8427e",
+      "passed": false,
+      "timestamp": "2026-02-08T12:48:23.115642"
     }
   }
 }

@@ -26,13 +26,18 @@ void main(List<String> args) async {
 
   print('Delegating to test/e2e/e2e_runner.dart...\n');
 
-  final result = await Process.run(
-    'dart',
-    ['run', runnerPath, ...args],
-    workingDirectory: projectRoot,
-    runInShell: Platform.isWindows,
-    mode: ProcessStartMode.inheritStdio,
-  );
+  // Use Process.start with inheritStdio for real-time output
+  final process = await Process.start('dart', [
+    'run',
+    runnerPath,
+    ...args,
+  ], workingDirectory: projectRoot);
 
-  exit(result.exitCode);
+  // Forward stdout and stderr
+  process.stdout.listen((data) => stdout.add(data));
+  process.stderr.listen((data) => stderr.add(data));
+
+  // Wait for completion and exit with same code
+  final exitCode = await process.exitCode;
+  exit(exitCode);
 }

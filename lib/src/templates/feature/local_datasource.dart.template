@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../core/errors/exceptions.dart';
+import 'package:{{projectName}}/src/core/errors/exceptions.dart';
 {{if HAS_ENTITY}}
-import '../domain/entities/{{ENTITY_NAME}}_entity.dart';
+import 'package:{{projectName}}/src/features/{{FEATURE_NAME}}/domain/entities/{{ENTITY_NAME}}_entity.dart';
 {{endif}}
 
 /// Local datasource interface for {{PASCAL_NAME}} feature.

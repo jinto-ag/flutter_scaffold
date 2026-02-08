@@ -8,7 +8,7 @@ COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
 # Conventional commit pattern with emoji
 # Format: <emoji> <type>(<scope>): <description>
 # Example: 🐛 fix(scaffold): resolve marker directory issue
-PATTERN="^(🎉|✨|🐛|📝|🔧|♻️|🧪|⬆️|🔥|🚀|💄|🏗️|✅|🔒|📦|🗑️) (feat|fix|docs|style|refactor|test|chore|perf|build|ci|revert)\([a-z_-]+\): .{3,}"
+PATTERN="^(🎉|✨|🐛|📝|🔧|♻️|🧪|⬆️|🔥|🚀|💄|🏗️|✅|🔒|📦|🗑️) (feat|fix|docs|style|refactor|test|chore|perf|build|ci|revert)\([a-z0-9_-]+\): .{3,}"
 
 # Also allow merge commits
 MERGE_PATTERN="^Merge "

@@ -1,14 +1,14 @@
-import '../../core/errors/exceptions.dart';
-import '../../core/errors/failures.dart';
+import 'package:{{projectName}}/src/core/errors/exceptions.dart';
+import 'package:{{projectName}}/src/core/errors/failures.dart';
 {{if HAS_ENTITY}}
-import '../domain/entities/{{ENTITY_NAME}}_entity.dart';
+import 'package:{{projectName}}/src/features/{{FEATURE_NAME}}/domain/entities/{{ENTITY_NAME}}_entity.dart';
 {{endif}}
-import '../domain/repositories/{{REPOSITORY_NAME}}_repository.dart';
+import 'package:{{projectName}}/src/features/{{FEATURE_NAME}}/domain/repositories/{{REPOSITORY_NAME}}_repository.dart';
 {{if HAS_REMOTE_DATASOURCE}}
-import '../datasources/{{REPOSITORY_NAME}}_remote_datasource.dart';
+import 'package:{{projectName}}/src/features/{{FEATURE_NAME}}/data/datasources/{{REPOSITORY_NAME}}_remote_datasource.dart';
 {{endif}}
 {{if HAS_LOCAL_DATASOURCE}}
-import '../datasources/{{REPOSITORY_NAME}}_local_datasource.dart';
+import 'package:{{projectName}}/src/features/{{FEATURE_NAME}}/data/datasources/{{REPOSITORY_NAME}}_local_datasource.dart';
 {{endif}}
 
 /// Implementation of [{{PASCAL_NAME}}Repository].

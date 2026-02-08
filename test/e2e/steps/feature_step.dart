@@ -25,21 +25,64 @@ class FeatureStep extends E2EStep {
 
   @override
   Future<void> execute(E2ETestContext context) async {
-    const featureName = 'test_feat';
-
-    // Add Feature
-    await context.runScaffoldInProject(['add', 'feature', featureName]);
-
-    FileAssertions.expectDir(
-      '${context.projectPath}/lib/src/features/$featureName',
+    // Test 1: Add basic feature
+    await context.logCommand(
+      stepName: 'feature',
+      commandName: 'add_basic_feature',
+      description: 'Add basic feature',
+      args: ['add', 'feature', 'product'],
     );
+
+    FileAssertions.expectDir('${context.projectPath}/lib/src/features/product');
     FileAssertions.expectFile(
-      '${context.projectPath}/lib/src/features/$featureName/presentation/screens/${featureName}_screen.dart',
+      '${context.projectPath}/lib/src/features/product/presentation/screens/product_screen.dart',
     );
 
-    // Add Duplicate (should fail)
+    // Test 2: Add feature with screen type
+    await context.logCommand(
+      stepName: 'feature',
+      commandName: 'add_feature_with_screen',
+      description: 'Add feature with list screen',
+      args: ['add', 'feature', 'order', '--screen', 'list', '--force'],
+    );
+
+    FileAssertions.expectDir('${context.projectPath}/lib/src/features/order');
+
+    // Test 3: Add feature with model and fields
+    await context.logCommand(
+      stepName: 'feature',
+      commandName: 'add_feature_with_model',
+      description: 'Add feature with model and json_serializable',
+      args: [
+        'add',
+        'feature',
+        'cart',
+        '--model',
+        'item',
+        '--json-serializable',
+        '--field',
+        'id:int',
+        '--field',
+        'name:String',
+        '--field',
+        'price:double',
+        '--force',
+      ],
+    );
+
+    FileAssertions.expectDir('${context.projectPath}/lib/src/features/cart');
+    FileAssertions.expectFile(
+      '${context.projectPath}/lib/src/features/cart/data/models/item_model.dart',
+    );
+
+    // Test 4: Duplicate feature without --force (should fail)
     try {
-      await context.runScaffoldInProject(['add', 'feature', featureName]);
+      await context.logCommand(
+        stepName: 'feature',
+        commandName: 'add_duplicate_no_force',
+        description: 'Add duplicate feature (should fail)',
+        args: ['add', 'feature', 'product'],
+      );
       throw Exception('Duplicate feature addition should have failed');
     } catch (e) {
       if (!e.toString().contains('exit code 1') &&
@@ -48,16 +91,14 @@ class FeatureStep extends E2EStep {
       }
     }
 
-    // Remove Feature
-    await context.runScaffoldInProject([
-      'remove',
-      'feature',
-      featureName,
-      '--force',
-    ]);
-
-    FileAssertions.expectNoDir(
-      '${context.projectPath}/lib/src/features/$featureName',
+    // Test 5: Remove feature
+    await context.logCommand(
+      stepName: 'feature',
+      commandName: 'remove_feature',
+      description: 'Remove feature',
+      args: ['remove', 'feature', 'cart', '--force'],
     );
+
+    FileAssertions.expectNoDir('${context.projectPath}/lib/src/features/cart');
   }
 }

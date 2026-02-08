@@ -4,11 +4,20 @@ library;
 import 'package:args/command_runner.dart';
 import 'package:path/path.dart' as p;
 
+import '../services/dependency_service.dart';
 import '../services/feature_service.dart';
 import '../utils/file_utils.dart';
 import '../utils/logger.dart';
 import '../utils/string_utils.dart';
 import '../utils/templates.dart';
+
+/// Helper to extract project name from pubspec.yaml
+String _getProjectName(String projectPath) {
+  final context = TemplateContext.fromPubspec(
+    p.join(projectPath, 'pubspec.yaml'),
+  );
+  return context['projectName'] as String? ?? 'app';
+}
 
 /// Subcommand to add a repository to a feature.
 class AddRepositoryCommand extends Command<int> {
@@ -16,9 +25,11 @@ class AddRepositoryCommand extends Command<int> {
     ScaffoldLogger? logger,
     FeatureService? featureService,
     FileUtils? fileUtils,
+    DependencyService? dependencyService,
   }) : _logger = logger ?? ScaffoldLogger(),
        _featureService = featureService ?? FeatureService(),
-       _fileUtils = fileUtils ?? const FileUtils() {
+       _fileUtils = fileUtils ?? const FileUtils(),
+       _dependencyService = dependencyService ?? DependencyService() {
     argParser
       ..addOption(
         'feature',
@@ -62,6 +73,7 @@ class AddRepositoryCommand extends Command<int> {
   final ScaffoldLogger _logger;
   final FeatureService _featureService;
   final FileUtils _fileUtils;
+  final DependencyService _dependencyService;
 
   @override
   String get name => 'repository';
@@ -157,6 +169,21 @@ class AddRepositoryCommand extends Command<int> {
           force: force,
           dryRun: dryRun,
         );
+      }
+
+      // Add required dependencies for datasources
+      if (!dryRun && (hasRemote || hasLocal)) {
+        _logger.info('Installing datasource dependencies...');
+        final result = await _dependencyService.ensureFeatureDependencies(
+          featureType: FeatureType.repository,
+          projectPath: projectPath,
+          showOutput: false,
+        );
+        if (!result.success) {
+          _logger.warn(
+            'Failed to add dependencies: ${result.failed.join(", ")}',
+          );
+        }
       }
 
       // Generate mapper if requested
@@ -297,7 +324,9 @@ class AddRepositoryCommand extends Command<int> {
     _fileUtils.createDirectory(implDir);
 
     final loader = const TemplateLoader();
+    final projectName = _getProjectName(projectPath);
     final variables = {
+      'projectName': projectName,
       'FEATURE_NAME': featureName,
       'PASCAL_NAME': pascalName,
       'REPOSITORY_NAME': snakeName,
@@ -353,7 +382,9 @@ class AddRepositoryCommand extends Command<int> {
     _fileUtils.createDirectory(dsDir);
 
     final loader = const TemplateLoader();
+    final projectName = _getProjectName(projectPath);
     final variables = {
+      'projectName': projectName,
       'FEATURE_NAME': featureName,
       'PASCAL_NAME': pascalName,
       'REPOSITORY_NAME': snakeName,
@@ -405,7 +436,9 @@ class AddRepositoryCommand extends Command<int> {
     _fileUtils.createDirectory(dsDir);
 
     final loader = const TemplateLoader();
+    final projectName = _getProjectName(projectPath);
     final variables = {
+      'projectName': projectName,
       'FEATURE_NAME': featureName,
       'PASCAL_NAME': pascalName,
       'REPOSITORY_NAME': snakeName,

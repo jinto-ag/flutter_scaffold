@@ -26,6 +26,11 @@ abstract class E2EStep {
   /// List of step names that must run before this step.
   List<String> get requiredSteps => [];
 
+  /// Whether this step should always run regardless of cache.
+  ///
+  /// Useful for steps that set up state (like creating a project) needed by others.
+  bool get alwaysRun => false;
+
   /// Execute the test step.
   Future<void> execute(E2ETestContext context);
 
