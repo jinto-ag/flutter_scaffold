@@ -372,6 +372,11 @@ flutter_scaffold help config
 - **Template Development**: See `lib/src/templates/` directory
 - **Configuration**: Run `flutter_scaffold config init` for sample file
 - **E2E Testing**: See `test/e2e/` directory
+- **Contributing**: See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines
+- **Security**: See [SECURITY.md](SECURITY.md) for vulnerability reporting
+- **Code of Conduct**: See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for community standards
+- **Authors**: See [AUTHORS.md](AUTHORS.md) for contributor recognition
+- **Funding**: See [FUNDING.md](FUNDING.md) to support development
 
 ## 🤝 Contributing
 
