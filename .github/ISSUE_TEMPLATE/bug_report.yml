@@ -103,5 +103,5 @@ body:
           required: true
         - label: I have included relevant error logs
           required: false
-        - label: This is not a security issue (for security issues, email security@flutter_scaffold.dev)
+        - label: This is not a security issue (for security issues, email project.jintoag@gmail.com)
           required: true

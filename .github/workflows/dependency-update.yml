@@ -1,0 +1,69 @@
+name: Dependency Update
+
+on:
+  schedule:
+    # Run every Monday at 9:00 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+jobs:
+  update-dependencies:
+    name: Update Dependencies
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: '3.3.0'
+
+      - name: Update pubspec dependencies
+        run: |
+          # Update dependencies in pubspec.yaml
+          dart pub upgrade --major-versions
+
+      - name: Update VS Code extension dependencies
+        run: |
+          cd vscode-extension
+          npm update
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet HEAD -- pubspec.yaml vscode-extension/package-lock.json; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Pull Request
+        if: steps.changes.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: '🔧 chore(deps): update dependencies'
+          title: '🔧 chore: Update Dependencies'
+          body: |
+            ## 📦 Dependency Updates
+            
+            This PR updates dependencies to their latest versions:
+            
+            ### Flutter Scaffold
+            - Dart dependencies updated via `dart pub upgrade`
+            
+            ### VS Code Extension  
+            - npm dependencies updated via `npm update`
+            
+            ### Testing
+            All tests should pass after these updates. Please review the changes before merging.
+            
+            ---
+            
+            This PR was created automatically by the dependency update workflow.
+          branch: deps/update-dependencies
+          delete-branch: true

@@ -368,15 +368,26 @@ flutter_scaffold help config
 
 ## 📚 Additional Resources
 
+### 📖 Documentation
 - **VS Code Extension**: [Extension README](vscode-extension/README.md)
 - **Template Development**: See `lib/src/templates/` directory
 - **Configuration**: Run `flutter_scaffold config init` for sample file
 - **E2E Testing**: See `test/e2e/` directory
+- **GitHub Setup**: See [GITHUB_SETUP.md](GITHUB_SETUP.md) for CI/CD details
+
+### 🤝 Community & Governance
 - **Contributing**: See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines
 - **Security**: See [SECURITY.md](SECURITY.md) for vulnerability reporting
 - **Code of Conduct**: See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for community standards
 - **Authors**: See [AUTHORS.md](AUTHORS.md) for contributor recognition
 - **Funding**: See [FUNDING.md](FUNDING.md) to support development
+
+### 🚀 Development & Automation
+- **CI/CD Pipeline**: Automated testing, building, and releasing
+- **Branch Protection**: `main` branch with required reviews and status checks
+- **Quality Gates**: Code formatting, analysis, and security scanning
+- **Multi-Platform**: Windows, macOS, Linux support
+- **Release Automation**: GitHub releases with artifacts and Pub.dev publishing
 
 ## 🤝 Contributing
 

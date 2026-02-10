@@ -14,7 +14,7 @@ The flutter_scaffold team and community take security bugs seriously. We appreci
 
 **Please do not report security vulnerabilities through public GitHub issues.**
 
-Instead, please send an email to: **security@flutter_scaffold.dev**
+Instead, please send an email to: **project.jintoag@gmail.com**
 
 This email is monitored by the core team who will respond within 48 hours.
 
