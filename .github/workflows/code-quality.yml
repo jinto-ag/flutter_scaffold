@@ -1,0 +1,92 @@
+name: Code Quality
+
+on:
+  pull_request:
+    branches: [main, dev]
+
+jobs:
+  quality-check:
+    name: Code Quality Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: '3.3.0'
+
+      - name: Setup Node.js (for VS Code extension)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: vscode-extension
+
+      - name: Install Dart dependencies
+        run: dart pub get
+
+      - name: Install Node dependencies
+        run: |
+          cd vscode-extension
+          npm ci
+
+      - name: Check code formatting
+        run: |
+          # Check Dart formatting
+          dart format --set-exit-if-changed .
+          
+          # Check TypeScript formatting (would need prettier if configured)
+          cd vscode-extension
+          npm run lint
+
+      - name: Run static analysis
+        run: |
+          # Dart analysis
+          dart analyze --fatal-infos --fatal-warnings .
+          
+          # TypeScript analysis (in vscode-extension)
+          cd vscode-extension
+          npm run lint
+
+      - name: Run tests with coverage
+        run: |
+          # Dart tests
+          dart test --coverage=coverage/lcov.info
+          
+          # Node tests
+          cd vscode-extension
+          npm test
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage/lcov.info,./vscode-extension/coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: true
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run CodeQL Analysis
+        uses: github/codeql-action/init@v2
+        with:
+          languages: javascript, dart
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v2
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+        with:
+          category: "/language:${{matrix.language}}"
