@@ -176,6 +176,7 @@ class ResetProjectCommand extends Command<int> {
         projectPath: projectPath,
         featureName: 'home',
         force: true,
+        skipVerification: true, // Build runner runs after this
       );
 
       // Reset main.dart

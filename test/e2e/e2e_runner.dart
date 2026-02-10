@@ -19,12 +19,14 @@
 ///   --list-steps   List available steps
 ///   --output=...   Output directory for logs (default: e2e_test_output)
 ///   --reset-output Clear output directory before running
+///   --fail-fast    Stop on first failure (default: continue all tests)
 ///   -h, --help     Show help
 library;
 
 import 'dart:io';
 
 import '../utils/test_utils.dart';
+import 'cache_manager.dart';
 import 'step_base.dart';
 import 'test_context.dart';
 import 'steps/steps.dart';
@@ -37,6 +39,9 @@ void main(List<String> args) async {
   final help = args.contains('--help') || args.contains('-h');
   final listSteps = args.contains('--list-steps');
   final resetOutput = args.contains('--reset-output');
+  final failFast = args.contains('--fail-fast');
+  final cacheStats = args.contains('--cache-stats');
+  final cacheClear = args.contains('--cache-clear');
 
   // Parse output directory
   final outputArg = args.firstWhere(
@@ -47,6 +52,22 @@ void main(List<String> args) async {
 
   if (help) {
     _printHelp();
+    exit(0);
+  }
+
+  // Handle cache management commands early
+  final projectRoot = Directory.current.path;
+  if (cacheStats || cacheClear) {
+    final cacheManager = CacheManager(projectRoot: projectRoot);
+    if (cacheClear) {
+      cacheManager.clearAll();
+      print('Cache cleared.');
+    }
+    if (cacheStats) {
+      final stats = cacheManager.getStats();
+      print(stats);
+      print('Cached steps: ${cacheManager.getCachedSteps().join(', ')}');
+    }
     exit(0);
   }
 
@@ -86,7 +107,7 @@ void main(List<String> args) async {
     exit(0);
   }
 
-  final projectRoot = Directory.current.path;
+  // projectRoot is already declared above for cache management
   final logFile = File('$projectRoot/.flutter_scaffold/e2e_test.log');
 
   final context = E2ETestContext(
@@ -122,12 +143,19 @@ void main(List<String> args) async {
     // Check dependencies and resolve order
     final orderedSteps = _resolveStepOrder(stepsToRun, allSteps);
 
+    // Track failures and skips for final report
+    final failures = <String, String>{};
+    int skippedCount = 0;
+    int ranCount = 0;
+
     // Execute steps
     for (final stepName in orderedSteps) {
       final step = allSteps[stepName];
       if (step == null) {
         context.logger.error('Unknown step: $stepName');
-        exit(1);
+        if (failFast) exit(1);
+        failures[stepName] = 'Unknown step';
+        continue;
       }
 
       // Check cache
@@ -138,6 +166,7 @@ void main(List<String> args) async {
         context.logger.info(
           '${AnsiColors.gray}[SKIP] ${step.description} (cached)${AnsiColors.reset}',
         );
+        skippedCount++;
         continue;
       }
 
@@ -147,22 +176,50 @@ void main(List<String> args) async {
         await step.execute(context);
         context.logger.stepComplete();
         context.cacheManager.markStepComplete(stepName, dependencyFiles);
-      } catch (e) {
+        ranCount++;
+      } catch (e, stackTrace) {
         context.logger.stepFailed();
         context.logger.error(e.toString());
+
+        // Log the error to a file for debugging
+        context.logError(
+          stepName: stepName,
+          errorName: 'step_failure',
+          description: 'Step "$stepName" failed during execution',
+          error: e,
+          stackTrace: stackTrace,
+        );
+
         context.cacheManager.markStepComplete(
           stepName,
           dependencyFiles,
           passed: false,
         );
-        rethrow;
+        failures[stepName] = e.toString();
+        if (failFast) rethrow;
+        // Continue to next step if not fail-fast
       }
     }
 
     // Generate index files
     context.generateIndex();
 
+    // Report failures
+    if (failures.isNotEmpty) {
+      context.logger.error('\n${failures.length} step(s) failed:');
+      for (final entry in failures.entries) {
+        context.logger.error(
+          '  ✗ ${entry.key}: ${entry.value.split('\n').first}',
+        );
+      }
+      context.logger.info('\nLogs available at: ${context.outputDir.path}');
+      exit(1);
+    }
+
     context.logger.success('E2E Tests Passed');
+    context.logger.info(
+      'Summary: $ranCount ran, $skippedCount cached/skipped, ${failures.length} failed',
+    );
     context.logger.info('Logs available at: ${context.outputDir.path}');
   } catch (e, st) {
     // Generate index even on failure
@@ -226,6 +283,9 @@ Options:
   --list-steps     List available steps
   --output=...     Output directory for logs (default: e2e_test_output)
   --reset-output   Clear output directory before running
+  --fail-fast      Stop on first failure (default: continue all tests)
+  --cache-stats    Show cache statistics
+  --cache-clear    Clear all cached step results
   -h, --help       Show this help
 
 Examples:
@@ -234,5 +294,8 @@ Examples:
   dart run test/e2e/e2e_runner.dart --steps=create,features,model
   dart run test/e2e/e2e_runner.dart --quick --verbose
   dart run test/e2e/e2e_runner.dart --reset-output        # Clear logs first
+  dart run test/e2e/e2e_runner.dart --fail-fast           # Stop on first error
+  dart run test/e2e/e2e_runner.dart --cache-stats         # View cache info
+  dart run test/e2e/e2e_runner.dart --cache-clear         # Clear cache
 ''');
 }

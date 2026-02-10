@@ -1,64 +1,79 @@
 {
   "steps": {
     "build_cli": {
-      "hash": "c0b2c66ee60527b535c0b1cc2234d2bb",
+      "hash": "fdc747b4df6b7cc81a0fd44787ba3772",
       "passed": true,
-      "timestamp": "2026-02-08T12:35:22.635490"
-    },
-    "create": {
-      "hash": "a051902fc660d1e5ffe604728634a8dd",
-      "passed": true,
-      "timestamp": "2026-02-08T12:36:10.842417"
+      "timestamp": "2026-02-08T18:20:04.612708"
     },
     "config": {
-      "hash": "8e15fab7eabde7748a115f78840f4e63",
+      "hash": "e464370d170f9266a758c83d3fad5500",
       "passed": true,
-      "timestamp": "2026-02-08T12:35:22.871658"
+      "timestamp": "2026-02-08T18:08:26.357097"
     },
     "upgrade": {
-      "hash": "6ef7b7a8789b93ae285b89c5d7900e9b",
+      "hash": "e3a0ef74d3932292850a7a309f01a2fc",
       "passed": true,
-      "timestamp": "2026-02-08T12:35:24.031586"
+      "timestamp": "2026-02-08T18:08:28.066364"
+    },
+    "create": {
+      "hash": "97b293547ed02afabd1a516e88629ab9",
+      "passed": true,
+      "timestamp": "2026-02-08T18:21:36.135823"
     },
     "init": {
-      "hash": "21d2758e77ff148f4fddb81a6c189b88",
-      "passed": true,
-      "timestamp": "2026-02-08T12:36:33.563118"
+      "hash": "ae7072e85864e17c817757fc52bdd1d4",
+      "passed": false,
+      "timestamp": "2026-02-08T18:09:19.961346"
     },
     "features": {
-      "hash": "b99834bc19bbad24580b3adfa04fb947",
-      "passed": true,
-      "timestamp": "2026-02-08T12:38:00.325883"
+      "hash": "e245bf5a937003fe328905c1ed961e82",
+      "passed": false,
+      "timestamp": "2026-02-08T18:09:19.970736"
     },
     "usecase": {
-      "hash": "d88159f3654deb72bd5d11142d914f5b",
-      "passed": true,
-      "timestamp": "2026-02-08T12:39:26.540062"
+      "hash": "359e972853226c87475f12b3e599acfc",
+      "passed": false,
+      "timestamp": "2026-02-08T18:09:19.994056"
     },
     "repository": {
-      "hash": "70865a18c1b07e1aa955f65242dd970b",
-      "passed": true,
-      "timestamp": "2026-02-08T12:41:13.177739"
+      "hash": "8fdbaed8f48a4c32867008b4199951e4",
+      "passed": false,
+      "timestamp": "2026-02-08T18:09:20.001327"
     },
     "model": {
-      "hash": "2e33fa207a7b33c97c9531c037eaeb13",
-      "passed": true,
-      "timestamp": "2026-02-08T12:44:41.796782"
+      "hash": "212e60d25289c56ec4323b491651eb6e",
+      "passed": false,
+      "timestamp": "2026-02-08T18:09:20.012647"
     },
     "dry_run": {
-      "hash": "d41d8cd98f00b204e9800998ecf8427e",
-      "passed": true,
-      "timestamp": "2026-02-08T12:45:57.441470"
+      "hash": "c0b2c66ee60527b535c0b1cc2234d2bb",
+      "passed": false,
+      "timestamp": "2026-02-08T18:09:20.016251"
     },
     "force_flag": {
-      "hash": "d41d8cd98f00b204e9800998ecf8427e",
+      "hash": "c0b2c66ee60527b535c0b1cc2234d2bb",
+      "passed": false,
+      "timestamp": "2026-02-08T18:09:20.019639"
+    },
+    "reset": {
+      "hash": "90a164fa133115cb6c28a422a78c7078",
+      "passed": false,
+      "timestamp": "2026-02-08T18:09:20.023385"
+    },
+    "info": {
+      "hash": "b6714514008b221ef63b8b1e87129e0c",
+      "passed": false,
+      "timestamp": "2026-02-08T18:09:20.037106"
+    },
+    "help": {
+      "hash": "c0b2c66ee60527b535c0b1cc2234d2bb",
       "passed": true,
-      "timestamp": "2026-02-08T12:48:15.331085"
+      "timestamp": "2026-02-08T18:09:22.648712"
     },
     "verification": {
-      "hash": "d41d8cd98f00b204e9800998ecf8427e",
+      "hash": "c0b2c66ee60527b535c0b1cc2234d2bb",
       "passed": false,
-      "timestamp": "2026-02-08T12:48:23.115642"
+      "timestamp": "2026-02-08T18:09:22.651592"
     }
   }
 }

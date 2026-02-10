@@ -16,7 +16,10 @@ class ModelStep extends E2EStep {
   @override
   List<String> get dependencies => [
     'lib/src/commands/add_model_command.dart',
-    'lib/src/templates/feature/model.dart.template',
+    'lib/src/services/model_service.dart',
+    'lib/src/templates/feature/basic_model.dart.template',
+    'lib/src/templates/feature/json_serializable_model.dart.template',
+    'lib/src/templates/feature/freezed_model.dart.template',
   ];
 
   @override

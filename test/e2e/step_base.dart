@@ -31,13 +31,25 @@ abstract class E2EStep {
   /// Useful for steps that set up state (like creating a project) needed by others.
   bool get alwaysRun => false;
 
+  /// Shared dependencies that affect all steps.
+  ///
+  /// These are common utilities, core files, and config that should invalidate
+  /// cache when changed.
+  List<String> get sharedDependencies => [
+    'lib/src/utils/**/*.dart',
+    'lib/src/core/**/*.dart',
+    'pubspec.yaml',
+  ];
+
   /// Execute the test step.
   Future<void> execute(E2ETestContext context);
 
-  /// Get all dependency file paths.
+  /// Get all dependency file paths including shared dependencies.
   List<String> getDependencyFiles(String projectRoot) {
     final files = <String>[];
-    for (final pattern in dependencies) {
+    final allDeps = [...dependencies, ...sharedDependencies];
+
+    for (final pattern in allDeps) {
       // Handle glob patterns
       if (pattern.contains('**')) {
         final parts = pattern.split('**/');

@@ -8,7 +8,7 @@ class {{PASCAL_MODEL_NAME}}Model {
 
 {{if HAS_FIELDS}}
   // Properties
-{{FIELDS}}
+{{FIELD_DECLARATIONS}}
 
   @override
   bool operator ==(Object other) =>
@@ -17,7 +17,7 @@ class {{PASCAL_MODEL_NAME}}Model {
           runtimeType == other.runtimeType;
 
   @override
-  int get hashCode => Object.hash([{{FIELD_NAMES}}]);
+  int get hashCode => Object.hashAll([{{FIELD_NAMES}}]);
 
   @override
   String toString() => '{{PASCAL_MODEL_NAME}}Model({{FIELD_NAMES}})';

@@ -16,6 +16,7 @@ class RepositoryStep extends E2EStep {
   @override
   List<String> get dependencies => [
     'lib/src/commands/add_repository_command.dart',
+    'lib/src/services/feature_service.dart',
     'lib/src/templates/feature/repository.dart.template',
     'lib/src/templates/feature/repository_impl.dart.template',
     'lib/src/templates/feature/remote_datasource.dart.template',

@@ -138,13 +138,14 @@ class CreateCommand extends Command<int> {
       _logger.info('Applying clean architecture scaffold...');
       _scaffoldService.createScaffold(projectPath: projectPath, force: force);
 
-      // Add home feature
+      // Add home feature (skip verification - it runs in setupProject after deps)
       _logger.info('');
       _logger.info("Adding 'home' feature...");
       await _featureService.addFeature(
         projectPath: projectPath,
         featureName: 'home',
         force: force,
+        skipVerification: true, // Deps not installed yet
       );
 
       // Install dependencies

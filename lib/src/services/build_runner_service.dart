@@ -243,13 +243,15 @@ class BuildRunnerService {
       _logger.success('Analysis passed');
     }
 
-    // Run tests (if test directory exists)
+    // Run tests (if test directory exists) - Use flutter test for Flutter projects
     ProcessResult? testResult;
     final testDir = _fileUtils.joinPath(projectPath, 'test');
     if (_fileUtils.directoryExists(testDir)) {
       try {
         _logger.info('Running tests...');
-        testResult = await _processUtils.dart([
+        // Use flutter test instead of dart test for Flutter projects
+        // Flutter projects require the Flutter test harness for dart:ui
+        testResult = await _processUtils.flutter([
           'test',
         ], workingDirectory: projectPath);
 

@@ -1,5 +1,5 @@
-import '../../domain/entities/{{FEATURE_NAME}}_entity.dart';
-import '../models/{{FEATURE_NAME}}_model.dart';
+import 'package:{{projectName}}/src/features/{{FEATURE_NAME}}/domain/entities/{{FEATURE_NAME}}_entity.dart';
+import 'package:{{projectName}}/src/features/{{FEATURE_NAME}}/data/models/{{FEATURE_NAME}}_model.dart';
 
 /// Mapper for converting between {{PASCAL_NAME}}Entity and {{PASCAL_NAME}}Model.
 ///

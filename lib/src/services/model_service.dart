@@ -150,37 +150,61 @@ class ModelService {
       'pascalModelName': toPascalCase(normalizedModel),
       'FEATURE_NAME': normalizedFeature,
       'PASCAL_FEATURE_NAME': toPascalCase(normalizedFeature),
-      'FIELDS': fields.map((field) => '  final $field;').join('\n'),
+      // Constructor parameters: required this.fieldName,
+      'FIELDS': fields
+          .map((field) {
+            final parts = field.split(':');
+            final name = parts[0].trim();
+            return '    required this.$name,';
+          })
+          .join('\n'),
+      // Field declarations: final Type fieldName;
+      'FIELD_DECLARATIONS': fields
+          .map((field) {
+            final parts = field.split(':');
+            final name = parts[0].trim();
+            final type = parts.length > 1 ? parts[1].trim() : 'dynamic';
+            return '  final $type $name;';
+          })
+          .join('\n'),
+      // Just field names for hashCode and toString
       'FIELD_NAMES': fields
           .map((field) => field.split(':').first.trim())
           .join(', '),
+      // copyWith parameters: Type? fieldName,
       'FIELDS_WITH_OPTIONAL': fields
           .map((field) {
             final parts = field.split(':');
-            return '    ${parts.length > 1 ? parts[1].trim() : parts[0].trim()}? ${parts[0].trim()}';
+            final name = parts[0].trim();
+            final type = parts.length > 1 ? parts[1].trim() : 'dynamic';
+            return '    $type? $name,';
           })
-          .join(',\n'),
+          .join('\n'),
+      // copyWith body: fieldName: fieldName ?? this.fieldName,
       'COPY_FIELDS': fields
           .map((field) {
             final parts = field.split(':');
-            if (parts.length > 1) {
-              return '      ${parts[1].trim()}? ${parts[0].trim()} : ${parts[0].trim()}';
-            }
-            return '      ${parts[0].trim()}';
+            final name = parts[0].trim();
+            return '      $name: $name ?? this.$name,';
           })
-          .join(',\n'),
+          .join('\n'),
+      // toJson entries: 'fieldName': fieldName,
       'JSON_FIELDS': fields
           .map((field) {
             final parts = field.split(':');
-            return '      \'${parts[0].trim()}\': ${parts[0].trim()},';
+            final name = parts[0].trim();
+            return "      '$name': $name,";
           })
-          .join(',\n'),
+          .join('\n'),
+      // fromJson entries: fieldName: json['fieldName'] as Type,
       'FROM_JSON_FIELDS': fields
           .map((field) {
             final parts = field.split(':');
-            return '      ${parts[1].trim()}: json[\'${parts[0].trim()}\']';
+            final name = parts[0].trim();
+            final type = parts.length > 1 ? parts[1].trim() : 'dynamic';
+            return "      $name: json['$name'] as $type,";
           })
-          .join(',\n'),
+          .join('\n'),
       'HAS_FIELDS': fields.isNotEmpty,
       'FIELD_COUNT': fields.length,
     };

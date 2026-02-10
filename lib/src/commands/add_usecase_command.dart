@@ -30,7 +30,7 @@ class AddUsecaseCommand extends Command<int> {
       ..addFlag(
         'with-params',
         help: 'Generate a Params class for the use case',
-        negatable: false,
+        negatable: true,
         defaultsTo: true,
       )
       ..addOption(

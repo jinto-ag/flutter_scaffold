@@ -18,6 +18,7 @@ class UsecaseStep extends E2EStep {
   @override
   List<String> get dependencies => [
     'lib/src/commands/add_usecase_command.dart',
+    'lib/src/services/feature_service.dart',
     'lib/src/templates/feature/usecase.dart.template',
   ];
 

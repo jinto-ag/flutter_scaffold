@@ -17,7 +17,10 @@ class FeatureStep extends E2EStep {
   List<String> get dependencies => [
     'lib/src/commands/add_feature_command.dart',
     'lib/src/commands/remove_feature_command.dart',
+    'lib/src/services/feature_service.dart',
+    'lib/src/services/build_runner_service.dart',
     'lib/src/templates/feature/**/*.template',
+    'lib/src/templates/routing/**/*.template',
   ];
 
   @override

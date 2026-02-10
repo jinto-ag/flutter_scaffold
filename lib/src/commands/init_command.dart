@@ -314,6 +314,7 @@ class InitCommand extends Command<int> {
         projectPath: projectPath,
         featureName: 'home',
         force: force,
+        skipVerification: true, // Deps not installed yet
       );
       filesCreated.add('lib/src/features/home/');
     } catch (e) {

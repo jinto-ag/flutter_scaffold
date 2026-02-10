@@ -30,10 +30,25 @@ class FeatureInfo {
 
 /// Result of feature operation.
 class FeatureResult {
-  const FeatureResult({required this.dirsCreated, required this.filesCreated});
+  const FeatureResult({
+    required this.dirsCreated,
+    required this.filesCreated,
+    this.buildRunnerSuccess = true,
+    this.analyzerSuccess = true,
+    this.testsSuccess = true,
+    this.verificationIssues = const [],
+  });
 
   final int dirsCreated;
   final int filesCreated;
+  final bool buildRunnerSuccess;
+  final bool analyzerSuccess;
+  final bool testsSuccess;
+  final List<String> verificationIssues;
+
+  /// Returns true if all verification steps passed.
+  bool get verificationSuccess =>
+      buildRunnerSuccess && analyzerSuccess && testsSuccess;
 }
 
 /// Service for managing feature modules.
@@ -133,11 +148,16 @@ class FeatureService {
   }
 
   /// Add a new feature module.
+  ///
+  /// If [skipVerification] is true, skips pub get, build_runner, and code
+  /// verification. Use this when dependencies aren't installed yet (e.g.,
+  /// during initial project creation before setupProject is called).
   Future<FeatureResult> addFeature({
     required String projectPath,
     required String featureName,
     bool force = false,
     bool dryRun = false,
+    bool skipVerification = false,
     String? screenName,
   }) async {
     // Normalize the feature name
@@ -217,13 +237,21 @@ class FeatureService {
       _updateRoutes(projectPath, screenName, normalized);
     }
 
-    if (!dryRun) {
+    // Track verification status
+    var buildRunnerSuccess = true;
+    var analyzerSuccess = true;
+    var testsSuccess = true;
+    final verificationIssues = <String>[];
+
+    if (!dryRun && !skipVerification) {
       // Run pub get if needed
       await _buildRunnerService.runPubGet(projectPath);
 
       // Run build runner if needed
       final buildResult = await _buildRunnerService.runBuildRunner(projectPath);
       if (!buildResult.success) {
+        buildRunnerSuccess = false;
+        verificationIssues.add('Build runner failed');
         _logger.warn('Build runner completed with issues');
       }
 
@@ -232,6 +260,17 @@ class FeatureService {
         projectPath,
       );
       if (!verificationResult.success) {
+        // Track specific failures
+        if (verificationResult.analyzerResult.exitCode != 0) {
+          analyzerSuccess = false;
+          verificationIssues.add('Flutter analyze found issues');
+        }
+        if (verificationResult.testResult != null &&
+            verificationResult.testResult!.exitCode != 0) {
+          testsSuccess = false;
+          verificationIssues.add('Tests failed');
+        }
+
         _logger.warn('Code verification found issues');
         if (verificationResult.issues.isNotEmpty) {
           for (final issue in verificationResult.issues) {
@@ -239,10 +278,22 @@ class FeatureService {
           }
         }
       }
+    } else if (skipVerification) {
+      _logger.info('Build runner not needed for this project');
     }
 
     _logger.divider();
-    _logger.success("Feature '$normalized' created!");
+
+    // Report status based on verification
+    final verificationPassed =
+        buildRunnerSuccess && analyzerSuccess && testsSuccess;
+
+    if (verificationPassed) {
+      _logger.success("Feature '$normalized' created!");
+    } else {
+      _logger.error("Feature '$normalized' created but verification FAILED!");
+    }
+
     _logger.info('  Directories: $dirsCreated');
     _logger.info('  Files: $filesCreated');
     if (screenName != null) {
@@ -256,7 +307,25 @@ class FeatureService {
     _logger.info('  ├── domain/{entities, repositories, usecases}/');
     _logger.info('  └── presentation/{providers, screens, widgets}/');
 
-    return FeatureResult(dirsCreated: dirsCreated, filesCreated: filesCreated);
+    final result = FeatureResult(
+      dirsCreated: dirsCreated,
+      filesCreated: filesCreated,
+      buildRunnerSuccess: buildRunnerSuccess,
+      analyzerSuccess: analyzerSuccess,
+      testsSuccess: testsSuccess,
+      verificationIssues: verificationIssues,
+    );
+
+    // Throw if verification failed - this ensures non-zero exit code
+    // Skip throwing if verification was intentionally skipped
+    if (!verificationPassed && !skipVerification) {
+      throw FeatureException(
+        "Feature '$normalized' created but verification failed:\n"
+        '  ${verificationIssues.join('\n  ')}',
+      );
+    }
+
+    return result;
   }
 
   /// Remove a feature module.
@@ -433,8 +502,16 @@ class FeatureService {
       if (routesArrayStart != -1) {
         final routesArrayEnd = updatedContent.indexOf('],', routesArrayStart);
         if (routesArrayEnd != -1) {
+          // Check if there's already content before the closing bracket
+          final beforeClosing = updatedContent
+              .substring(0, routesArrayEnd)
+              .trimRight();
+          // Only add a comma if the previous content doesn't end with a comma or opening bracket
+          final needsComma =
+              !beforeClosing.endsWith(',') && !beforeClosing.endsWith('[');
+          final comma = needsComma ? ',' : '';
           updatedContent =
-              '${updatedContent.substring(0, routesArrayEnd)},\n$routeConfig${updatedContent.substring(routesArrayEnd)}';
+              '${updatedContent.substring(0, routesArrayEnd)}$comma\n$routeConfig${updatedContent.substring(routesArrayEnd)}';
         }
       }
     }

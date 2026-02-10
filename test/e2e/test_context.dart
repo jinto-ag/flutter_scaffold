@@ -153,13 +153,16 @@ class E2ETestContext {
   ///
   /// Creates a log file at `outputDir/stepName/commandName.log` and
   /// registers the execution in the command registry.
-  Future<ProcessRunResult> logCommand({
+  ///
+  /// Set [throwOnError] to false to continue execution on failure.
+  Future<ProcessRunResult?> logCommand({
     required String stepName,
     required String commandName,
     required String description,
     required List<String> args,
     String? workingDirectory,
     bool useScaffold = true,
+    bool throwOnError = true,
   }) async {
     // Create step directory
     final stepDir = Directory('${outputDir.path}/$stepName');
@@ -187,7 +190,8 @@ class E2ETestContext {
     logger.debug('▶ Running: $description');
 
     bool success = true;
-    ProcessRunResult result;
+    ProcessRunResult? result;
+    String? errorMessage;
 
     try {
       if (useScaffold) {
@@ -205,31 +209,91 @@ class E2ETestContext {
       buffer.writeln(result.output);
       buffer.writeln();
       buffer.writeln('[RESULT: SUCCESS]');
+      buffer.writeln('[EXIT CODE: ${result.exitCode}]');
       logger.debug('  ✓ Success');
-    } catch (e) {
+    } catch (e, stackTrace) {
       success = false;
+      errorMessage = e.toString();
       buffer.writeln('ERROR: $e');
+      buffer.writeln();
+      buffer.writeln('STACK TRACE:');
+      buffer.writeln(stackTrace.toString());
       buffer.writeln();
       buffer.writeln('[RESULT: FAILED]');
       logger.debug('  ✗ Failed');
-      rethrow;
-    } finally {
-      logFile.writeAsStringSync(buffer.toString());
+    }
 
-      commandRegistry.add(
-        CommandLogEntry(
-          stepName: stepName,
-          commandName: commandName,
-          description: description,
-          command: fullCommand,
-          logPath: relativePath,
-          success: success,
-          timestamp: DateTime.now(),
-        ),
-      );
+    // Always write log file
+    logFile.writeAsStringSync(buffer.toString());
+
+    // Register in command registry
+    commandRegistry.add(
+      CommandLogEntry(
+        stepName: stepName,
+        commandName: commandName,
+        description: description,
+        command: fullCommand,
+        logPath: relativePath,
+        success: success,
+        timestamp: DateTime.now(),
+      ),
+    );
+
+    // Throw if requested and failed
+    if (!success && throwOnError) {
+      throw Exception('Command failed: $fullCommand\n$errorMessage');
     }
 
     return result;
+  }
+
+  /// Log an error that occurred outside of a command execution.
+  void logError({
+    required String stepName,
+    required String errorName,
+    required String description,
+    required Object error,
+    StackTrace? stackTrace,
+  }) {
+    final stepDir = Directory('${outputDir.path}/$stepName');
+    if (!stepDir.existsSync()) {
+      stepDir.createSync(recursive: true);
+    }
+
+    final logFile = File('${stepDir.path}/$errorName.log');
+    final relativePath = '$stepName/$errorName.log';
+
+    final buffer = StringBuffer()
+      ..writeln('=' * 60)
+      ..writeln('Error: $description')
+      ..writeln('Timestamp: ${DateTime.now()}')
+      ..writeln('=' * 60)
+      ..writeln()
+      ..writeln('ERROR: $error')
+      ..writeln();
+
+    if (stackTrace != null) {
+      buffer.writeln('STACK TRACE:');
+      buffer.writeln(stackTrace.toString());
+      buffer.writeln();
+    }
+
+    buffer.writeln('[RESULT: FAILED]');
+    logFile.writeAsStringSync(buffer.toString());
+
+    commandRegistry.add(
+      CommandLogEntry(
+        stepName: stepName,
+        commandName: errorName,
+        description: description,
+        command: 'N/A (error)',
+        logPath: relativePath,
+        success: false,
+        timestamp: DateTime.now(),
+      ),
+    );
+
+    logger.error('Error logged: $description');
   }
 
   /// Generate index.md and commands.json files.
