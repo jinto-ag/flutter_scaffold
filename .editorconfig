@@ -1,0 +1,61 @@
+# .editorconfig
+
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# All files
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+# Dart files
+[*.dart]
+indent_size = 2
+
+# YAML files
+[*.{yml,yaml}]
+indent_size = 2
+
+# JSON files
+[*.json]
+indent_size = 2
+
+# Markdown files
+[*.md]
+indent_size = 2
+trim_trailing_whitespace = false
+
+# Shell scripts
+[*.sh]
+indent_size = 2
+end_of_line = lf
+
+# Makefiles
+[Makefile]
+indent_style = tab
+indent_size = 4
+
+# VS Code extension files
+[*.ts]
+indent_size = 2
+
+[*.js]
+indent_size = 2
+
+# Template files
+[*.template]
+indent_size = 2
+
+# Configuration files
+[{*.yml,*.yaml}]
+indent_size = 2
+
+# GitHub files
+[{.github/**/,*}]
+indent_size = 2

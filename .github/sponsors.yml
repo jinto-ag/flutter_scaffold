@@ -1,0 +1,40 @@
+# GitHub Sponsors Configuration
+
+# This file configures GitHub Sponsors for the flutter_scaffold project
+
+github_sponsors:
+  # Main maintainer
+  jinto-ag:
+    name: "flutter_scaffold Maintainer"
+    description: "Lead developer and maintainer of flutter_scaffold CLI"
+    url: "https://github.com/jinto-ag"
+    
+# Sponsorship tiers (for future reference)
+tiers:
+  bronze:
+    amount: "$1-9/month"
+    benefits:
+      - Thank you note in release notes
+      - Access to development discussions
+      
+  silver:
+    amount: "$10-49/month"
+    benefits:
+      - Bronze benefits
+      - Name in README sponsors section
+      - Priority bug reports
+      
+  gold:
+    amount: "$50-99/month"
+    benefits:
+      - Silver benefits
+      - Name with link in README
+      - Feature request priority
+      
+  platinum:
+    amount: "$100+/month"
+    benefits:
+      - Gold benefits
+      - Featured sponsor placement
+      - Direct maintainer access
+      - Custom consultation hours

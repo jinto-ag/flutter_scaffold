@@ -1,0 +1,107 @@
+name: Bug Report
+description: File a bug report to help us improve
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report! Please fill in the template below.
+
+  - type: input
+    id: flutter_scaffold_version
+    attributes:
+      label: flutter_scaffold Version
+      description: What version of flutter_scaffold are you using?
+      placeholder: e.g., 0.1.0-beta
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating System
+      description: What operating system are you using?
+      placeholder: e.g., macOS 13.0, Windows 11, Ubuntu 22.04
+    validations:
+      required: true
+
+  - type: input
+    id: dart_version
+    attributes:
+      label: Dart/Flutter Version
+      description: What versions of Dart and Flutter are you using?
+      placeholder: e.g., Dart 3.3.0, Flutter 3.19.0
+    validations:
+      required: true
+
+  - type: textarea
+    id: bug_description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+      placeholder: Describe the bug...
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction_steps
+    attributes:
+      label: Reproduction Steps
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Run '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+      render: bash
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: Expected Behavior
+      description: What you expected to happen
+      placeholder: Describe what should happen...
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual_behavior
+    attributes:
+      label: Actual Behavior
+      description: What actually happened
+      placeholder: Describe what actually happened...
+    validations:
+      required: true
+
+  - type: textarea
+    id: error_logs
+    attributes:
+      label: Error Logs
+      description: Please copy and paste any relevant error logs
+      placeholder: Paste error logs here...
+      render: shell
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: Add any other context about the problem here
+      placeholder: Any additional information...
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Before Submitting
+      description: Please confirm the following
+      options:
+        - label: I have searched existing issues for similar bugs
+          required: true
+        - label: I have provided all the requested information
+          required: true
+        - label: I have included relevant error logs
+          required: false
+        - label: This is not a security issue (for security issues, email security@flutter_scaffold.dev)
+          required: true

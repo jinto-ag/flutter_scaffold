@@ -1,0 +1,63 @@
+# .gitattributes
+
+# Auto detect text files and perform LF normalization
+* text=auto eol=lf
+
+# Explicitly declare text files you want to always be normalized and converted
+# to native line endings on checkout.
+*.dart text
+*.yaml text
+*.yml text
+*.json text
+*.md text
+*.txt text
+*.sh text eol=lf
+*.template text
+
+# Denote all files that are truly binary and should not be modified.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.mov binary
+*.mp4 binary
+*.zip binary
+*.gz binary
+*.tar binary
+
+# VS Code extension files
+*.vsix binary
+
+# Lock files (should be treated as text but with specific handling)
+package-lock.json text
+pubspec.lock text
+
+# Generated files (keep as is)
+*.g.dart text linguist-generated=true
+*.freezed.dart text linguist-generated=true
+*.mocks.dart text linguist-generated=true
+
+# Test output files
+*.log text
+*.out text
+
+# Shell scripts should always use LF
+*.sh eol=lf
+
+# Makefiles
+Makefile text eol=lf
+
+# Docker files
+Dockerfile* text
+
+# Configuration files
+.gitignore text
+.gitattributes text
+
+# Documentation files
+*.md text
+LICENSE text
+CODE_OF_CONDUCT.md text
+CONTRIBUTING.md text
+SECURITY.md text

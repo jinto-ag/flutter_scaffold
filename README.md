@@ -2,6 +2,8 @@
 
 A **production-grade Dart CLI tool** for scaffolding Flutter projects with Clean Architecture. Replaces the legacy `scaffold.sh` script with a modular, testable, cross-platform Dart implementation powered by a robust template engine.
 
+🤖 **AI-Enhanced Development**: This project was developed with assistance from various AI tools and platforms, demonstrating the power of human-AI collaboration in creating professional development tools.
+
 ## Features
 
 - 🏗️ **Clean Architecture Structure** - Organized layers: core, routing, shared, features
@@ -373,12 +375,23 @@ flutter_scaffold help config
 
 ## 🤝 Contributing
 
-1. Fork the repository
+1. Fork repository
 2. Create a feature branch: `git checkout -b feature/amazing-feature`
 3. Run tests: `dart test` and `dart run test/e2e/e2e_runner.dart --quick`
 4. Commit changes with conventional format: `✨ feat(feature): add amazing feature`
 5. Push to branch: `git push origin feature/amazing-feature`
 6. Open a Pull Request
+
+### 🤖 AI-Assisted Development
+
+We welcome contributions from both human developers and AI-assisted development:
+
+- **AI-Native IDE Users**: Contributions from AI-powered development tools are welcome
+- **AI Agents**: Development assisted by AI agents following our contribution guidelines
+- **Human Review**: All AI-assisted contributions require human review and testing
+- **Documentation**: Clearly indicate AI assistance in commit messages or PR descriptions
+
+If you're using AI tools for development, please mention this in your pull request to help us understand the evolving development landscape.
 
 ## License
 

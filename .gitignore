@@ -4,3 +4,103 @@
 build
 *.template.__analysis__.dart
 *.log
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Dependency directories
+node_modules/
+.packages
+
+# Coverage reporting
+coverage/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Test output
+test_output/
+e2e_test_output/
+test_results/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Distribution
+dist/
+out/
+
+# Package files
+*.tar.gz
+*.zip
+*.vsix
+
+# Lock files (keep pubspec.lock but ignore others)
+package-lock.json
+yarn.lock
+
+# Local configuration
+flutter_scaffold.yaml.local
+.flutter_scaffold/
+
+# Build artifacts
+*.g.dart
+*.freezed.dart
+*.mocks.dart
+
+# Documentation build
+docs/build/
+site/
+
+# Backup files
+*.bak
+*.backup
+
+# Log files
+*.log
+logs/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# Optional REPL history
+.node_repl_history
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
