@@ -386,4 +386,24 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## Version
 
-Current version: **0.1.0** (Run `flutter_scaffold --version` for latest)
+Current version: **0.1.0-beta** - Public Preview Release
+
+Run `flutter_scaffold --version` for the latest version information.
+
+### 🚀 Beta Status
+
+This is a public preview release. The core functionality is stable and ready for production use, but some features may evolve based on community feedback.
+
+**What's Stable:**
+- ✅ Project creation and initialization
+- ✅ Feature/module management
+- ✅ Template engine and generation
+- ✅ Configuration system
+- ✅ Build integration
+- ✅ VS Code extension
+
+**What May Evolve:**
+- 🔄 Template variable names
+- 🔄 Configuration structure
+- 🔄 Command-line arguments
+- 🔄 Plugin system (upcoming)

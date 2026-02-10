@@ -34,7 +34,7 @@ class VersionInfo {
       // Try to find pubspec.yaml in current directory or package root
       final pubspecPath = _findPubspecPath();
       if (pubspecPath == null) {
-        _cachedVersion = '0.1.0'; // Fallback
+        _cachedVersion = '0.1.0-beta'; // Fallback
         _cachedName = 'flutter_scaffold';
         return;
       }
@@ -59,10 +59,10 @@ class VersionInfo {
         _cachedName = nameMatch.group(1)?.trim();
       }
 
-      _cachedVersion ??= '0.1.0';
+      _cachedVersion ??= '0.1.0-beta';
       _cachedName ??= 'flutter_scaffold';
     } catch (e) {
-      _cachedVersion = '0.1.0';
+      _cachedVersion = '0.1.0-beta';
       _cachedName = 'flutter_scaffold';
     }
   }

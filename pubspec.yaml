@@ -1,6 +1,6 @@
 name: flutter_scaffold
 description: A production-grade Flutter project scaffolding tool with Clean Architecture.
-version: 0.1.0
+version: 0.1.0-beta
 repository: https://github.com/jinto-ag/flutter_scaffold
 
 executables:
