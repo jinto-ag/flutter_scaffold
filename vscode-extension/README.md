@@ -47,23 +47,64 @@ Then press `F5` in VS Code to run the extension in development mode.
 
 ```bash
 npm run package
-code --install-extension flutter-scaffold-template-0.1.7.vsix
+code --install-extension flutter-scaffold-template-0.1.3.vsix
 ```
 
 ## Supported Placeholders
 
+### Core Names
 | Placeholder              | Description                                 |
 | :----------------------- | :------------------------------------------ |
 | `{{projectName}}`        | Project name from pubspec.yaml (snake_case) |
 | `{{featureName}}`        | Feature name in snake_case                  |
 | `{{FeatureName}}`        | Feature name in PascalCase                  |
 | `{{PASCAL_NAME}}`        | Entity/Feature name in PascalCase           |
+
+### Model-Related
+| Placeholder              | Description                                 |
+| :----------------------- | :------------------------------------------ |
 | `{{MODEL_NAME}}`         | Model name (snake_case)                     |
 | `{{PASCAL_MODEL_NAME}}`  | Model name (PascalCase)                     |
+
+### Screen-Related
+| Placeholder              | Description                                 |
+| :----------------------- | :------------------------------------------ |
 | `{{screenName}}`         | Screen name (camelCase/snake_case context)  |
 | `{{PASCAL_SCREEN_NAME}}` | Screen name (PascalCase)                    |
-| `{{FIELDS}}`             | List of model fields                        |
+
+### Data & Logic
+| Placeholder              | Description                                 |
+| :----------------------- | :------------------------------------------ |
+| `{{FIELDS}}`             | Model constructor parameters                |
+| `{{FIELD_DECLARATIONS}}` | Model field declarations (final Type name;) |
+| `{{FIELD_NAMES}}`        | Just field names for hashCode/toString     |
+| `{{FIELDS_WITH_OPTIONAL}}` | copyWith optional parameters             |
+| `{{COPY_FIELDS}}`         | copyWith method field mappings            |
+| `{{JSON_FIELDS}}`        | JSON serialization field mappings          |
+| `{{FROM_JSON_FIELDS}}`    | JSON deserialization field mappings        |
+
+### Component Names
+| Placeholder              | Description                                 |
+| :----------------------- | :------------------------------------------ |
+| `{{REPOSITORY_NAME}}`     | Repository name (snake_case)               |
+| `{{PASCAL_REPOSITORY_NAME}}` | Repository name (PascalCase)              |
+| `{{USECASE_NAME}}`        | Use case name (snake_case)                 |
+| `{{PASCAL_USECASE_NAME}}` | Use case name (PascalCase)                 |
+| `{{USECASE_DESCRIPTION}}` | Use case description text                  |
+| `{{RETURN_TYPE}}`         | Use case return type                       |
+| `{{ENTITY_NAME}}`         | Entity name (snake_case)                  |
+| `{{PASCAL_ENTITY_NAME}}`   | Entity name (PascalCase)                  |
+
+### Conditionals
+| Placeholder              | Description                                 |
+| :----------------------- | :------------------------------------------ |
 | `{{HAS_FIELDS}}`         | Boolean conditional for fields presence     |
+| `{{HAS_ENTITY}}`         | Boolean conditional for entity presence    |
+| `{{HAS_PARAMS}}`         | Boolean conditional for parameters presence |
+| `{{JSON_FIELDS}}`        | JSON serialization field mappings          |
+| `{{FROM_JSON_FIELDS}}`    | JSON deserialization field mappings        |
+| `{{COPY_FIELDS}}`         | copyWith method field mappings            |
+| `{{FIELDS_WITH_OPTIONAL}}` | copyWith optional parameters             |
 
 ## Configuration
 
